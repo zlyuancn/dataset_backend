@@ -1,0 +1,790 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "决定proto引用路径和rpc路由",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "DatasetService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/Dataset/AdminAddDataset": {
+      "post": {
+        "summary": "添加数据集",
+        "operationId": "DatasetService_AdminAddDataset",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/datasetAdminAddDatasetRsp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/datasetAdminAddDatasetReq"
+            }
+          }
+        ],
+        "tags": [
+          "DatasetService"
+        ]
+      }
+    },
+    "/Dataset/AdminDelDataset": {
+      "post": {
+        "summary": "删除数据集. 数据集处理过程中必须先停止才能删除",
+        "operationId": "DatasetService_AdminDelDataset",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/datasetAdminDelDatasetRsp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/datasetAdminDelDatasetReq"
+            }
+          }
+        ],
+        "tags": [
+          "DatasetService"
+        ]
+      }
+    },
+    "/Dataset/AdminRunProcessDataset": {
+      "post": {
+        "summary": "启动处理",
+        "operationId": "DatasetService_AdminRunProcessDataset",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/datasetAdminRunProcessDatasetRsp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/datasetAdminRunProcessDatasetReq"
+            }
+          }
+        ],
+        "tags": [
+          "DatasetService"
+        ]
+      }
+    },
+    "/Dataset/AdminStopProcessDataset": {
+      "post": {
+        "summary": "停止处理",
+        "operationId": "DatasetService_AdminStopProcessDataset",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/datasetAdminStopProcessDatasetRsp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/datasetAdminStopProcessDatasetReq"
+            }
+          }
+        ],
+        "tags": [
+          "DatasetService"
+        ]
+      }
+    },
+    "/Dataset/AdminUpdateDataset": {
+      "post": {
+        "summary": "修改数据集. 只有\"已创建\"状态才会修改 datasetExtend",
+        "operationId": "DatasetService_AdminUpdateDataset",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/datasetAdminUpdateDatasetRsp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/datasetAdminUpdateDatasetReq"
+            }
+          }
+        ],
+        "tags": [
+          "DatasetService"
+        ]
+      }
+    },
+    "/Dataset/QueryDatasetData": {
+      "post": {
+        "summary": "查询数据",
+        "operationId": "DatasetService_QueryDatasetData",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/datasetQueryDatasetDataRsp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/datasetQueryDatasetDataReq"
+            }
+          }
+        ],
+        "tags": [
+          "DatasetService"
+        ]
+      }
+    },
+    "/Dataset/QueryDatasetInfo": {
+      "post": {
+        "summary": "查询数据集基本信息",
+        "operationId": "DatasetService_QueryDatasetInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/datasetQueryDatasetInfoRsp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/datasetQueryDatasetInfoReq"
+            }
+          }
+        ],
+        "tags": [
+          "DatasetService"
+        ]
+      }
+    },
+    "/Dataset/QueryDatasetList": {
+      "post": {
+        "summary": "查询数据集列表",
+        "operationId": "DatasetService_QueryDatasetList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/datasetQueryDatasetListRsp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/datasetQueryDatasetListReq"
+            }
+          }
+        ],
+        "tags": [
+          "DatasetService"
+        ]
+      }
+    },
+    "/Dataset/QueryDatasetStatusInfo": {
+      "post": {
+        "summary": "查询数据集信息, 用于获取处理中的数据集的变化数据",
+        "operationId": "DatasetService_QueryDatasetStatusInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/datasetQueryDatasetStatusInfoRsp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/datasetQueryDatasetStatusInfoReq"
+            }
+          }
+        ],
+        "tags": [
+          "DatasetService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "datasetAdminAddDatasetReq": {
+      "type": "object",
+      "properties": {
+        "datasetName": {
+          "type": "string",
+          "title": "数据集名"
+        },
+        "remark": {
+          "type": "string",
+          "title": "备注"
+        },
+        "datasetExtend": {
+          "$ref": "#/definitions/datasetDatasetExtend",
+          "title": "数据源扩展数据"
+        },
+        "op": {
+          "$ref": "#/definitions/datasetOpInfoQ",
+          "title": "操作信息"
+        },
+        "status": {
+          "$ref": "#/definitions/datasetStatus",
+          "title": "状态"
+        }
+      }
+    },
+    "datasetAdminAddDatasetRsp": {
+      "type": "object",
+      "properties": {
+        "datasetId": {
+          "type": "string",
+          "format": "int64",
+          "title": "创建的数据集id"
+        }
+      }
+    },
+    "datasetAdminDelDatasetReq": {
+      "type": "object",
+      "properties": {
+        "datasetId": {
+          "type": "integer",
+          "format": "int32",
+          "title": "数据集id. 必填"
+        },
+        "op": {
+          "$ref": "#/definitions/datasetOpInfoQ",
+          "title": "操作信息"
+        }
+      }
+    },
+    "datasetAdminDelDatasetRsp": {
+      "type": "object"
+    },
+    "datasetAdminRunProcessDatasetReq": {
+      "type": "object",
+      "properties": {
+        "datasetId": {
+          "type": "integer",
+          "format": "int32",
+          "title": "数据集id. 必填"
+        },
+        "op": {
+          "$ref": "#/definitions/datasetOpInfoQ",
+          "title": "操作信息"
+        }
+      }
+    },
+    "datasetAdminRunProcessDatasetRsp": {
+      "type": "object"
+    },
+    "datasetAdminStopProcessDatasetReq": {
+      "type": "object",
+      "properties": {
+        "datasetId": {
+          "type": "integer",
+          "format": "int32",
+          "title": "数据集id. 必填"
+        },
+        "op": {
+          "$ref": "#/definitions/datasetOpInfoQ",
+          "title": "操作信息"
+        }
+      }
+    },
+    "datasetAdminStopProcessDatasetRsp": {
+      "type": "object"
+    },
+    "datasetAdminUpdateDatasetReq": {
+      "type": "object",
+      "properties": {
+        "datasetName": {
+          "type": "string",
+          "title": "数据集名"
+        },
+        "remark": {
+          "type": "string",
+          "title": "备注"
+        },
+        "datasetExtend": {
+          "$ref": "#/definitions/datasetDatasetExtend",
+          "title": "数据源扩展数据"
+        },
+        "op": {
+          "$ref": "#/definitions/datasetOpInfoQ",
+          "title": "操作信息"
+        },
+        "status": {
+          "$ref": "#/definitions/datasetStatus",
+          "title": "状态"
+        }
+      }
+    },
+    "datasetAdminUpdateDatasetRsp": {
+      "type": "object"
+    },
+    "datasetChunkProcess": {
+      "type": "object",
+      "properties": {
+        "persistenceType": {
+          "type": "integer",
+          "format": "int32",
+          "title": "持久化类型"
+        },
+        "compressorType": {
+          "$ref": "#/definitions/datasetCompressorType",
+          "title": "压缩类型"
+        }
+      },
+      "title": "描述chunk如何处理"
+    },
+    "datasetCompressorType": {
+      "type": "string",
+      "enum": [
+        "CompressorType_None",
+        "CompressorType_Lz4"
+      ],
+      "default": "CompressorType_None",
+      "title": "- CompressorType_None: 不压缩"
+    },
+    "datasetDataProcess": {
+      "type": "object",
+      "properties": {
+        "dataSource": {
+          "$ref": "#/definitions/datasetDataSource",
+          "title": "数据源"
+        },
+        "uriFile": {
+          "$ref": "#/definitions/datasetDataSourceUriFile"
+        }
+      },
+      "title": "描述如何处理"
+    },
+    "datasetDataSource": {
+      "type": "string",
+      "enum": [
+        "DataSource_None",
+        "DataSource_UriFile"
+      ],
+      "default": "DataSource_None",
+      "title": "- DataSource_UriFile: uri文件"
+    },
+    "datasetDataSourceUriFile": {
+      "type": "object",
+      "properties": {
+        "uri": {
+          "type": "string",
+          "title": "下载地址"
+        },
+        "headers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/datasetKV"
+          },
+          "title": "header"
+        },
+        "insecureSkipVerify": {
+          "type": "boolean",
+          "title": "是否验证服务器的证书链和主机名"
+        },
+        "proxy": {
+          "type": "string",
+          "title": "代理"
+        }
+      },
+      "title": "uri文件"
+    },
+    "datasetDatasetExtend": {
+      "type": "object",
+      "properties": {
+        "dataProcess": {
+          "$ref": "#/definitions/datasetDataProcess",
+          "title": "数据处理"
+        },
+        "chunkProcess": {
+          "$ref": "#/definitions/datasetChunkProcess",
+          "title": "chunk 处理"
+        },
+        "valueProcess": {
+          "$ref": "#/definitions/datasetValueProcess",
+          "title": "value 处理"
+        }
+      },
+      "title": "处理器扩展数据"
+    },
+    "datasetDatasetInfoA": {
+      "type": "object",
+      "description": "todo",
+      "title": "数据集信息-响应"
+    },
+    "datasetDatasetInfoByListA": {
+      "type": "object",
+      "description": "todo",
+      "title": "数据集基础信息-响应"
+    },
+    "datasetDatasetStateInfo": {
+      "type": "object",
+      "title": "todo"
+    },
+    "datasetKV": {
+      "type": "object",
+      "properties": {
+        "k": {
+          "type": "string"
+        },
+        "v": {
+          "type": "string"
+        }
+      }
+    },
+    "datasetOpInfoQ": {
+      "type": "object",
+      "properties": {
+        "opSource": {
+          "type": "string",
+          "title": "操作来源"
+        },
+        "opUserid": {
+          "type": "string",
+          "title": "操作用户id"
+        },
+        "opUserName": {
+          "type": "string",
+          "title": "操作用户名"
+        },
+        "opRemark": {
+          "type": "string",
+          "title": "操作备注"
+        }
+      },
+      "title": "操作信息-请求"
+    },
+    "datasetQueryDatasetDataReq": {
+      "type": "object",
+      "properties": {
+        "datasetId": {
+          "type": "integer",
+          "format": "int32",
+          "title": "数据集id. 必填"
+        },
+        "valueSn": {
+          "type": "string",
+          "format": "int64",
+          "title": "value 的 sn. 必填"
+        }
+      }
+    },
+    "datasetQueryDatasetDataRsp": {
+      "type": "object",
+      "properties": {
+        "datasetId": {
+          "type": "integer",
+          "format": "int32",
+          "title": "数据集id"
+        },
+        "chunkSn": {
+          "type": "integer",
+          "format": "int32",
+          "title": "chunk sn"
+        },
+        "valueSn": {
+          "type": "string",
+          "format": "int64",
+          "title": "数据sn"
+        },
+        "value": {
+          "type": "string",
+          "title": "值"
+        }
+      }
+    },
+    "datasetQueryDatasetInfoReq": {
+      "type": "object",
+      "properties": {
+        "datasetId": {
+          "type": "integer",
+          "format": "int32",
+          "title": "数据集id. 必填"
+        }
+      }
+    },
+    "datasetQueryDatasetInfoRsp": {
+      "type": "object",
+      "properties": {
+        "line": {
+          "$ref": "#/definitions/datasetDatasetInfoA",
+          "title": "数据集信息"
+        }
+      }
+    },
+    "datasetQueryDatasetListReq": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "title": "页号, 从1开始"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32",
+          "title": "每页返回数量, 最少返回5条"
+        },
+        "datasetId": {
+          "type": "integer",
+          "format": "int32",
+          "title": "数据集id"
+        },
+        "status": {
+          "$ref": "#/definitions/datasetStatus",
+          "title": "状态"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "int64",
+          "title": "开始时间, 秒级时间戳. 0表示不限制"
+        },
+        "endTime": {
+          "type": "string",
+          "format": "int64",
+          "title": "结束时间, 秒级时间戳. 0表示不限制"
+        },
+        "opUser": {
+          "type": "string",
+          "title": "操作人"
+        }
+      }
+    },
+    "datasetQueryDatasetListRsp": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int32",
+          "title": "总条数"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32",
+          "title": "当前分一页预期返回条数"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/datasetDatasetInfoByListA"
+          },
+          "title": "数据集任务信息"
+        }
+      }
+    },
+    "datasetQueryDatasetStatusInfoReq": {
+      "type": "object",
+      "properties": {
+        "datasetIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "int64"
+          },
+          "title": "要查询的数据集id列表"
+        }
+      }
+    },
+    "datasetQueryDatasetStatusInfoRsp": {
+      "type": "object",
+      "properties": {
+        "datasetStateInfos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/datasetDatasetStateInfo"
+          }
+        }
+      }
+    },
+    "datasetStatus": {
+      "type": "string",
+      "enum": [
+        "Status_Created",
+        "Status_Running",
+        "Status_Finished",
+        "Status_Stopping",
+        "Status_Stopped",
+        "Status_Finishing"
+      ],
+      "default": "Status_Created",
+      "description": "- Status_Created: 已创建\n - Status_Running: 运行中\n - Status_Finished: 已完成\n - Status_Stopping: 正在停止\n - Status_Stopped: 已停止\n - Status_Finishing: 正在完成",
+      "title": "状态"
+    },
+    "datasetValueProcess": {
+      "type": "object",
+      "properties": {
+        "delim": {
+          "type": "string",
+          "title": "分隔符"
+        },
+        "trimSpace": {
+          "type": "boolean",
+          "description": "修剪空字符. 包括 '\\t', '\\n', '\\v', '\\f', '\\r', ' ', U+0085 (NEL), U+00A0 (NBSP)."
+        },
+        "trimPrefix": {
+          "type": "string",
+          "title": "修剪前缀"
+        },
+        "trimSuffix": {
+          "type": "string",
+          "title": "修剪后缀"
+        },
+        "filterSubString": {
+          "type": "string",
+          "title": "过滤包含子字符串的值"
+        },
+        "filterPrefix": {
+          "type": "string",
+          "title": "过滤包含前缀的值"
+        },
+        "filterSuffix": {
+          "type": "string",
+          "title": "过滤包含后缀的值"
+        }
+      },
+      "title": "描述值如何处理"
+    },
+    "googlerpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    }
+  }
+}

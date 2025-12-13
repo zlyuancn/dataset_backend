@@ -1,0 +1,257 @@
+syntax = 'proto3';
+package dataset; // 决定proto引用路径和rpc路由
+option go_package = "github.com/zlyuancn/dataset/pb"; // 用于对golang包管理的定位
+
+import "google/api/annotations.proto";  // 添加导入
+import "validate/validate.proto";
+
+// 数据集管理端服务
+service DatasetService {
+  // 添加数据集
+  rpc AdminAddDataset(AdminAddDatasetReq) returns (AdminAddDatasetRsp) {
+    option (google.api.http) = {
+      post: "/Dataset/AdminAddDataset",
+      body: "*",
+    };
+  }
+  // 修改数据集. 只有"已创建"状态才会修改 datasetExtend
+  rpc AdminUpdateDataset(AdminUpdateDatasetReq) returns (AdminUpdateDatasetRsp) {
+    option (google.api.http) = {
+      post: "/Dataset/AdminUpdateDataset",
+      body: "*",
+    };
+  }
+  // 删除数据集. 数据集处理过程中必须先停止才能删除
+  rpc AdminDelDataset(AdminDelDatasetReq) returns (AdminDelDatasetRsp){
+    option (google.api.http) = {
+      post: "/Dataset/AdminDelDataset",
+      body: "*",
+    };
+  }
+  // 启动处理
+  rpc AdminRunProcessDataset(AdminRunProcessDatasetReq) returns (AdminRunProcessDatasetRsp){
+    option (google.api.http) = {
+      post: "/Dataset/AdminRunProcessDataset",
+      body: "*",
+    };
+  }
+  // 停止处理
+  rpc AdminStopProcessDataset(AdminStopProcessDatasetReq) returns (AdminStopProcessDatasetRsp){
+    option (google.api.http) = {
+      post: "/Dataset/AdminStopProcessDataset",
+      body: "*",
+    };
+  }
+
+  // 查询数据集列表
+  rpc QueryDatasetList(QueryDatasetListReq) returns (QueryDatasetListRsp){
+    option (google.api.http) = {
+      post: "/Dataset/QueryDatasetList",
+      body: "*",
+    };
+  }
+  // 查询数据集基本信息
+  rpc QueryDatasetInfo(QueryDatasetInfoReq) returns (QueryDatasetInfoRsp){
+    option (google.api.http) = {
+      post: "/Dataset/QueryDatasetInfo",
+      body: "*",
+    };
+  }
+  // 查询数据集信息, 用于获取处理中的数据集的变化数据
+  rpc QueryDatasetStatusInfo(QueryDatasetStatusInfoReq) returns (QueryDatasetStatusInfoRsp){
+    option (google.api.http) = {
+      post: "/Dataset/QueryDatasetStatusInfo",
+      body: "*",
+    };
+  }
+  // 查询数据
+  rpc QueryDatasetData(QueryDatasetDataReq) returns (QueryDatasetDataRsp){
+    option (google.api.http) = {
+      post: "/Dataset/QueryDatasetData",
+      body: "*",
+    };
+  }
+}
+
+// 操作信息-请求
+message OpInfoQ {
+  string opSource = 1; // 操作来源
+  string opUserid = 2; // 操作用户id
+  string opUserName = 3; // 操作用户名
+  string opRemark = 4; // 操作备注
+}
+
+// 操作信息-响应
+message OpInfoA {
+  string opSource = 1; // 操作来源
+  string opUserid = 2; // 操作用户id
+  string opUserName = 3; // 操作用户名
+  string opRemark = 4; // 操作描述
+  int64 opTime = 5; // 操作秒级时间戳
+}
+
+enum OpCmd {
+  OpCmd_Update = 0; // 更新
+  OpCmd_Create = 1; // 创建
+  OpCmd_CreateAndRun = 2; // 创建并启动处理
+  OpCmd_Delete = 3; // 删除
+  OpCmd_Run = 4; // 启动处理
+  OpCmd_Stop = 5; // 停止
+}
+
+// 状态
+enum Status {
+  Status_Created = 0; // 已创建
+  Status_Running = 2; // 运行中
+  Status_Finished = 3; // 已完成
+  Status_Stopping = 4; // 正在停止
+  Status_Stopped = 5; // 已停止
+  Status_Finishing = 6; // 正在完成
+}
+
+message KV{
+  string k = 1;
+  string v = 2;
+}
+
+// 描述如何处理
+message DataProcess {
+  DataSource dataSource = 1; // 数据源
+  DataSourceUriFile uriFile = 2;
+}
+
+enum DataSource {
+  DataSource_None = 0;
+  DataSource_UriFile = 1; // uri文件
+}
+
+// uri文件
+message DataSourceUriFile {
+  string uri = 1; // 下载地址
+  repeated KV headers = 2; // header
+  bool insecureSkipVerify = 3; // 是否验证服务器的证书链和主机名
+  string proxy = 4; // 代理
+}
+
+
+// 描述chunk如何处理
+message ChunkProcess {
+  int32 persistenceType = 1; // 持久化类型
+  CompressorType compressorType = 2; // 压缩类型
+}
+
+enum CompressorType {
+  CompressorType_None = 0; // 不压缩
+  CompressorType_Lz4 = 1;
+}
+
+// 描述值如何处理
+message ValueProcess {
+  string delim = 1; // 分隔符
+  bool trimSpace = 2; // 修剪空字符. 包括 '\t', '\n', '\v', '\f', '\r', ' ', U+0085 (NEL), U+00A0 (NBSP).
+  string trimPrefix = 3; // 修剪前缀
+  string trimSuffix = 4; // 修剪后缀
+  string filterSubString = 5; // 过滤包含子字符串的值
+  string filterPrefix = 6; // 过滤包含前缀的值
+  string filterSuffix = 7; // 过滤包含后缀的值
+}
+
+// 处理器扩展数据
+message DatasetExtend {
+  DataProcess dataProcess = 1; // 数据处理
+  ChunkProcess chunkProcess = 2; // chunk 处理
+  ValueProcess valueProcess = 3; // value 处理
+}
+
+message AdminAddDatasetReq {
+  string datasetName = 2[(validate.rules).string.min_len = 1]; // 数据集名
+  string remark = 3; // 备注
+
+  DatasetExtend datasetExtend = 5; // 数据源扩展数据
+
+  OpInfoQ op = 6; // 操作信息
+  Status status = 7; // 状态
+}
+message AdminAddDatasetRsp {
+  int64 datasetId = 1; // 创建的数据集id
+}
+
+message AdminUpdateDatasetReq {
+  string datasetName = 2[(validate.rules).string.min_len = 1]; // 数据集名
+  string remark = 3; // 备注
+
+  DatasetExtend datasetExtend = 5; // 数据源扩展数据
+
+  OpInfoQ op = 6; // 操作信息
+  Status status = 7; // 状态
+}
+message AdminUpdateDatasetRsp {}
+
+message AdminDelDatasetReq {
+  int32 datasetId = 1 [(validate.rules).int32.gt = 0]; // 数据集id. 必填
+  OpInfoQ op = 2; // 操作信息
+}
+message AdminDelDatasetRsp {}
+
+message AdminRunProcessDatasetReq {
+  int32 datasetId = 1 [(validate.rules).int32.gt = 0]; // 数据集id. 必填
+  OpInfoQ op = 2; // 操作信息
+}
+message AdminRunProcessDatasetRsp {}
+
+message AdminStopProcessDatasetReq {
+  int32 datasetId = 1 [(validate.rules).int32.gt = 0]; // 数据集id. 必填
+  OpInfoQ op = 2; // 操作信息
+}
+message AdminStopProcessDatasetRsp {}
+
+// 数据集基础信息-响应
+message DatasetInfoByListA {
+  // todo
+}
+message QueryDatasetListReq {
+  int32 page = 1 [(validate.rules).int32.gt = 0]; // 页号, 从1开始
+  int32 pageSize = 2 [(validate.rules).int32.gte = 5]; // 每页返回数量, 最少返回5条
+  int32 datasetId = 3 [(validate.rules).int32.gte = 0]; // 数据集id
+  Status status = 4; // 状态
+  int64 startTime = 5; // 开始时间, 秒级时间戳. 0表示不限制
+  int64 endTime = 6; // 结束时间, 秒级时间戳. 0表示不限制
+  string opUser = 7; // 操作人
+}
+message QueryDatasetListRsp {
+  int32 total = 1; // 总条数
+  int32 pageSize = 2; // 当前分一页预期返回条数
+  repeated DatasetInfoByListA lines = 3; // 数据集任务信息
+}
+
+// 数据集信息-响应
+message DatasetInfoA {
+  // todo
+}
+message QueryDatasetInfoReq {
+  int32 datasetId = 1 [(validate.rules).int32.gt = 0]; // 数据集id. 必填
+}
+message QueryDatasetInfoRsp {
+  DatasetInfoA line = 1; // 数据集信息
+}
+
+message QueryDatasetStatusInfoReq {
+  repeated int64 datasetIds = 1; // 要查询的数据集id列表
+}
+message DatasetStateInfo {
+  // todo
+}
+message QueryDatasetStatusInfoRsp {
+  repeated DatasetStateInfo datasetStateInfos = 1;
+}
+
+message QueryDatasetDataReq {
+  int32 datasetId = 1 [(validate.rules).int32.gt = 0]; // 数据集id. 必填
+  int64 valueSn = 2 [(validate.rules).int64.gte = 0]; // value 的 sn. 必填
+}
+message QueryDatasetDataRsp {
+  int32 datasetId = 1; // 数据集id
+  int32 chunkSn = 2; // chunk sn
+  int64 valueSn = 3; // 数据sn
+  string value = 4; // 值
+}
