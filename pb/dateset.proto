@@ -107,6 +107,8 @@ enum Status {
   Status_Stopping = 4; // 正在停止
   Status_Stopped = 5; // 已停止
   Status_Finishing = 6; // 正在完成
+  Status_Deleting = 7; // 正在删除
+  Status_ChunkDeleted = 8; // 元数据已删除
 }
 
 message KV{
@@ -171,12 +173,15 @@ message AdminAddDatasetReq {
 
   OpInfoQ op = 6; // 操作信息
   Status status = 7; // 状态
+
+  bool startProcessNow = 8; // 创建后是否立即启动处理
 }
 message AdminAddDatasetRsp {
   int64 datasetId = 1; // 创建的数据集id
 }
 
 message AdminUpdateDatasetReq {
+  int64 datasetId = 1 [(validate.rules).int64.gt = 0]; // 数据集id. 必填
   string datasetName = 2[(validate.rules).string.min_len = 1]; // 数据集名
   string remark = 3; // 备注
 
@@ -188,19 +193,19 @@ message AdminUpdateDatasetReq {
 message AdminUpdateDatasetRsp {}
 
 message AdminDelDatasetReq {
-  int32 datasetId = 1 [(validate.rules).int32.gt = 0]; // 数据集id. 必填
+  int64 datasetId = 1 [(validate.rules).int64.gt = 0]; // 数据集id. 必填
   OpInfoQ op = 2; // 操作信息
 }
 message AdminDelDatasetRsp {}
 
 message AdminRunProcessDatasetReq {
-  int32 datasetId = 1 [(validate.rules).int32.gt = 0]; // 数据集id. 必填
+  int64 datasetId = 1 [(validate.rules).int64.gt = 0]; // 数据集id. 必填
   OpInfoQ op = 2; // 操作信息
 }
 message AdminRunProcessDatasetRsp {}
 
 message AdminStopProcessDatasetReq {
-  int32 datasetId = 1 [(validate.rules).int32.gt = 0]; // 数据集id. 必填
+  int64 datasetId = 1 [(validate.rules).int64.gt = 0]; // 数据集id. 必填
   OpInfoQ op = 2; // 操作信息
 }
 message AdminStopProcessDatasetRsp {}
@@ -212,7 +217,7 @@ message DatasetInfoByListA {
 message QueryDatasetListReq {
   int32 page = 1 [(validate.rules).int32.gt = 0]; // 页号, 从1开始
   int32 pageSize = 2 [(validate.rules).int32.gte = 5]; // 每页返回数量, 最少返回5条
-  int32 datasetId = 3 [(validate.rules).int32.gte = 0]; // 数据集id
+  int64 datasetId = 3 [(validate.rules).int64.gte = 0]; // 数据集id
   Status status = 4; // 状态
   int64 startTime = 5; // 开始时间, 秒级时间戳. 0表示不限制
   int64 endTime = 6; // 结束时间, 秒级时间戳. 0表示不限制
@@ -229,7 +234,7 @@ message DatasetInfoA {
   // todo
 }
 message QueryDatasetInfoReq {
-  int32 datasetId = 1 [(validate.rules).int32.gt = 0]; // 数据集id. 必填
+  int64 datasetId = 1 [(validate.rules).int64.gt = 0]; // 数据集id. 必填
 }
 message QueryDatasetInfoRsp {
   DatasetInfoA line = 1; // 数据集信息
@@ -246,11 +251,11 @@ message QueryDatasetStatusInfoRsp {
 }
 
 message QueryDatasetDataReq {
-  int32 datasetId = 1 [(validate.rules).int32.gt = 0]; // 数据集id. 必填
+  int64 datasetId = 1 [(validate.rules).int64.gt = 0]; // 数据集id. 必填
   int64 valueSn = 2 [(validate.rules).int64.gte = 0]; // value 的 sn. 必填
 }
 message QueryDatasetDataRsp {
-  int32 datasetId = 1; // 数据集id
+  int64 datasetId = 1; // 数据集id
   int32 chunkSn = 2; // chunk sn
   int64 valueSn = 3; // 数据sn
   string value = 4; // 值

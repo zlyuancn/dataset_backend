@@ -1121,6 +1121,8 @@ func (m *AdminAddDatasetReq) validate(all bool) error {
 
 	// no validation rules for Status
 
+	// no validation rules for StartProcessNow
+
 	if len(errors) > 0 {
 		return AdminAddDatasetReqMultiError(errors)
 	}
@@ -1326,6 +1328,17 @@ func (m *AdminUpdateDatasetReq) validate(all bool) error {
 	}
 
 	var errors []error
+
+	if m.GetDatasetId() <= 0 {
+		err := AdminUpdateDatasetReqValidationError{
+			field:  "DatasetId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if utf8.RuneCountInString(m.GetDatasetName()) < 1 {
 		err := AdminUpdateDatasetReqValidationError{
