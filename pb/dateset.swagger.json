@@ -530,17 +530,108 @@
     },
     "datasetDatasetInfoA": {
       "type": "object",
-      "description": "todo",
+      "properties": {
+        "datasetId": {
+          "type": "string",
+          "format": "int64",
+          "title": "数据集id"
+        },
+        "datasetName": {
+          "type": "string",
+          "title": "数据集名"
+        },
+        "remark": {
+          "type": "string",
+          "title": "备注"
+        },
+        "datasetExtend": {
+          "$ref": "#/definitions/datasetDatasetExtend",
+          "title": "数据源扩展数据"
+        },
+        "op": {
+          "$ref": "#/definitions/datasetOpInfoQ",
+          "title": "操作信息"
+        },
+        "status": {
+          "$ref": "#/definitions/datasetStatus",
+          "title": "状态"
+        }
+      },
       "title": "数据集信息-响应"
     },
     "datasetDatasetInfoByListA": {
       "type": "object",
-      "description": "todo",
+      "properties": {
+        "datasetId": {
+          "type": "string",
+          "format": "int64",
+          "title": "数据集"
+        },
+        "datasetName": {
+          "type": "string",
+          "title": "数据集名"
+        },
+        "valueTotal": {
+          "type": "integer",
+          "format": "int32",
+          "title": "value 总数"
+        },
+        "status": {
+          "$ref": "#/definitions/datasetStatus",
+          "title": "状态"
+        },
+        "statusInfo": {
+          "type": "string",
+          "title": "状态信息"
+        },
+        "createTime": {
+          "type": "string",
+          "format": "int64",
+          "title": "创建时间秒级时间戳"
+        },
+        "op": {
+          "$ref": "#/definitions/datasetOpInfoA",
+          "title": "操作信息"
+        }
+      },
       "title": "数据集基础信息-响应"
     },
     "datasetDatasetStateInfo": {
       "type": "object",
-      "title": "todo"
+      "properties": {
+        "datasetId": {
+          "type": "string",
+          "format": "int64",
+          "title": "数据集id"
+        },
+        "chunkTotal": {
+          "type": "integer",
+          "format": "int32",
+          "title": "chunk 预估总数"
+        },
+        "chunkFinishedCount": {
+          "type": "integer",
+          "format": "int32",
+          "title": "chunk 完成总数"
+        },
+        "valueTotal": {
+          "type": "string",
+          "format": "int64",
+          "title": "value 总数"
+        },
+        "status": {
+          "$ref": "#/definitions/datasetStatus",
+          "title": "状态"
+        },
+        "statusInfo": {
+          "type": "string",
+          "title": "状态信息"
+        },
+        "op": {
+          "$ref": "#/definitions/datasetOpInfoA",
+          "title": "操作信息"
+        }
+      }
     },
     "datasetKV": {
       "type": "object",
@@ -552,6 +643,33 @@
           "type": "string"
         }
       }
+    },
+    "datasetOpInfoA": {
+      "type": "object",
+      "properties": {
+        "opSource": {
+          "type": "string",
+          "title": "操作来源"
+        },
+        "opUserid": {
+          "type": "string",
+          "title": "操作用户id"
+        },
+        "opUserName": {
+          "type": "string",
+          "title": "操作用户名"
+        },
+        "opRemark": {
+          "type": "string",
+          "title": "操作描述"
+        },
+        "opTime": {
+          "type": "string",
+          "format": "int64",
+          "title": "操作秒级时间戳"
+        }
+      },
+      "title": "操作信息-响应"
     },
     "datasetOpInfoQ": {
       "type": "object",

@@ -18,3 +18,11 @@ type CacheDatasetProcessStatus struct {
 	NextChunkStartValueSn int   // 下一个 chunk 的第一个数据的 sn
 	ResumePointOffset     int64 // 断点续传偏移量, 表示已完成的chunk扫描了多少字节
 }
+
+// 停止标记
+type StopFlag byte
+
+const (
+	StopFlag_None StopFlag = iota // 无
+	StopFlag_Stop                 // 停止信号
+)

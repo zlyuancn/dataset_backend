@@ -12,6 +12,7 @@ import (
 	"github.com/zly-app/zapp/component/gpool"
 	"github.com/zly-app/zapp/log"
 	"github.com/zly-app/zapp/pkg/utils"
+	"github.com/zlyuancn/redis_tool"
 	"go.uber.org/zap"
 
 	"github.com/zlyuancn/dataset/module"
@@ -19,7 +20,6 @@ import (
 	"github.com/zlyuancn/dataset/conf"
 	"github.com/zlyuancn/dataset/dao/dataset"
 	"github.com/zlyuancn/dataset/dao/dataset_history"
-	"github.com/zlyuancn/dataset/dao/redis"
 	"github.com/zlyuancn/dataset/handler"
 	"github.com/zlyuancn/dataset/model"
 	"github.com/zlyuancn/dataset/pb"
@@ -100,7 +100,7 @@ func (*Dataset) AdminUpdateDataset(ctx context.Context, req *pb.AdminUpdateDatas
 
 	// 加锁
 	lockKey := conf.Conf.DatasetOpLockKeyPrefix + strconv.Itoa(int(req.GetDatasetId()))
-	unlock, _, err := redis.AutoLock(ctx, lockKey, time.Second*10)
+	unlock, _, err := redis_tool.AutoLock(ctx, lockKey, time.Second*time.Duration(conf.Conf.AdminOpLockTtl))
 	if err != nil {
 		log.Error(ctx, "AdminUpdateDataset call AutoLock fail.", zap.Error(err))
 		return nil, err
@@ -143,7 +143,7 @@ func (*Dataset) AdminUpdateDataset(ctx context.Context, req *pb.AdminUpdateDatas
 	d.OpUserId = req.GetOp().GetOpUserid()
 	d.OpUserName = req.GetOp().GetOpUserName()
 	d.OpRemark = req.GetOp().GetOpRemark()
-	d.StatusInfo = model.StatusInfo_UserOp
+	d.StatusInfo = v.StatusInfo
 	if d.Status == byte(pb.Status_Status_Created) {
 		d.DatasetExtend = de
 	}
@@ -165,7 +165,7 @@ func (*Dataset) AdminUpdateDataset(ctx context.Context, req *pb.AdminUpdateDatas
 		OpRemark:      req.GetOp().GetOpRemark(),
 		OpCmd:         byte(pb.OpCmd_OpCmd_Update),
 		Status:        v.Status,
-		StatusInfo:    model.StatusInfo_UserOp,
+		StatusInfo:    v.StatusInfo,
 	}
 	gpool.GetDefGPool().Go(func() error {
 		_, err = dataset_history.CreateOneModel(cloneCtx, h)
@@ -192,7 +192,7 @@ func (*Dataset) AdminUpdateDataset(ctx context.Context, req *pb.AdminUpdateDatas
 func (*Dataset) AdminDelDataset(ctx context.Context, req *pb.AdminDelDatasetReq) (*pb.AdminDelDatasetRsp, error) {
 	// 加锁
 	lockKey := conf.Conf.DatasetOpLockKeyPrefix + strconv.Itoa(int(req.GetDatasetId()))
-	unlock, _, err := redis.AutoLock(ctx, lockKey, time.Second*10)
+	unlock, _, err := redis_tool.AutoLock(ctx, lockKey, time.Second*time.Duration(conf.Conf.AdminOpLockTtl))
 	if err != nil {
 		log.Error(ctx, "AdminDelDataset call AutoLock fail.", zap.Error(err))
 		return nil, err
@@ -275,4 +275,207 @@ func (*Dataset) AdminDelDataset(ctx context.Context, req *pb.AdminDelDatasetReq)
 	// todo 删除已持久化的chunk
 
 	return &pb.AdminDelDatasetRsp{}, nil
+}
+
+func (*Dataset) AdminRunProcessDataset(ctx context.Context, req *pb.AdminRunProcessDatasetReq) (*pb.AdminRunProcessDatasetRsp, error) {
+	// 加锁
+	lockKey := conf.Conf.DatasetOpLockKeyPrefix + strconv.Itoa(int(req.GetDatasetId()))
+	unlock, _, err := redis_tool.AutoLock(ctx, lockKey, time.Second*time.Duration(conf.Conf.AdminOpLockTtl))
+	if err != nil {
+		log.Error(ctx, "AdminRunProcessDataset call AutoLock fail.", zap.Error(err))
+		return nil, err
+	}
+	defer unlock()
+
+	// 获取数据集
+	d, err := dataset.GetOneByDatasetId(ctx, int(req.GetDatasetId()))
+	if err != nil {
+		log.Error(ctx, "AdminRunProcessDataset call dataset.GetOneByDatasetId fail.", zap.Error(err))
+		return nil, err
+	}
+	oldStatus := d.Status
+
+	// 检查状态
+	switch pb.Status(d.Status) {
+	case pb.Status_Status_Running, pb.Status_Status_Stopping:
+		log.Error(ctx, "AdminRunProcessDataset fail. status is running", zap.Int64("dataset", req.GetDatasetId()))
+		return nil, errors.New("AdminRunProcessDataset status is running")
+	case pb.Status_Status_Finishing, pb.Status_Status_Finished:
+		log.Error(ctx, "AdminRunProcessDataset fail. status is finished", zap.Int64("dataset", req.GetDatasetId()))
+		return nil, errors.New("AdminRunProcessDataset status is finished")
+	case pb.Status_Status_Deleting, pb.Status_Status_ChunkDeleted:
+		log.Error(ctx, "AdminRunProcessDataset fail. status is deleted", zap.Int64("dataset", req.GetDatasetId()))
+		return nil, errors.New("Dataset status is deleted")
+	case pb.Status_Status_Created, pb.Status_Status_Stopped:
+	default:
+		log.Error(ctx, "AdminRunProcessDataset fail. status is unknown", zap.Int64("dataset", req.GetDatasetId()))
+		return nil, errors.New("Dataset status is unknown")
+	}
+
+	// 写入数据库的数据
+	v := &dataset.Model{
+		DatasetId:  uint(req.GetDatasetId()),
+		Status:     byte(pb.Status_Status_Running),
+		OpSource:   req.GetOp().GetOpSource(),
+		OpUserId:   req.GetOp().GetOpUserid(),
+		OpUserName: req.GetOp().GetOpUserName(),
+		OpRemark:   req.GetOp().GetOpRemark(),
+		StatusInfo: model.StatusInfo_UserChangeStatus,
+	}
+
+	// 更新数据为处理中
+	count, err := dataset.AdminUpdateStatus(ctx, v, oldStatus)
+	if err != nil {
+		log.Error(ctx, "AdminRunProcessDataset call dataset.AdminUpdateStatus fail.", zap.Error(err))
+		return nil, err
+	}
+	if count != 1 {
+		err = fmt.Errorf("update dataset status fail. update count != 1. is %d", count)
+		log.Error(ctx, "AdminRunProcessDataset call dataset.AdminUpdateStatus fail.", zap.Error(err))
+		return nil, err
+	}
+
+	cloneCtx := utils.Ctx.CloneContext(ctx)
+	// 添加历史记录
+	h := &dataset_history.Model{
+		DatasetId:  uint(req.GetDatasetId()),
+		OpSource:   req.GetOp().GetOpSource(),
+		OpUserId:   req.GetOp().GetOpUserid(),
+		OpUserName: req.GetOp().GetOpUserName(),
+		OpRemark:   req.GetOp().GetOpRemark(),
+		OpCmd:      byte(pb.OpCmd_OpCmd_Run),
+		Status:     v.Status,
+		StatusInfo: model.StatusInfo_UserChangeStatus,
+	}
+	gpool.GetDefGPool().Go(func() error {
+		_, err = dataset_history.CreateOneModel(cloneCtx, h)
+		if err != nil {
+			log.Error(cloneCtx, "AdminRunProcessDataset call dataset_history.CreateOneModel fail.", zap.Error(err))
+			// return nil, err
+		}
+		return nil
+	}, nil)
+
+	// 清除缓存
+	gpool.GetDefGPool().Go(func() error {
+		err := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetId(int(req.GetDatasetId())))
+		if err != nil {
+			log.Error(cloneCtx, "AdminRunProcessDataset call clear Cache fail.", zap.Error(err))
+			// return err
+		}
+		return nil
+	}, nil)
+
+	// 启动
+	gpool.GetDefGPool().Go(func() error {
+		// 删除停止标记
+		err = module.Dataset.SetStopFlag(cloneCtx, int(d.DatasetId), model.StopFlag_None)
+		if err != nil {
+			log.Error(cloneCtx, "AdminRunProcessDataset call DelStopFlag fail.", zap.Error(err))
+			return err
+		}
+
+		// todo 开始处理
+		return nil
+	}, nil)
+
+	return &pb.AdminRunProcessDatasetRsp{}, nil
+}
+
+func (*Dataset) AdminStopProcessDataset(ctx context.Context, req *pb.AdminStopProcessDatasetReq) (*pb.AdminStopProcessDatasetRsp, error) {
+	// 加锁
+	lockKey := conf.Conf.DatasetOpLockKeyPrefix + strconv.Itoa(int(req.GetDatasetId()))
+	unlock, _, err := redis_tool.AutoLock(ctx, lockKey, time.Second*time.Duration(conf.Conf.AdminOpLockTtl))
+	if err != nil {
+		log.Error(ctx, "AdminStopProcessDataset call AutoLock fail.", zap.Error(err))
+		return nil, err
+	}
+	defer unlock()
+
+	// 获取数据集
+	d, err := dataset.GetOneByDatasetId(ctx, int(req.GetDatasetId()))
+	if err != nil {
+		log.Error(ctx, "AdminStopProcessDataset call dataset.GetOneByDatasetId fail.", zap.Error(err))
+		return nil, err
+	}
+	oldStatus := d.Status
+
+	// 检查状态
+	switch pb.Status(d.Status) {
+	case pb.Status_Status_Running:
+	case pb.Status_Status_Deleting, pb.Status_Status_ChunkDeleted:
+		log.Error(ctx, "AdminStopProcessDataset fail. status is deleted", zap.Int64("dataset", req.GetDatasetId()))
+		return nil, errors.New("Dataset status is deleted")
+	case pb.Status_Status_Created, pb.Status_Status_Stopping, pb.Status_Status_Stopped, pb.Status_Status_Finishing, pb.Status_Status_Finished:
+		log.Error(ctx, "AdminStopProcessDataset fail. status not running", zap.Int64("dataset", req.GetDatasetId()))
+		return nil, errors.New("Dataset status is not running")
+	default:
+		log.Error(ctx, "AdminStopProcessDataset fail. status is unknown", zap.Int64("dataset", req.GetDatasetId()))
+		return nil, errors.New("Dataset status is unknown")
+	}
+
+	// 写入停止标记
+	err = module.Dataset.SetStopFlag(ctx, int(req.GetDatasetId()), model.StopFlag_Stop)
+	if err != nil {
+		log.Error(ctx, "AdminStopProcessDataset call SetStopFlag fail.", zap.Error(err))
+		return nil, err
+	}
+
+	// 写入数据库的数据
+	v := &dataset.Model{
+		DatasetId:  uint(req.GetDatasetId()),
+		Status:     byte(pb.Status_Status_Stopping),
+		OpSource:   req.GetOp().GetOpSource(),
+		OpUserId:   req.GetOp().GetOpUserid(),
+		OpUserName: req.GetOp().GetOpUserName(),
+		OpRemark:   req.GetOp().GetOpRemark(),
+		StatusInfo: model.StatusInfo_UserChangeStatus,
+	}
+
+	// 更新数据为停止中
+	count, err := dataset.AdminUpdateStatus(ctx, v, oldStatus)
+	if err != nil {
+		log.Error(ctx, "AdminStopProcessDataset call dataset.AdminUpdateStatus fail.", zap.Error(err))
+		return nil, err
+	}
+	if count != 1 {
+		err = fmt.Errorf("update dataset status fail. update count != 1. is %d", count)
+		log.Error(ctx, "AdminStopProcessDataset call dataset.AdminUpdateStatus fail.", zap.Error(err))
+		return nil, err
+	}
+
+	cloneCtx := utils.Ctx.CloneContext(ctx)
+	// 添加历史记录
+	h := &dataset_history.Model{
+		DatasetId:  uint(req.GetDatasetId()),
+		OpSource:   req.GetOp().GetOpSource(),
+		OpUserId:   req.GetOp().GetOpUserid(),
+		OpUserName: req.GetOp().GetOpUserName(),
+		OpRemark:   req.GetOp().GetOpRemark(),
+		OpCmd:      byte(pb.OpCmd_OpCmd_Stop),
+		Status:     v.Status,
+		StatusInfo: model.StatusInfo_UserChangeStatus,
+	}
+	gpool.GetDefGPool().Go(func() error {
+		_, err = dataset_history.CreateOneModel(cloneCtx, h)
+		if err != nil {
+			log.Error(cloneCtx, "AdminStopProcessDataset call dataset_history.CreateOneModel fail.", zap.Error(err))
+			// return nil, err
+		}
+		return nil
+	}, nil)
+
+	// 清除缓存
+	gpool.GetDefGPool().Go(func() error {
+		err := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetId(int(req.GetDatasetId())))
+		if err != nil {
+			log.Error(cloneCtx, "AdminStopProcessDataset call clear Cache fail.", zap.Error(err))
+			// return err
+		}
+		return nil
+	}, nil)
+
+	// todo 尝试获取运行处理锁, 直接更新状态为已停止
+
+	return &pb.AdminStopProcessDatasetRsp{}, nil
 }

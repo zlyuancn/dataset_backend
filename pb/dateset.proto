@@ -212,7 +212,13 @@ message AdminStopProcessDatasetRsp {}
 
 // 数据集基础信息-响应
 message DatasetInfoByListA {
-  // todo
+  int64 datasetId = 1; // 数据集
+  string datasetName = 2; // 数据集名
+  int32 valueTotal = 3; // value 总数
+  Status status = 4; // 状态
+  string statusInfo = 5; // 状态信息
+  int64 createTime = 6; // 创建时间秒级时间戳
+  OpInfoA op = 7; // 操作信息
 }
 message QueryDatasetListReq {
   int32 page = 1 [(validate.rules).int32.gt = 0]; // 页号, 从1开始
@@ -231,7 +237,14 @@ message QueryDatasetListRsp {
 
 // 数据集信息-响应
 message DatasetInfoA {
-  // todo
+  int64 datasetId = 1; // 数据集id
+  string datasetName = 2; // 数据集名
+  string remark = 3; // 备注
+
+  DatasetExtend datasetExtend = 5; // 数据源扩展数据
+
+  OpInfoQ op = 6; // 操作信息
+  Status status = 7; // 状态
 }
 message QueryDatasetInfoReq {
   int64 datasetId = 1 [(validate.rules).int64.gt = 0]; // 数据集id. 必填
@@ -244,7 +257,13 @@ message QueryDatasetStatusInfoReq {
   repeated int64 datasetIds = 1; // 要查询的数据集id列表
 }
 message DatasetStateInfo {
-  // todo
+  int64 datasetId = 1; // 数据集id
+  int32 chunkTotal = 2; // chunk 预估总数
+  int32 chunkFinishedCount = 3; // chunk 完成总数
+  int64 valueTotal = 4; // value 总数
+  Status status = 5; // 状态
+  string statusInfo = 6; // 状态信息
+  OpInfoA op = 7; // 操作信息
 }
 message QueryDatasetStatusInfoRsp {
   repeated DatasetStateInfo datasetStateInfos = 1;

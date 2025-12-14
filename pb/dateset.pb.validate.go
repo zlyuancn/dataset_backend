@@ -2349,6 +2349,47 @@ func (m *DatasetInfoByListA) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for DatasetId
+
+	// no validation rules for DatasetName
+
+	// no validation rules for ValueTotal
+
+	// no validation rules for Status
+
+	// no validation rules for StatusInfo
+
+	// no validation rules for CreateTime
+
+	if all {
+		switch v := interface{}(m.GetOp()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, DatasetInfoByListAValidationError{
+					field:  "Op",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, DatasetInfoByListAValidationError{
+					field:  "Op",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetOp()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return DatasetInfoByListAValidationError{
+				field:  "Op",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return DatasetInfoByListAMultiError(errors)
 	}
@@ -2733,6 +2774,72 @@ func (m *DatasetInfoA) validate(all bool) error {
 	}
 
 	var errors []error
+
+	// no validation rules for DatasetId
+
+	// no validation rules for DatasetName
+
+	// no validation rules for Remark
+
+	if all {
+		switch v := interface{}(m.GetDatasetExtend()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, DatasetInfoAValidationError{
+					field:  "DatasetExtend",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, DatasetInfoAValidationError{
+					field:  "DatasetExtend",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetDatasetExtend()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return DatasetInfoAValidationError{
+				field:  "DatasetExtend",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetOp()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, DatasetInfoAValidationError{
+					field:  "Op",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, DatasetInfoAValidationError{
+					field:  "Op",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetOp()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return DatasetInfoAValidationError{
+				field:  "Op",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for Status
 
 	if len(errors) > 0 {
 		return DatasetInfoAMultiError(errors)
@@ -3178,6 +3285,47 @@ func (m *DatasetStateInfo) validate(all bool) error {
 	}
 
 	var errors []error
+
+	// no validation rules for DatasetId
+
+	// no validation rules for ChunkTotal
+
+	// no validation rules for ChunkFinishedCount
+
+	// no validation rules for ValueTotal
+
+	// no validation rules for Status
+
+	// no validation rules for StatusInfo
+
+	if all {
+		switch v := interface{}(m.GetOp()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, DatasetStateInfoValidationError{
+					field:  "Op",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, DatasetStateInfoValidationError{
+					field:  "Op",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetOp()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return DatasetStateInfoValidationError{
+				field:  "Op",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	if len(errors) > 0 {
 		return DatasetStateInfoMultiError(errors)

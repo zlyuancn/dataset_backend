@@ -14,3 +14,8 @@ type cacheKeyCli struct{}
 func (cacheKeyCli) GetDatasetId(datasetId int) string {
 	return conf.Conf.DatasetOpLockKeyPrefix + strconv.Itoa(datasetId)
 }
+
+// 停止标记key
+func (*cacheKeyCli) GetStopFlag(datasetId int) string {
+	return conf.Conf.StopProcessFlagPrefix + strconv.Itoa(datasetId)
+}
