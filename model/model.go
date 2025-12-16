@@ -12,10 +12,10 @@ type ChunkMeta []OneChunkMeta
 
 // 缓存的数据集处理状态
 type CacheDatasetProcessStatus struct {
-	ChunkTotal            int   // chunk 总数
-	ChunkProcessedCount   int   // chunk 完成数
-	ValueProcessedCount   int   // 当前已完成处理的数据总数
-	NextChunkStartValueSn int   // 下一个 chunk 的第一个数据的 sn
+	ChunkTotal            int32 // chunk 总数
+	ChunkProcessedCount   int32 // chunk 完成数
+	ValueProcessedCount   int64 // 当前已完成处理的数据总数
+	NextChunkStartValueSn int64 // 下一个 chunk 的第一个数据的 sn
 	ResumePointOffset     int64 // 断点续传偏移量, 表示已完成的chunk扫描了多少字节
 }
 

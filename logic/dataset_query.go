@@ -5,8 +5,11 @@ import (
 
 	"github.com/bytedance/sonic"
 	"github.com/zly-app/cache/v2"
+	"github.com/zly-app/component/redis"
 	"github.com/zly-app/zapp/log"
+	"github.com/zlyuancn/dataset/client/db"
 	"github.com/zlyuancn/dataset/dao/dataset"
+	"github.com/zlyuancn/dataset/model"
 	"github.com/zlyuancn/dataset/module"
 	"github.com/zlyuancn/dataset/pb"
 	"go.uber.org/zap"
@@ -110,8 +113,6 @@ func (d *Dataset) QueryDatasetList(ctx context.Context, req *pb.QueryDatasetList
 		ret = append(ret, d.datasetDBModel2ListPb(line))
 	}
 
-	// todo 对于运行中的任务, 进度需要从redis获取
-
 	nextCursor := int64(0)
 	if len(ret) > 0 {
 		nextCursor = ret[len(ret)-1].DatasetId
@@ -129,9 +130,6 @@ func (d *Dataset) QueryDatasetInfo(ctx context.Context, req *pb.QueryDatasetInfo
 		return nil, err
 	}
 	ret := d.datasetDbModel2Pb(line)
-
-	// todo 对于运行中的任务, 进度需要从redis获取
-
 	return &pb.QueryDatasetInfoRsp{Line: ret}, nil
 }
 
@@ -145,7 +143,7 @@ func (d *Dataset) datasetDbModel2Pb(line *dataset.Model) *pb.DatasetInfoA {
 		DatasetName:   line.DatasetName,
 		Remark:        line.Remark,
 		DatasetExtend: de,
-		ValueTotal:    int32(line.ValueTotal),
+		ValueTotal:    line.ValueTotal,
 		CreateTime:    line.CreateTime.Unix(),
 		ProcessedTime: line.ProcessedTime,
 		Op: &pb.OpInfoA{
@@ -171,7 +169,7 @@ func (d *Dataset) datasetDBModel2ListPb(line *dataset.Model) *pb.DatasetInfoByLi
 		DatasetId:   int64(line.DatasetId),
 		DatasetName: line.DatasetName,
 		Remark:      line.Remark,
-		ValueTotal:  int32(line.ValueTotal),
+		ValueTotal:  line.ValueTotal,
 		CreateTime:  line.CreateTime.Unix(),
 		Op: &pb.OpInfoA{
 			OpSource:   line.OpSource,
@@ -186,9 +184,91 @@ func (d *Dataset) datasetDBModel2ListPb(line *dataset.Model) *pb.DatasetInfoByLi
 	return ret
 }
 
+func (d *Dataset) datasetDBModel2StatusPb(line *dataset.Model) *pb.DatasetStateInfo {
+	de := &pb.DatasetExtend{}
+	if line.DatasetExtend != "" {
+		_ = sonic.UnmarshalString(line.DatasetExtend, de)
+	}
+	ret := &pb.DatasetStateInfo{
+		DatasetId:           int64(line.DatasetId),
+		ChunkTotal:          0,
+		ChunkProcessedCount: 0,
+		ValueTotal:          line.ValueTotal,
+		Status:              pb.Status(line.Status),
+		StatusInfo:          line.StatusInfo,
+		Op: &pb.OpInfoA{
+			OpSource:   line.OpSource,
+			OpUserid:   line.OpUserId,
+			OpUserName: line.OpUserName,
+			OpRemark:   line.OpRemark,
+			OpTime:     line.UpdateTime.Unix(),
+		},
+	}
+	return ret
+}
+
 func (d *Dataset) QueryDatasetStatusInfo(ctx context.Context, req *pb.QueryDatasetStatusInfoReq) (*pb.QueryDatasetStatusInfoRsp, error) {
+	// 批量获取数据
+	ids := make([]uint, len(req.GetDatasetIds()))
+	for i, id := range req.GetDatasetIds() {
+		ids[i] = uint(id)
+	}
+	lines, err := module.Dataset.BatchGetDatasetInfoByCache(ctx, ids)
+	if err != nil {
+		log.Error(ctx, "QueryDatasetStatusInfo call BatchGetDatasetInfoByCache fail.", zap.Error(err))
+		return nil, err
+	}
+
+	// 数据转换
+	ret := make([]*pb.DatasetStateInfo, 0, len(lines))
+	for _, line := range lines {
+		ret = append(ret, d.datasetDBModel2StatusPb(line))
+	}
+
+	// 对于运行中的任务, 进度需要从redis获取
+	_ = d.batchRenderRunningProcess(ctx, ret)
+
 	return &pb.QueryDatasetStatusInfoRsp{}, nil
 }
+
+// 批量渲染运行中任务进度
+func (*Dataset) batchRenderRunningProcess(ctx context.Context, ret []*pb.DatasetStateInfo) error {
+	lines := make([]*pb.DatasetStateInfo, 0, len(ret))
+	status := make([]*redis.StringCmd, 0, len(ret)) // 数据集状态
+
+	rdb, err := db.GetRedis()
+	if err != nil {
+		return err
+	}
+	pipe := rdb.Pipeline()
+	for _, l := range ret {
+		switch l.Status {
+		case pb.Status_Status_Running, pb.Status_Status_Stopping, pb.Status_Status_Finishing, pb.Status_Status_Deleting:
+		default:
+			continue
+		}
+
+		lines = append(lines, l)
+		status = append(status, pipe.Get(ctx, module.CacheKey.GetCacheDatasetProcessStatus(int(l.DatasetId))))
+	}
+	_, err = pipe.Exec(ctx)
+	if err != nil && err != redis.Nil {
+		log.Error(ctx, "batchRenderRunningProcess call pipe.Exec", zap.Error(err))
+		return err
+	}
+
+	for i, line := range lines {
+		if status[i].Err() == nil {
+			s := &model.CacheDatasetProcessStatus{}
+			_ = sonic.UnmarshalString(status[i].Val(), s)
+			line.ChunkTotal = s.ChunkTotal
+			line.ChunkProcessedCount = s.ChunkProcessedCount
+			line.ValueTotal = s.ValueProcessedCount
+		}
+	}
+	return nil
+}
+
 func (d *Dataset) QueryDatasetData(ctx context.Context, req *pb.QueryDatasetDataReq) (*pb.QueryDatasetDataRsp, error) {
 	return &pb.QueryDatasetDataRsp{}, nil
 }

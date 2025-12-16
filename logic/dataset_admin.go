@@ -86,7 +86,13 @@ func (*Dataset) AdminAddDataset(ctx context.Context, req *pb.AdminAddDatasetReq)
 		return nil
 	}, nil)
 
-	// todo 立即启动处理
+	// 立即启动处理
+	if req.GetStartProcessNow() {
+		gpool.GetDefGPool().Go(func() error {
+			module.Processor.CreateProcessor(cloneCtx, v)
+			return nil
+		}, nil)
+	}
 
 	return &pb.AdminAddDatasetRsp{DatasetId: datasetId}, nil
 }
@@ -322,6 +328,12 @@ func (*Dataset) AdminRunProcessDataset(ctx context.Context, req *pb.AdminRunProc
 		OpRemark:   req.GetOp().GetOpRemark(),
 		StatusInfo: model.StatusInfo_UserChangeStatus,
 	}
+	d.Status = v.Status
+	d.OpSource = req.GetOp().GetOpSource()
+	d.OpUserId = req.GetOp().GetOpUserid()
+	d.OpUserName = req.GetOp().GetOpUserName()
+	d.OpRemark = req.GetOp().GetOpRemark()
+	d.StatusInfo = v.StatusInfo
 
 	// 更新数据为处理中
 	count, err := dataset.AdminUpdateStatus(ctx, v, oldStatus)
@@ -375,7 +387,8 @@ func (*Dataset) AdminRunProcessDataset(ctx context.Context, req *pb.AdminRunProc
 			return err
 		}
 
-		// todo 开始处理
+		// 开始处理
+		module.Processor.CreateProcessor(ctx, d)
 		return nil
 	}, nil)
 

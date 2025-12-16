@@ -1440,7 +1440,7 @@ type DatasetInfoByListA struct {
 	DatasetId     int64                  `protobuf:"varint,1,opt,name=datasetId,proto3" json:"datasetId,omitempty"`               // 数据集id
 	DatasetName   string                 `protobuf:"bytes,2,opt,name=datasetName,proto3" json:"datasetName,omitempty"`            // 数据集名
 	Remark        string                 `protobuf:"bytes,3,opt,name=remark,proto3" json:"remark,omitempty"`                      // 备注
-	ValueTotal    int32                  `protobuf:"varint,5,opt,name=valueTotal,proto3" json:"valueTotal,omitempty"`             // value 总数
+	ValueTotal    int64                  `protobuf:"varint,5,opt,name=valueTotal,proto3" json:"valueTotal,omitempty"`             // value 总数
 	CreateTime    int64                  `protobuf:"varint,6,opt,name=createTime,proto3" json:"createTime,omitempty"`             // 创建时间秒级时间戳
 	Op            *OpInfoA               `protobuf:"bytes,8,opt,name=op,proto3" json:"op,omitempty"`                              // 操作信息
 	Status        Status                 `protobuf:"varint,9,opt,name=status,proto3,enum=dataset.Status" json:"status,omitempty"` // 状态
@@ -1500,7 +1500,7 @@ func (x *DatasetInfoByListA) GetRemark() string {
 	return ""
 }
 
-func (x *DatasetInfoByListA) GetValueTotal() int32 {
+func (x *DatasetInfoByListA) GetValueTotal() int64 {
 	if x != nil {
 		return x.ValueTotal
 	}
@@ -1686,7 +1686,7 @@ type DatasetInfoA struct {
 	DatasetName   string                 `protobuf:"bytes,2,opt,name=datasetName,proto3" json:"datasetName,omitempty"`                           // 数据集名
 	Remark        string                 `protobuf:"bytes,3,opt,name=remark,proto3" json:"remark,omitempty"`                                     // 备注
 	DatasetExtend *DatasetExtend         `protobuf:"bytes,4,opt,name=datasetExtend,proto3" json:"datasetExtend,omitempty"`                       // 数据源扩展数据
-	ValueTotal    int32                  `protobuf:"varint,5,opt,name=valueTotal,proto3" json:"valueTotal,omitempty"`                            // value 总数
+	ValueTotal    int64                  `protobuf:"varint,5,opt,name=valueTotal,proto3" json:"valueTotal,omitempty"`                            // value 总数
 	CreateTime    int64                  `protobuf:"varint,6,opt,name=createTime,proto3" json:"createTime,omitempty"`                            // 创建时间秒级时间戳
 	ProcessedTime int64                  `protobuf:"varint,7,opt,name=processed_time,json=processedTime,proto3" json:"processed_time,omitempty"` // 加工完成时间秒级时间戳
 	Op            *OpInfoA               `protobuf:"bytes,8,opt,name=op,proto3" json:"op,omitempty"`                                             // 操作信息
@@ -1755,7 +1755,7 @@ func (x *DatasetInfoA) GetDatasetExtend() *DatasetExtend {
 	return nil
 }
 
-func (x *DatasetInfoA) GetValueTotal() int32 {
+func (x *DatasetInfoA) GetValueTotal() int64 {
 	if x != nil {
 		return x.ValueTotal
 	}
@@ -1937,16 +1937,16 @@ func (x *QueryDatasetStatusInfoReq) GetDatasetIds() []int64 {
 }
 
 type DatasetStateInfo struct {
-	state              protoimpl.MessageState `protogen:"open.v1"`
-	DatasetId          int64                  `protobuf:"varint,1,opt,name=datasetId,proto3" json:"datasetId,omitempty"`                   // 数据集id
-	ChunkTotal         int32                  `protobuf:"varint,2,opt,name=chunkTotal,proto3" json:"chunkTotal,omitempty"`                 // chunk 预估总数
-	ChunkFinishedCount int32                  `protobuf:"varint,3,opt,name=chunkFinishedCount,proto3" json:"chunkFinishedCount,omitempty"` // chunk 完成总数
-	ValueTotal         int64                  `protobuf:"varint,4,opt,name=valueTotal,proto3" json:"valueTotal,omitempty"`                 // value 总数
-	Status             Status                 `protobuf:"varint,5,opt,name=status,proto3,enum=dataset.Status" json:"status,omitempty"`     // 状态
-	StatusInfo         string                 `protobuf:"bytes,6,opt,name=statusInfo,proto3" json:"statusInfo,omitempty"`                  // 状态信息
-	Op                 *OpInfoA               `protobuf:"bytes,7,opt,name=op,proto3" json:"op,omitempty"`                                  // 操作信息
-	unknownFields      protoimpl.UnknownFields
-	sizeCache          protoimpl.SizeCache
+	state               protoimpl.MessageState `protogen:"open.v1"`
+	DatasetId           int64                  `protobuf:"varint,1,opt,name=datasetId,proto3" json:"datasetId,omitempty"`                     // 数据集id
+	ChunkTotal          int32                  `protobuf:"varint,2,opt,name=chunkTotal,proto3" json:"chunkTotal,omitempty"`                   // chunk 预估总数
+	ChunkProcessedCount int32                  `protobuf:"varint,3,opt,name=chunkProcessedCount,proto3" json:"chunkProcessedCount,omitempty"` // chunk 已处理总数
+	ValueTotal          int64                  `protobuf:"varint,4,opt,name=valueTotal,proto3" json:"valueTotal,omitempty"`                   // value 总数
+	Status              Status                 `protobuf:"varint,5,opt,name=status,proto3,enum=dataset.Status" json:"status,omitempty"`       // 状态
+	StatusInfo          string                 `protobuf:"bytes,6,opt,name=statusInfo,proto3" json:"statusInfo,omitempty"`                    // 状态信息
+	Op                  *OpInfoA               `protobuf:"bytes,7,opt,name=op,proto3" json:"op,omitempty"`                                    // 操作信息
+	unknownFields       protoimpl.UnknownFields
+	sizeCache           protoimpl.SizeCache
 }
 
 func (x *DatasetStateInfo) Reset() {
@@ -1993,9 +1993,9 @@ func (x *DatasetStateInfo) GetChunkTotal() int32 {
 	return 0
 }
 
-func (x *DatasetStateInfo) GetChunkFinishedCount() int32 {
+func (x *DatasetStateInfo) GetChunkProcessedCount() int32 {
 	if x != nil {
-		return x.ChunkFinishedCount
+		return x.ChunkProcessedCount
 	}
 	return 0
 }
@@ -2287,7 +2287,7 @@ const file_dateset_proto_rawDesc = "" +
 	"\vdatasetName\x18\x02 \x01(\tR\vdatasetName\x12\x16\n" +
 	"\x06remark\x18\x03 \x01(\tR\x06remark\x12\x1e\n" +
 	"\n" +
-	"valueTotal\x18\x05 \x01(\x05R\n" +
+	"valueTotal\x18\x05 \x01(\x03R\n" +
 	"valueTotal\x12\x1e\n" +
 	"\n" +
 	"createTime\x18\x06 \x01(\x03R\n" +
@@ -2319,7 +2319,7 @@ const file_dateset_proto_rawDesc = "" +
 	"\x06remark\x18\x03 \x01(\tR\x06remark\x12<\n" +
 	"\rdatasetExtend\x18\x04 \x01(\v2\x16.dataset.DatasetExtendR\rdatasetExtend\x12\x1e\n" +
 	"\n" +
-	"valueTotal\x18\x05 \x01(\x05R\n" +
+	"valueTotal\x18\x05 \x01(\x03R\n" +
 	"valueTotal\x12\x1e\n" +
 	"\n" +
 	"createTime\x18\x06 \x01(\x03R\n" +
@@ -2339,13 +2339,13 @@ const file_dateset_proto_rawDesc = "" +
 	"\x19QueryDatasetStatusInfoReq\x12\x1e\n" +
 	"\n" +
 	"datasetIds\x18\x01 \x03(\x03R\n" +
-	"datasetIds\"\x8b\x02\n" +
+	"datasetIds\"\x8d\x02\n" +
 	"\x10DatasetStateInfo\x12\x1c\n" +
 	"\tdatasetId\x18\x01 \x01(\x03R\tdatasetId\x12\x1e\n" +
 	"\n" +
 	"chunkTotal\x18\x02 \x01(\x05R\n" +
-	"chunkTotal\x12.\n" +
-	"\x12chunkFinishedCount\x18\x03 \x01(\x05R\x12chunkFinishedCount\x12\x1e\n" +
+	"chunkTotal\x120\n" +
+	"\x13chunkProcessedCount\x18\x03 \x01(\x05R\x13chunkProcessedCount\x12\x1e\n" +
 	"\n" +
 	"valueTotal\x18\x04 \x01(\x03R\n" +
 	"valueTotal\x12'\n" +

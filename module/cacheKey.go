@@ -19,3 +19,13 @@ func (cacheKeyCli) GetDatasetInfo(datasetId int) string {
 func (*cacheKeyCli) GetStopFlag(datasetId int) string {
 	return conf.Conf.StopProcessFlagPrefix + strconv.Itoa(datasetId)
 }
+
+// 缓存的数据集处理状态
+func (*cacheKeyCli) GetCacheDatasetProcessStatus(datasetId int) string {
+	return conf.Conf.DatasetProcessStatusPrefix + strconv.Itoa(datasetId)
+}
+
+// 获取运行处理锁
+func (*cacheKeyCli) GetRunProcessLock(datasetId int) string {
+	return conf.Conf.RunLockPrefix + strconv.Itoa(datasetId)
+}

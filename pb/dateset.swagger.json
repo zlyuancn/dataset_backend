@@ -582,8 +582,8 @@
           "title": "数据源扩展数据"
         },
         "valueTotal": {
-          "type": "integer",
-          "format": "int32",
+          "type": "string",
+          "format": "int64",
           "title": "value 总数"
         },
         "createTime": {
@@ -633,8 +633,8 @@
           "title": "备注"
         },
         "valueTotal": {
-          "type": "integer",
-          "format": "int32",
+          "type": "string",
+          "format": "int64",
           "title": "value 总数"
         },
         "createTime": {
@@ -670,10 +670,10 @@
           "format": "int32",
           "title": "chunk 预估总数"
         },
-        "chunkFinishedCount": {
+        "chunkProcessedCount": {
           "type": "integer",
           "format": "int32",
-          "title": "chunk 完成总数"
+          "title": "chunk 已处理总数"
         },
         "valueTotal": {
           "type": "string",

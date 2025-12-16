@@ -4,7 +4,10 @@ import (
 	"context"
 	"strconv"
 
+	"github.com/bytedance/sonic"
+	"github.com/spf13/cast"
 	"github.com/zly-app/cache/v2"
+	"github.com/zly-app/component/redis"
 	"github.com/zly-app/component/sqlx"
 	"github.com/zly-app/zapp/log"
 	"github.com/zly-app/zapp/pkg/utils"
@@ -33,6 +36,24 @@ func (*datasetCli) SetStopFlag(ctx context.Context, datasetId int, flag model.St
 		err = rdb.SetNX(ctx, key, strconv.Itoa(int(model.StopFlag_Stop)), 0).Err()
 	}
 	return err
+}
+
+// 获取停止标记
+func (*datasetCli) GetStopFlag(ctx context.Context, datasetId int) (model.StopFlag, error) {
+	key := CacheKey.GetStopFlag(datasetId)
+	rdb, err := db.GetRedis()
+	if err != nil {
+		return model.StopFlag_None, err
+	}
+	v, err := rdb.Get(ctx, key).Result()
+	if err == redis.Nil {
+		return model.StopFlag_None, nil
+	}
+	if err != nil {
+		log.Error(ctx, "GetStopFlag fail.", zap.Error(err))
+		return model.StopFlag_None, err
+	}
+	return model.StopFlag(cast.ToInt(v)), nil
 }
 
 // 获取数据集信息, 使用缓存
@@ -65,4 +86,28 @@ func (d *datasetCli) BatchGetDatasetInfoByCache(ctx context.Context, datasetId [
 		return nil, err
 	}
 	return lines, nil
+}
+
+func (d *datasetCli) LoadCacheProcessStatus(ctx context.Context, datasetId int) (*model.CacheDatasetProcessStatus, bool, error) {
+	key := CacheKey.GetCacheDatasetProcessStatus(datasetId)
+	rdb, err := db.GetRedis()
+	if err != nil {
+		return nil, false, err
+	}
+	v, err := rdb.Get(ctx, key).Result()
+	if err == redis.Nil {
+		return nil, false, nil
+	}
+	if err != nil {
+		return nil, false, err
+	}
+
+	ret := &model.CacheDatasetProcessStatus{}
+	err = sonic.UnmarshalString(v, ret)
+	if err != nil {
+		log.Error(ctx, "LoadCacheProcessStatus UnmarshalString fail.", zap.String("v", v), zap.Error(err))
+		return nil, false, err
+	}
+
+	return ret, true, nil
 }

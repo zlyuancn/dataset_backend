@@ -3653,7 +3653,7 @@ func (m *DatasetStateInfo) validate(all bool) error {
 
 	// no validation rules for ChunkTotal
 
-	// no validation rules for ChunkFinishedCount
+	// no validation rules for ChunkProcessedCount
 
 	// no validation rules for ValueTotal
 
