@@ -12,6 +12,8 @@ type ChunkMeta []OneChunkMeta
 
 // 缓存的数据集处理状态
 type CacheDatasetProcessStatus struct {
+	DataStreamLen         int64 // 数据流长度
+	ChunkSizeLimit        int32 // chunk 大小限制
 	ChunkTotal            int32 // chunk 总数
 	ChunkProcessedCount   int32 // chunk 完成数
 	ValueProcessedCount   int64 // 当前已完成处理的数据总数

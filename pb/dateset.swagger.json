@@ -539,6 +539,10 @@
         "proxy": {
           "type": "string",
           "title": "代理"
+        },
+        "method": {
+          "type": "string",
+          "title": "请求方法如 GET POST PUT PATCH HEAD DELETE"
         }
       },
       "title": "uri文件"

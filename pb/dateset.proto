@@ -140,6 +140,7 @@ message DataSourceUriFile {
   repeated KV headers = 2; // header
   bool insecureSkipVerify = 3; // 是否验证服务器的证书链和主机名
   string proxy = 4; // 代理
+  string method = 5; // 请求方法如 GET POST PUT PATCH HEAD DELETE
 }
 
 

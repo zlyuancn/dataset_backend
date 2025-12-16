@@ -543,6 +543,8 @@ func (m *DataSourceUriFile) validate(all bool) error {
 
 	// no validation rules for Proxy
 
+	// no validation rules for Method
+
 	if len(errors) > 0 {
 		return DataSourceUriFileMultiError(errors)
 	}

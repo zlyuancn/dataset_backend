@@ -22,6 +22,9 @@ const (
 	defDatasetInfoKeyPrefix              = "dataset:info:"
 	defDatasetInfoCacheTtl               = 3600
 	defDatasetProcessStatusPrefix        = "dataset:status:"
+	defChunkSizeLimit                    = 8 * 1024 * 1024
+	defMinChunkSizeLimit                 = 1 * 1024
+	defValueMaxScanSizeLimit             = 1 * 1024 * 1024
 )
 
 var Conf = Config{
@@ -39,6 +42,9 @@ var Conf = Config{
 	DatasetInfoKeyPrefix:              defDatasetInfoKeyPrefix,
 	DatasetInfoCacheTtl:               defDatasetInfoCacheTtl,
 	DatasetProcessStatusPrefix:        defDatasetProcessStatusPrefix,
+
+	ChunkSizeLimit:        defChunkSizeLimit,
+	ValueMaxScanSizeLimit: defValueMaxScanSizeLimit,
 }
 
 type Config struct {
@@ -47,7 +53,7 @@ type Config struct {
 	SqlxName  string // sqlx组件名
 	RedisName string // redis组件名
 
-	// redisKey
+	// redis
 
 	DatasetOpLockKeyPrefix            string // 数据集操作锁前缀
 	AdminOpLockTtl                    int    // admin 接口操作锁 ttl , 单位秒
@@ -60,6 +66,11 @@ type Config struct {
 	DatasetInfoKeyPrefix              string // 数据集信息缓存前缀
 	DatasetInfoCacheTtl               int    // 数据集信息缓存ttl秒数
 	DatasetProcessStatusPrefix        string // 数据集处理状态缓存前缀
+
+	// chunk
+
+	ChunkSizeLimit        int32 // chunk 大小限制
+	ValueMaxScanSizeLimit int   // value 扫描最大长度限制
 }
 
 func (conf *Config) Check() {
@@ -102,6 +113,11 @@ func (conf *Config) Check() {
 	}
 	if conf.DatasetProcessStatusPrefix == "" {
 		conf.DatasetProcessStatusPrefix = defDatasetProcessStatusPrefix
+	}
+
+	conf.ChunkSizeLimit = max(conf.ChunkSizeLimit, defMinChunkSizeLimit)
+	if conf.ValueMaxScanSizeLimit < 1 {
+		conf.ValueMaxScanSizeLimit = conf.ValueMaxScanSizeLimit
 	}
 }
 

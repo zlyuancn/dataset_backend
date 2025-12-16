@@ -448,6 +448,8 @@ github.com/zlyuancn/connpool v0.0.0-20240529080113-fdbaa79cba97 h1:IxkdvMgQgvkWj
 github.com/zlyuancn/connpool v0.0.0-20240529080113-fdbaa79cba97/go.mod h1:8LD1Yt5uc6SNBYANF0IpVEx7NM+/d/9+ku5WZ9x/4W8=
 github.com/zlyuancn/redis_tool v0.0.0-20251216042311-cf7350789353 h1:9Jyjw8NdYAgOc13ens0J3bQlL0rcxUjGXG5PTHUvRa0=
 github.com/zlyuancn/redis_tool v0.0.0-20251216042311-cf7350789353/go.mod h1:6jM+/xg7lky6Ppv9VIPGCkXjfN6RhOl/hpn+9O+JgaM=
+github.com/zlyuancn/splitter v0.0.0-20251214080342-5f516467a746 h1:z4wTm57aKYQTtu5r7HV0MfQb6eF+jc1qiCR/HRjADcI=
+github.com/zlyuancn/splitter v0.0.0-20251214080342-5f516467a746/go.mod h1:SR/n9n+M4xYbWkzWySZAR/SXq1H/W9fbGMXSqYEzmD0=
 github.com/zlyuancn/zbalancer v1.1.0 h1:bDs59eIkEXUVTdwMKd6pko2PBAEgAw7TgIQwzzYZKjk=
 github.com/zlyuancn/zbalancer v1.1.0/go.mod h1:c8hq0Lig8lOqqXD7YLqPJOFsNROGG5I6N+6AbuutBYI=
 github.com/zlyuancn/zstr v0.0.0-20230412074414-14d6b645962f h1:s4xoe70+PMGec95geCKaIk/nSUo5Gu2QGqDjZOKeMXY=

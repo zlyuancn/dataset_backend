@@ -2,6 +2,7 @@ package module
 
 import (
 	"context"
+	"io"
 	"strconv"
 	"sync/atomic"
 	"time"
@@ -12,10 +13,13 @@ import (
 	"github.com/zlyuancn/dataset/client/db"
 	"github.com/zlyuancn/dataset/conf"
 	"github.com/zlyuancn/dataset/dao/dataset"
+	"github.com/zlyuancn/dataset/datasource"
 	"github.com/zlyuancn/dataset/handler"
 	"github.com/zlyuancn/dataset/model"
 	"github.com/zlyuancn/dataset/pb"
+	"github.com/zlyuancn/dataset/value_filter"
 	"github.com/zlyuancn/redis_tool"
+	"github.com/zlyuancn/splitter"
 	"go.uber.org/zap"
 )
 
@@ -69,6 +73,8 @@ type processorLauncher struct {
 	renewKeyStopChan chan struct{} // key自动续期具有独立的停止信号
 	onceStop         int32         // 只调用一次stop
 
+	ds datasource.DataSource
+
 	gotStopFlag model.StopFlag // 停止标记
 	statusInfo  string         // 停止时的状态信息传递
 }
@@ -98,11 +104,18 @@ func newProcessorLauncher(datasetInfo *dataset.Model,
 	// 从cache加载状态
 	err = p.loadCacheStatus()
 	if err != nil {
-		log.Error(p.ctx, "newProcessorLauncher call loadCacheStatus fail.", zap.Error(err))
+		log.Error(p.ctx, "newProcessorLauncher call loadCacheStatus fail.", zap.Any("dataset", datasetInfo), zap.Error(err))
 		return nil, err
 	}
 
-	// todo 根据 数据集扩展数据 构造rd
+	// 构造数据源
+	p.ds, err = datasource.NewDataSource(p.ctx, de.GetDataProcess())
+	if err != nil {
+		log.Error(p.ctx, "newProcessorLauncher call NewDataSource fail", zap.Any("dataset", datasetInfo), zap.Error(err))
+		return nil, err
+	}
+
+	// todo 构造持久化工具
 
 	return p, nil
 }
@@ -187,6 +200,68 @@ func (p *processorLauncher) loopCheckStopFlag() {
 	}
 }
 
+// 尝试恢复断点
+func (p *processorLauncher) tryResumePointOffset() {
+	// 重新开始
+	restart := true
+
+	// 尝试断点续传
+	if p.pStatus.ResumePointOffset > 0 {
+		resume, err := p.ds.SetBreakpoint(p.pStatus.ResumePointOffset)
+		if err != nil {
+			log.Error(p.ctx, "try ResumePointOffset fail.", zap.Error(err))
+		}
+		restart = !resume
+	}
+
+	// 重新开始处理
+	if restart {
+		dataStreamLen := p.ds.GetDataStreamLen()
+		chunkSizeLimit := conf.Conf.ChunkSizeLimit
+		p.pStatus = &model.CacheDatasetProcessStatus{
+			DataStreamLen:  dataStreamLen,
+			ChunkSizeLimit: chunkSizeLimit,
+			ChunkTotal:     0,
+		}
+		if dataStreamLen > 0 && chunkSizeLimit > 0 {
+			p.pStatus.ChunkTotal = int32((dataStreamLen-1)/int64(chunkSizeLimit) + 1)
+		}
+	}
+}
+
+func (p *processorLauncher) flushChunkHandler(args *splitter.FlushChunkArgs) {
+	// todo chunkSn和dataSn都有偏移
+	// todo 如何并行上传? 是否考虑一个元数据缓存区, 记录所有已完成上传的元数据的chunkSn和nextDataSn
+	// todo 并行上传的逻辑放到 chunkPersistence 的模块中, 不是由持久化类型实现, 而是一个外壳实现, 且该外壳还能将按顺序输出已完成的chunkSn
+	// todo 这个 chunkPersistence 模块还接管了 chunkSn 偏移和 dataSn 偏移
+}
+
+func (p *processorLauncher) runSplitter(sp splitter.Splitter, rd io.Reader) (bool, error) {
+	// 开始处理
+	runSplitStopCh := make(chan error, 1)
+	go func() {
+		err := sp.RunSplit(rd)
+		runSplitStopCh <- err
+	}()
+
+	// 等待处理
+	select {
+	case <-p.stopChan:
+		sp.Stop()
+		return false, nil
+	case err := <-runSplitStopCh:
+		if err == splitter.ErrSplitterIsStarted {
+			return false, nil
+		}
+		if err != nil {
+			p.submitStopFlag("RunSplit fail. err=" + err.Error())
+			log.Error(p.ctx, "RunSplit fail", zap.Error(err))
+			return false, err
+		}
+		return true, nil
+	}
+}
+
 func (p *processorLauncher) Run() {
 	log.Warn(p.ctx, "dataset run process", zap.Any("datasetInfo", p.datasetInfo))
 
@@ -199,7 +274,42 @@ func (p *processorLauncher) Run() {
 		p.stopSideEffect()       // 处理停止后副作用
 	}()
 
-	// todo
+	// 尝试恢复断点
+	p.tryResumePointOffset()
+
+	// 获取读取器
+	rd, err := p.ds.GetReader()
+	if err != nil {
+		p.submitStopFlag("GetReader fail. err=" + err.Error())
+		log.Error(p.ctx, "GetReader fail", zap.Error(err))
+		return
+	}
+
+	// 开始读取
+	sp := splitter.NewSplitter(splitter.Conf{
+		Delim:                 []byte(p.de.GetValueProcess().GetDelim()),
+		ChunkSizeLimit:        int(p.pStatus.ChunkSizeLimit),
+		FlushChunkHandler:     p.flushChunkHandler,
+		ValueMaxScanSizeLimit: conf.Conf.ValueMaxScanSizeLimit,
+		ValueFilter:           value_filter.NewValueFilter(p.de.GetValueProcess()),
+	})
+
+	// 开始处理
+	splitterIsFinished, err := p.runSplitter(sp, rd)
+	if err != nil {
+		p.submitStopFlag("RunSplit fail. err=" + err.Error())
+		log.Error(p.ctx, "RunSplit fail", zap.Error(err))
+		return
+	}
+
+	// 如果不是分隔完成就返回, 必然是停止运行
+	if !splitterIsFinished {
+		return
+	}
+
+	// todo 已完成
+	// todo splitter 处理完成并不代表 chunk 持久化完成. 这里要等待chunk持久化完成
+
 }
 
 // 内部发起停止信号

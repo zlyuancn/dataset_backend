@@ -496,6 +496,7 @@ type DataSourceUriFile struct {
 	Headers            []*KV                  `protobuf:"bytes,2,rep,name=headers,proto3" json:"headers,omitempty"`                        // header
 	InsecureSkipVerify bool                   `protobuf:"varint,3,opt,name=insecureSkipVerify,proto3" json:"insecureSkipVerify,omitempty"` // 是否验证服务器的证书链和主机名
 	Proxy              string                 `protobuf:"bytes,4,opt,name=proxy,proto3" json:"proxy,omitempty"`                            // 代理
+	Method             string                 `protobuf:"bytes,5,opt,name=method,proto3" json:"method,omitempty"`                          // 请求方法如 GET POST PUT PATCH HEAD DELETE
 	unknownFields      protoimpl.UnknownFields
 	sizeCache          protoimpl.SizeCache
 }
@@ -554,6 +555,13 @@ func (x *DataSourceUriFile) GetInsecureSkipVerify() bool {
 func (x *DataSourceUriFile) GetProxy() string {
 	if x != nil {
 		return x.Proxy
+	}
+	return ""
+}
+
+func (x *DataSourceUriFile) GetMethod() string {
+	if x != nil {
+		return x.Method
 	}
 	return ""
 }
@@ -2219,12 +2227,13 @@ const file_dateset_proto_rawDesc = "" +
 	"\n" +
 	"dataSource\x18\x01 \x01(\x0e2\x13.dataset.DataSourceR\n" +
 	"dataSource\x124\n" +
-	"\auriFile\x18\x02 \x01(\v2\x1a.dataset.DataSourceUriFileR\auriFile\"\x92\x01\n" +
+	"\auriFile\x18\x02 \x01(\v2\x1a.dataset.DataSourceUriFileR\auriFile\"\xaa\x01\n" +
 	"\x11DataSourceUriFile\x12\x10\n" +
 	"\x03uri\x18\x01 \x01(\tR\x03uri\x12%\n" +
 	"\aheaders\x18\x02 \x03(\v2\v.dataset.KVR\aheaders\x12.\n" +
 	"\x12insecureSkipVerify\x18\x03 \x01(\bR\x12insecureSkipVerify\x12\x14\n" +
-	"\x05proxy\x18\x04 \x01(\tR\x05proxy\"y\n" +
+	"\x05proxy\x18\x04 \x01(\tR\x05proxy\x12\x16\n" +
+	"\x06method\x18\x05 \x01(\tR\x06method\"y\n" +
 	"\fChunkProcess\x12(\n" +
 	"\x0fpersistenceType\x18\x01 \x01(\x05R\x0fpersistenceType\x12?\n" +
 	"\x0ecompressorType\x18\x02 \x01(\x0e2\x17.dataset.CompressorTypeR\x0ecompressorType\"\xf4\x01\n" +
