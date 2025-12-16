@@ -41,10 +41,10 @@ CREATE TABLE `dataset_history`
     `status`         tinyint unsigned NOT NULL DEFAULT 0 COMMENT '任务状态 0=已创建 2=运行中 3=已完成 4=正在停止 5=已停止 6=已删除',
     `status_info`    varchar(1024)    NOT NULL DEFAULT '' COMMENT '状态信息',
     PRIMARY KEY (`id`),
-    KEY `idx_create_time` (`dataset_id`, `create_time` DESC),
-    KEY `idx_dataset_name` (`dataset_name`(8), `create_time` DESC),
-    KEY `idx_op_user_id` (`op_user_id`(8), `create_time` DESC),
-    KEY `idx_op_user_name` (`op_user_name`(8), `create_time` DESC)
+    KEY `idx_create_time` (`dataset_id`),
+    KEY `idx_dataset_name` (`dataset_name`(8)),
+    KEY `idx_op_user_id` (`op_user_id`(8)),
+    KEY `idx_op_user_name` (`op_user_name`(8))
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='数据集操作历史';
