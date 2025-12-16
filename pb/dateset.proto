@@ -43,6 +43,13 @@ service DatasetService {
     };
   }
 
+  // 搜索数据集
+  rpc SearchDataset(SearchDatasetReq) returns (SearchDatasetRsp){
+    option (google.api.http) = {
+      post: "/Dataset/SearchDataset",
+      body: "*",
+    };
+  }
   // 查询数据集列表
   rpc QueryDatasetList(QueryDatasetListReq) returns (QueryDatasetListRsp){
     option (google.api.http) = {
@@ -210,28 +217,42 @@ message AdminStopProcessDatasetReq {
 }
 message AdminStopProcessDatasetRsp {}
 
-// 数据集基础信息-响应
-message DatasetInfoByListA {
+// 查询方式仅支持一种
+message SearchDatasetLine {
   int64 datasetId = 1; // 数据集
   string datasetName = 2; // 数据集名
-  int32 valueTotal = 3; // value 总数
-  Status status = 4; // 状态
-  string statusInfo = 5; // 状态信息
+}
+message SearchDatasetReq {
+  int32 pageSize = 1 [(validate.rules).int32.gte = 5]; // 每页返回数量, 最少返回5条
+  string datasetName = 2; // 数据集名
+  string opUser = 3; // 操作人
+}
+message SearchDatasetRsp {
+  repeated SearchDatasetLine dataset = 1; // 搜索结果
+}
+
+// 数据集基础信息-响应
+message DatasetInfoByListA {
+  int64 datasetId = 1; // 数据集id
+  string datasetName = 2; // 数据集名
+  string remark = 3; // 备注
+  int32 valueTotal = 5; // value 总数
   int64 createTime = 6; // 创建时间秒级时间戳
-  OpInfoA op = 7; // 操作信息
+  OpInfoA op = 8; // 操作信息
+  Status status = 9; // 状态
+  string statusInfo = 10; // 状态信息
 }
 message QueryDatasetListReq {
   int32 page = 1 [(validate.rules).int32.gt = 0]; // 页号, 从1开始
   int32 pageSize = 2 [(validate.rules).int32.gte = 5]; // 每页返回数量, 最少返回5条
   int64 datasetId = 3 [(validate.rules).int64.gte = 0]; // 数据集id
-  Status status = 4; // 状态
+  repeated Status status = 4; // 状态
   int64 startTime = 5; // 开始时间, 秒级时间戳. 0表示不限制
   int64 endTime = 6; // 结束时间, 秒级时间戳. 0表示不限制
-  string opUser = 7; // 操作人
+  int64 nextCursor = 7; // 游标
 }
 message QueryDatasetListRsp {
-  int32 total = 1; // 总条数
-  int32 pageSize = 2; // 当前分一页预期返回条数
+  int64 nextCursor = 1; // 下一页游标
   repeated DatasetInfoByListA lines = 3; // 数据集任务信息
 }
 
@@ -240,11 +261,14 @@ message DatasetInfoA {
   int64 datasetId = 1; // 数据集id
   string datasetName = 2; // 数据集名
   string remark = 3; // 备注
-
-  DatasetExtend datasetExtend = 5; // 数据源扩展数据
-
-  OpInfoQ op = 6; // 操作信息
-  Status status = 7; // 状态
+  DatasetExtend datasetExtend = 4; // 数据源扩展数据
+  int32 valueTotal = 5; // value 总数
+  int64 createTime = 6; // 创建时间秒级时间戳
+  int64 processed_time = 7; // 加工完成时间秒级时间戳
+  OpInfoA op = 8; // 操作信息
+  Status status = 9; // 状态
+  string statusInfo = 10; // 状态信息
+  int64 activate_time = 11; // 最后激活时间秒级时间戳
 }
 message QueryDatasetInfoReq {
   int64 datasetId = 1 [(validate.rules).int64.gt = 0]; // 数据集id. 必填

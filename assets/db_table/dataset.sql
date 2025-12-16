@@ -17,12 +17,10 @@ CREATE TABLE `dataset`
     `status_info`    varchar(1024)    NOT NULL DEFAULT '' COMMENT '状态信息',
     `activate_time`  datetime         NOT NULL DEFAULT '1000-01-01 00:00:00' comment '最后激活时间',
     PRIMARY KEY (`dataset_id`),
-    KEY `idx_create_time` (`create_time` DESC),
-    KEY `idx_status_create_time` (`status`, `create_time` DESC),
-    KEY `idx_dataset_name` (`dataset_name`(8), `create_time` DESC),
-    KEY `idx_op_user_id` (`op_user_id`(8), `create_time` DESC),
-    KEY `idx_op_user_name` (`op_user_name`(8), `create_time` DESC),
-    KEY `idx_activate_time_status_index` (`activate_time` desc, `status`) comment '恢复器扫描处理中的数据集时索引覆盖'
+    KEY `idx_dataset_name` (`dataset_name`(8)),
+    KEY `idx_op_user_id` (`op_user_id`(8)),
+    KEY `idx_op_user_name` (`op_user_name`(8)),
+    KEY `idx_activate_time_status_index` (`activate_time` desc, `status`) comment '恢复器扫描处理中的数据集'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='数据集';
@@ -44,6 +42,7 @@ CREATE TABLE `dataset_history`
     `status_info`    varchar(1024)    NOT NULL DEFAULT '' COMMENT '状态信息',
     PRIMARY KEY (`id`),
     KEY `idx_create_time` (`dataset_id`, `create_time` DESC),
+    KEY `idx_dataset_name` (`dataset_name`(8), `create_time` DESC),
     KEY `idx_op_user_id` (`op_user_id`(8), `create_time` DESC),
     KEY `idx_op_user_name` (`op_user_name`(8), `create_time` DESC)
 ) ENGINE = InnoDB

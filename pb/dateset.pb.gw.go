@@ -10,6 +10,7 @@ package pb
 
 import (
 	"context"
+	"errors"
 	"io"
 	"net/http"
 
@@ -24,262 +25,299 @@ import (
 )
 
 // Suppress "imported and not used" errors
-var _ codes.Code
-var _ io.Reader
-var _ status.Status
-var _ = runtime.String
-var _ = utilities.NewDoubleArray
-var _ = metadata.Join
+var (
+	_ codes.Code
+	_ io.Reader
+	_ status.Status
+	_ = errors.New
+	_ = runtime.String
+	_ = utilities.NewDoubleArray
+	_ = metadata.Join
+)
 
 func request_DatasetService_AdminAddDataset_0(ctx context.Context, marshaler runtime.Marshaler, client DatasetServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq AdminAddDatasetReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq AdminAddDatasetReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
 	msg, err := client.AdminAddDataset(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
-
 }
 
 func local_request_DatasetService_AdminAddDataset_0(ctx context.Context, marshaler runtime.Marshaler, server DatasetServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq AdminAddDatasetReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq AdminAddDatasetReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
 	msg, err := server.AdminAddDataset(ctx, &protoReq)
 	return msg, metadata, err
-
 }
 
 func request_DatasetService_AdminUpdateDataset_0(ctx context.Context, marshaler runtime.Marshaler, client DatasetServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq AdminUpdateDatasetReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq AdminUpdateDatasetReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
 	msg, err := client.AdminUpdateDataset(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
-
 }
 
 func local_request_DatasetService_AdminUpdateDataset_0(ctx context.Context, marshaler runtime.Marshaler, server DatasetServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq AdminUpdateDatasetReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq AdminUpdateDatasetReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
 	msg, err := server.AdminUpdateDataset(ctx, &protoReq)
 	return msg, metadata, err
-
 }
 
 func request_DatasetService_AdminDelDataset_0(ctx context.Context, marshaler runtime.Marshaler, client DatasetServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq AdminDelDatasetReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq AdminDelDatasetReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
 	msg, err := client.AdminDelDataset(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
-
 }
 
 func local_request_DatasetService_AdminDelDataset_0(ctx context.Context, marshaler runtime.Marshaler, server DatasetServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq AdminDelDatasetReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq AdminDelDatasetReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
 	msg, err := server.AdminDelDataset(ctx, &protoReq)
 	return msg, metadata, err
-
 }
 
 func request_DatasetService_AdminRunProcessDataset_0(ctx context.Context, marshaler runtime.Marshaler, client DatasetServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq AdminRunProcessDatasetReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq AdminRunProcessDatasetReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
 	msg, err := client.AdminRunProcessDataset(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
-
 }
 
 func local_request_DatasetService_AdminRunProcessDataset_0(ctx context.Context, marshaler runtime.Marshaler, server DatasetServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq AdminRunProcessDatasetReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq AdminRunProcessDatasetReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
 	msg, err := server.AdminRunProcessDataset(ctx, &protoReq)
 	return msg, metadata, err
-
 }
 
 func request_DatasetService_AdminStopProcessDataset_0(ctx context.Context, marshaler runtime.Marshaler, client DatasetServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq AdminStopProcessDatasetReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq AdminStopProcessDatasetReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
 	msg, err := client.AdminStopProcessDataset(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
-
 }
 
 func local_request_DatasetService_AdminStopProcessDataset_0(ctx context.Context, marshaler runtime.Marshaler, server DatasetServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq AdminStopProcessDatasetReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq AdminStopProcessDatasetReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
 	msg, err := server.AdminStopProcessDataset(ctx, &protoReq)
 	return msg, metadata, err
+}
 
+func request_DatasetService_SearchDataset_0(ctx context.Context, marshaler runtime.Marshaler, client DatasetServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq SearchDatasetReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.SearchDataset(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_DatasetService_SearchDataset_0(ctx context.Context, marshaler runtime.Marshaler, server DatasetServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq SearchDatasetReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.SearchDataset(ctx, &protoReq)
+	return msg, metadata, err
 }
 
 func request_DatasetService_QueryDatasetList_0(ctx context.Context, marshaler runtime.Marshaler, client DatasetServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryDatasetListReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq QueryDatasetListReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
 	msg, err := client.QueryDatasetList(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
-
 }
 
 func local_request_DatasetService_QueryDatasetList_0(ctx context.Context, marshaler runtime.Marshaler, server DatasetServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryDatasetListReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq QueryDatasetListReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
 	msg, err := server.QueryDatasetList(ctx, &protoReq)
 	return msg, metadata, err
-
 }
 
 func request_DatasetService_QueryDatasetInfo_0(ctx context.Context, marshaler runtime.Marshaler, client DatasetServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryDatasetInfoReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq QueryDatasetInfoReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
 	msg, err := client.QueryDatasetInfo(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
-
 }
 
 func local_request_DatasetService_QueryDatasetInfo_0(ctx context.Context, marshaler runtime.Marshaler, server DatasetServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryDatasetInfoReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq QueryDatasetInfoReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
 	msg, err := server.QueryDatasetInfo(ctx, &protoReq)
 	return msg, metadata, err
-
 }
 
 func request_DatasetService_QueryDatasetStatusInfo_0(ctx context.Context, marshaler runtime.Marshaler, client DatasetServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryDatasetStatusInfoReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq QueryDatasetStatusInfoReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
 	msg, err := client.QueryDatasetStatusInfo(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
-
 }
 
 func local_request_DatasetService_QueryDatasetStatusInfo_0(ctx context.Context, marshaler runtime.Marshaler, server DatasetServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryDatasetStatusInfoReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq QueryDatasetStatusInfoReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
 	msg, err := server.QueryDatasetStatusInfo(ctx, &protoReq)
 	return msg, metadata, err
-
 }
 
 func request_DatasetService_QueryDatasetData_0(ctx context.Context, marshaler runtime.Marshaler, client DatasetServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryDatasetDataReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq QueryDatasetDataReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
 	msg, err := client.QueryDatasetData(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
-
 }
 
 func local_request_DatasetService_QueryDatasetData_0(ctx context.Context, marshaler runtime.Marshaler, server DatasetServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq QueryDatasetDataReq
-	var metadata runtime.ServerMetadata
-
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && err != io.EOF {
+	var (
+		protoReq QueryDatasetDataReq
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-
 	msg, err := server.QueryDatasetData(ctx, &protoReq)
 	return msg, metadata, err
-
 }
 
 // RegisterDatasetServiceHandlerServer registers the http handlers for service DatasetService to "mux".
 // UnaryRPC     :call DatasetServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterDatasetServiceHandlerFromEndpoint instead.
+// GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
 func RegisterDatasetServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server DatasetServiceServer) error {
-
-	mux.Handle("POST", pattern_DatasetService_AdminAddDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_AdminAddDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/AdminAddDataset", runtime.WithHTTPPathPattern("/Dataset/AdminAddDataset"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/AdminAddDataset", runtime.WithHTTPPathPattern("/Dataset/AdminAddDataset"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -291,20 +329,15 @@ func RegisterDatasetServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_AdminAddDataset_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
-
-	mux.Handle("POST", pattern_DatasetService_AdminUpdateDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_AdminUpdateDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/AdminUpdateDataset", runtime.WithHTTPPathPattern("/Dataset/AdminUpdateDataset"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/AdminUpdateDataset", runtime.WithHTTPPathPattern("/Dataset/AdminUpdateDataset"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -316,20 +349,15 @@ func RegisterDatasetServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_AdminUpdateDataset_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
-
-	mux.Handle("POST", pattern_DatasetService_AdminDelDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_AdminDelDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/AdminDelDataset", runtime.WithHTTPPathPattern("/Dataset/AdminDelDataset"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/AdminDelDataset", runtime.WithHTTPPathPattern("/Dataset/AdminDelDataset"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -341,20 +369,15 @@ func RegisterDatasetServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_AdminDelDataset_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
-
-	mux.Handle("POST", pattern_DatasetService_AdminRunProcessDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_AdminRunProcessDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/AdminRunProcessDataset", runtime.WithHTTPPathPattern("/Dataset/AdminRunProcessDataset"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/AdminRunProcessDataset", runtime.WithHTTPPathPattern("/Dataset/AdminRunProcessDataset"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -366,20 +389,15 @@ func RegisterDatasetServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_AdminRunProcessDataset_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
-
-	mux.Handle("POST", pattern_DatasetService_AdminStopProcessDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_AdminStopProcessDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/AdminStopProcessDataset", runtime.WithHTTPPathPattern("/Dataset/AdminStopProcessDataset"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/AdminStopProcessDataset", runtime.WithHTTPPathPattern("/Dataset/AdminStopProcessDataset"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -391,20 +409,35 @@ func RegisterDatasetServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_AdminStopProcessDataset_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
-
-	mux.Handle("POST", pattern_DatasetService_QueryDatasetList_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_SearchDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/QueryDatasetList", runtime.WithHTTPPathPattern("/Dataset/QueryDatasetList"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/SearchDataset", runtime.WithHTTPPathPattern("/Dataset/SearchDataset"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_DatasetService_SearchDataset_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_DatasetService_SearchDataset_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_DatasetService_QueryDatasetList_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/QueryDatasetList", runtime.WithHTTPPathPattern("/Dataset/QueryDatasetList"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -416,20 +449,15 @@ func RegisterDatasetServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_QueryDatasetList_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
-
-	mux.Handle("POST", pattern_DatasetService_QueryDatasetInfo_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_QueryDatasetInfo_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/QueryDatasetInfo", runtime.WithHTTPPathPattern("/Dataset/QueryDatasetInfo"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/QueryDatasetInfo", runtime.WithHTTPPathPattern("/Dataset/QueryDatasetInfo"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -441,20 +469,15 @@ func RegisterDatasetServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_QueryDatasetInfo_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
-
-	mux.Handle("POST", pattern_DatasetService_QueryDatasetStatusInfo_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_QueryDatasetStatusInfo_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/QueryDatasetStatusInfo", runtime.WithHTTPPathPattern("/Dataset/QueryDatasetStatusInfo"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/QueryDatasetStatusInfo", runtime.WithHTTPPathPattern("/Dataset/QueryDatasetStatusInfo"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -466,20 +489,15 @@ func RegisterDatasetServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_QueryDatasetStatusInfo_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
-
-	mux.Handle("POST", pattern_DatasetService_QueryDatasetData_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_QueryDatasetData_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/QueryDatasetData", runtime.WithHTTPPathPattern("/Dataset/QueryDatasetData"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/dataset.DatasetService/QueryDatasetData", runtime.WithHTTPPathPattern("/Dataset/QueryDatasetData"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -491,9 +509,7 @@ func RegisterDatasetServiceHandlerServer(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_QueryDatasetData_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
 
 	return nil
@@ -520,7 +536,6 @@ func RegisterDatasetServiceHandlerFromEndpoint(ctx context.Context, mux *runtime
 			}
 		}()
 	}()
-
 	return RegisterDatasetServiceHandler(ctx, mux, conn)
 }
 
@@ -534,16 +549,13 @@ func RegisterDatasetServiceHandler(ctx context.Context, mux *runtime.ServeMux, c
 // to "mux". The handlers forward requests to the grpc endpoint over the given implementation of "DatasetServiceClient".
 // Note: the gRPC framework executes interceptors within the gRPC handler. If the passed in "DatasetServiceClient"
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
-// "DatasetServiceClient" to call the correct interceptors.
+// "DatasetServiceClient" to call the correct interceptors. This client ignores the HTTP middlewares.
 func RegisterDatasetServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client DatasetServiceClient) error {
-
-	mux.Handle("POST", pattern_DatasetService_AdminAddDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_AdminAddDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/AdminAddDataset", runtime.WithHTTPPathPattern("/Dataset/AdminAddDataset"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/AdminAddDataset", runtime.WithHTTPPathPattern("/Dataset/AdminAddDataset"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -554,18 +566,13 @@ func RegisterDatasetServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_AdminAddDataset_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
-
-	mux.Handle("POST", pattern_DatasetService_AdminUpdateDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_AdminUpdateDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/AdminUpdateDataset", runtime.WithHTTPPathPattern("/Dataset/AdminUpdateDataset"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/AdminUpdateDataset", runtime.WithHTTPPathPattern("/Dataset/AdminUpdateDataset"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -576,18 +583,13 @@ func RegisterDatasetServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_AdminUpdateDataset_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
-
-	mux.Handle("POST", pattern_DatasetService_AdminDelDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_AdminDelDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/AdminDelDataset", runtime.WithHTTPPathPattern("/Dataset/AdminDelDataset"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/AdminDelDataset", runtime.WithHTTPPathPattern("/Dataset/AdminDelDataset"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -598,18 +600,13 @@ func RegisterDatasetServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_AdminDelDataset_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
-
-	mux.Handle("POST", pattern_DatasetService_AdminRunProcessDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_AdminRunProcessDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/AdminRunProcessDataset", runtime.WithHTTPPathPattern("/Dataset/AdminRunProcessDataset"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/AdminRunProcessDataset", runtime.WithHTTPPathPattern("/Dataset/AdminRunProcessDataset"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -620,18 +617,13 @@ func RegisterDatasetServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_AdminRunProcessDataset_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
-
-	mux.Handle("POST", pattern_DatasetService_AdminStopProcessDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_AdminStopProcessDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/AdminStopProcessDataset", runtime.WithHTTPPathPattern("/Dataset/AdminStopProcessDataset"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/AdminStopProcessDataset", runtime.WithHTTPPathPattern("/Dataset/AdminStopProcessDataset"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -642,18 +634,30 @@ func RegisterDatasetServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_AdminStopProcessDataset_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
-
-	mux.Handle("POST", pattern_DatasetService_QueryDatasetList_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_SearchDataset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/QueryDatasetList", runtime.WithHTTPPathPattern("/Dataset/QueryDatasetList"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/SearchDataset", runtime.WithHTTPPathPattern("/Dataset/SearchDataset"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_DatasetService_SearchDataset_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_DatasetService_SearchDataset_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_DatasetService_QueryDatasetList_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/QueryDatasetList", runtime.WithHTTPPathPattern("/Dataset/QueryDatasetList"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -664,18 +668,13 @@ func RegisterDatasetServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_QueryDatasetList_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
-
-	mux.Handle("POST", pattern_DatasetService_QueryDatasetInfo_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_QueryDatasetInfo_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/QueryDatasetInfo", runtime.WithHTTPPathPattern("/Dataset/QueryDatasetInfo"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/QueryDatasetInfo", runtime.WithHTTPPathPattern("/Dataset/QueryDatasetInfo"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -686,18 +685,13 @@ func RegisterDatasetServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_QueryDatasetInfo_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
-
-	mux.Handle("POST", pattern_DatasetService_QueryDatasetStatusInfo_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_QueryDatasetStatusInfo_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/QueryDatasetStatusInfo", runtime.WithHTTPPathPattern("/Dataset/QueryDatasetStatusInfo"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/QueryDatasetStatusInfo", runtime.WithHTTPPathPattern("/Dataset/QueryDatasetStatusInfo"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -708,18 +702,13 @@ func RegisterDatasetServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_QueryDatasetStatusInfo_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
-
-	mux.Handle("POST", pattern_DatasetService_QueryDatasetData_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_DatasetService_QueryDatasetData_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		var err error
-		var annotatedContext context.Context
-		annotatedContext, err = runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/QueryDatasetData", runtime.WithHTTPPathPattern("/Dataset/QueryDatasetData"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/dataset.DatasetService/QueryDatasetData", runtime.WithHTTPPathPattern("/Dataset/QueryDatasetData"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -730,50 +719,33 @@ func RegisterDatasetServiceHandlerClient(ctx context.Context, mux *runtime.Serve
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-
 		forward_DatasetService_QueryDatasetData_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
-
 	})
-
 	return nil
 }
 
 var (
-	pattern_DatasetService_AdminAddDataset_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "AdminAddDataset"}, ""))
-
-	pattern_DatasetService_AdminUpdateDataset_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "AdminUpdateDataset"}, ""))
-
-	pattern_DatasetService_AdminDelDataset_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "AdminDelDataset"}, ""))
-
-	pattern_DatasetService_AdminRunProcessDataset_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "AdminRunProcessDataset"}, ""))
-
+	pattern_DatasetService_AdminAddDataset_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "AdminAddDataset"}, ""))
+	pattern_DatasetService_AdminUpdateDataset_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "AdminUpdateDataset"}, ""))
+	pattern_DatasetService_AdminDelDataset_0         = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "AdminDelDataset"}, ""))
+	pattern_DatasetService_AdminRunProcessDataset_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "AdminRunProcessDataset"}, ""))
 	pattern_DatasetService_AdminStopProcessDataset_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "AdminStopProcessDataset"}, ""))
-
-	pattern_DatasetService_QueryDatasetList_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "QueryDatasetList"}, ""))
-
-	pattern_DatasetService_QueryDatasetInfo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "QueryDatasetInfo"}, ""))
-
-	pattern_DatasetService_QueryDatasetStatusInfo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "QueryDatasetStatusInfo"}, ""))
-
-	pattern_DatasetService_QueryDatasetData_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "QueryDatasetData"}, ""))
+	pattern_DatasetService_SearchDataset_0           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "SearchDataset"}, ""))
+	pattern_DatasetService_QueryDatasetList_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "QueryDatasetList"}, ""))
+	pattern_DatasetService_QueryDatasetInfo_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "QueryDatasetInfo"}, ""))
+	pattern_DatasetService_QueryDatasetStatusInfo_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "QueryDatasetStatusInfo"}, ""))
+	pattern_DatasetService_QueryDatasetData_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"Dataset", "QueryDatasetData"}, ""))
 )
 
 var (
-	forward_DatasetService_AdminAddDataset_0 = runtime.ForwardResponseMessage
-
-	forward_DatasetService_AdminUpdateDataset_0 = runtime.ForwardResponseMessage
-
-	forward_DatasetService_AdminDelDataset_0 = runtime.ForwardResponseMessage
-
-	forward_DatasetService_AdminRunProcessDataset_0 = runtime.ForwardResponseMessage
-
+	forward_DatasetService_AdminAddDataset_0         = runtime.ForwardResponseMessage
+	forward_DatasetService_AdminUpdateDataset_0      = runtime.ForwardResponseMessage
+	forward_DatasetService_AdminDelDataset_0         = runtime.ForwardResponseMessage
+	forward_DatasetService_AdminRunProcessDataset_0  = runtime.ForwardResponseMessage
 	forward_DatasetService_AdminStopProcessDataset_0 = runtime.ForwardResponseMessage
-
-	forward_DatasetService_QueryDatasetList_0 = runtime.ForwardResponseMessage
-
-	forward_DatasetService_QueryDatasetInfo_0 = runtime.ForwardResponseMessage
-
-	forward_DatasetService_QueryDatasetStatusInfo_0 = runtime.ForwardResponseMessage
-
-	forward_DatasetService_QueryDatasetData_0 = runtime.ForwardResponseMessage
+	forward_DatasetService_SearchDataset_0           = runtime.ForwardResponseMessage
+	forward_DatasetService_QueryDatasetList_0        = runtime.ForwardResponseMessage
+	forward_DatasetService_QueryDatasetInfo_0        = runtime.ForwardResponseMessage
+	forward_DatasetService_QueryDatasetStatusInfo_0  = runtime.ForwardResponseMessage
+	forward_DatasetService_QueryDatasetData_0        = runtime.ForwardResponseMessage
 )

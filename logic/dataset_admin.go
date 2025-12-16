@@ -178,7 +178,7 @@ func (*Dataset) AdminUpdateDataset(ctx context.Context, req *pb.AdminUpdateDatas
 
 	// 清除缓存
 	gpool.GetDefGPool().Go(func() error {
-		err := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetId(int(req.GetDatasetId())))
+		err := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetInfo(int(req.GetDatasetId())))
 		if err != nil {
 			log.Error(cloneCtx, "AdminUpdateDataset call clear Cache fail.", zap.Error(err))
 			// return err
@@ -264,7 +264,7 @@ func (*Dataset) AdminDelDataset(ctx context.Context, req *pb.AdminDelDatasetReq)
 
 	// 清除缓存
 	gpool.GetDefGPool().Go(func() error {
-		err := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetId(int(req.GetDatasetId())))
+		err := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetInfo(int(req.GetDatasetId())))
 		if err != nil {
 			log.Error(cloneCtx, "AdminDelDataset call clear Cache fail.", zap.Error(err))
 			// return err
@@ -358,7 +358,7 @@ func (*Dataset) AdminRunProcessDataset(ctx context.Context, req *pb.AdminRunProc
 
 	// 清除缓存
 	gpool.GetDefGPool().Go(func() error {
-		err := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetId(int(req.GetDatasetId())))
+		err := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetInfo(int(req.GetDatasetId())))
 		if err != nil {
 			log.Error(cloneCtx, "AdminRunProcessDataset call clear Cache fail.", zap.Error(err))
 			// return err
@@ -467,7 +467,7 @@ func (*Dataset) AdminStopProcessDataset(ctx context.Context, req *pb.AdminStopPr
 
 	// 清除缓存
 	gpool.GetDefGPool().Go(func() error {
-		err := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetId(int(req.GetDatasetId())))
+		err := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetInfo(int(req.GetDatasetId())))
 		if err != nil {
 			log.Error(cloneCtx, "AdminStopProcessDataset call clear Cache fail.", zap.Error(err))
 			// return err

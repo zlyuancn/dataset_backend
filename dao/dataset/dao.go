@@ -199,3 +199,42 @@ limit 1;`
 	}
 	return result.RowsAffected()
 }
+
+func MultiGetBySelect(ctx context.Context, where map[string]any, selectField []string) ([]*Model, error) {
+	cond, vals, err := builder.BuildSelect(tableName, where, selectField)
+	if err != nil {
+		log.Error(ctx, "MultiGetBySelect BuildSelect err",
+			zap.Any("where", where),
+			zap.Error(err),
+		)
+		return nil, err
+	}
+
+	ret := []*Model{}
+	err = db.GetSqlx().Find(ctx, &ret, cond, vals...)
+	if err != nil {
+		log.Error(ctx, "MultiGetBySelect Find fail.", zap.String("cond", cond), zap.Any("vals", vals), zap.Error(err))
+		return nil, err
+	}
+	return ret, nil
+}
+
+func MultiGetId(ctx context.Context, where map[string]any) ([]uint, error) {
+	selectField := []string{"dataset_id"}
+	cond, vals, err := builder.BuildSelect(tableName, where, selectField)
+	if err != nil {
+		log.Error(ctx, "MultiGetId BuildSelect err",
+			zap.Any("where", where),
+			zap.Error(err),
+		)
+		return nil, err
+	}
+
+	ret := []uint{}
+	err = db.GetSqlx().Find(ctx, &ret, cond, vals...)
+	if err != nil {
+		log.Error(ctx, "MultiGetId Find fail.", zap.String("cond", cond), zap.Any("vals", vals), zap.Error(err))
+		return nil, err
+	}
+	return ret, nil
+}

@@ -312,6 +312,39 @@
           "DatasetService"
         ]
       }
+    },
+    "/Dataset/SearchDataset": {
+      "post": {
+        "summary": "搜索数据集",
+        "operationId": "DatasetService_SearchDataset",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/datasetSearchDatasetRsp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/datasetSearchDatasetReq"
+            }
+          }
+        ],
+        "tags": [
+          "DatasetService"
+        ]
+      }
     }
   },
   "definitions": {
@@ -548,13 +581,37 @@
           "$ref": "#/definitions/datasetDatasetExtend",
           "title": "数据源扩展数据"
         },
+        "valueTotal": {
+          "type": "integer",
+          "format": "int32",
+          "title": "value 总数"
+        },
+        "createTime": {
+          "type": "string",
+          "format": "int64",
+          "title": "创建时间秒级时间戳"
+        },
+        "processedTime": {
+          "type": "string",
+          "format": "int64",
+          "title": "加工完成时间秒级时间戳"
+        },
         "op": {
-          "$ref": "#/definitions/datasetOpInfoQ",
+          "$ref": "#/definitions/datasetOpInfoA",
           "title": "操作信息"
         },
         "status": {
           "$ref": "#/definitions/datasetStatus",
           "title": "状态"
+        },
+        "statusInfo": {
+          "type": "string",
+          "title": "状态信息"
+        },
+        "activateTime": {
+          "type": "string",
+          "format": "int64",
+          "title": "最后激活时间秒级时间戳"
         }
       },
       "title": "数据集信息-响应"
@@ -565,24 +622,20 @@
         "datasetId": {
           "type": "string",
           "format": "int64",
-          "title": "数据集"
+          "title": "数据集id"
         },
         "datasetName": {
           "type": "string",
           "title": "数据集名"
         },
+        "remark": {
+          "type": "string",
+          "title": "备注"
+        },
         "valueTotal": {
           "type": "integer",
           "format": "int32",
           "title": "value 总数"
-        },
-        "status": {
-          "$ref": "#/definitions/datasetStatus",
-          "title": "状态"
-        },
-        "statusInfo": {
-          "type": "string",
-          "title": "状态信息"
         },
         "createTime": {
           "type": "string",
@@ -592,6 +645,14 @@
         "op": {
           "$ref": "#/definitions/datasetOpInfoA",
           "title": "操作信息"
+        },
+        "status": {
+          "$ref": "#/definitions/datasetStatus",
+          "title": "状态"
+        },
+        "statusInfo": {
+          "type": "string",
+          "title": "状态信息"
         }
       },
       "title": "数据集基础信息-响应"
@@ -770,7 +831,10 @@
           "title": "数据集id"
         },
         "status": {
-          "$ref": "#/definitions/datasetStatus",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/datasetStatus"
+          },
           "title": "状态"
         },
         "startTime": {
@@ -783,24 +847,20 @@
           "format": "int64",
           "title": "结束时间, 秒级时间戳. 0表示不限制"
         },
-        "opUser": {
+        "nextCursor": {
           "type": "string",
-          "title": "操作人"
+          "format": "int64",
+          "title": "游标"
         }
       }
     },
     "datasetQueryDatasetListRsp": {
       "type": "object",
       "properties": {
-        "total": {
-          "type": "integer",
-          "format": "int32",
-          "title": "总条数"
-        },
-        "pageSize": {
-          "type": "integer",
-          "format": "int32",
-          "title": "当前分一页预期返回条数"
+        "nextCursor": {
+          "type": "string",
+          "format": "int64",
+          "title": "下一页游标"
         },
         "lines": {
           "type": "array",
@@ -834,6 +894,52 @@
             "type": "object",
             "$ref": "#/definitions/datasetDatasetStateInfo"
           }
+        }
+      }
+    },
+    "datasetSearchDatasetLine": {
+      "type": "object",
+      "properties": {
+        "datasetId": {
+          "type": "string",
+          "format": "int64",
+          "title": "数据集"
+        },
+        "datasetName": {
+          "type": "string",
+          "title": "数据集名"
+        }
+      },
+      "title": "查询方式仅支持一种"
+    },
+    "datasetSearchDatasetReq": {
+      "type": "object",
+      "properties": {
+        "pageSize": {
+          "type": "integer",
+          "format": "int32",
+          "title": "每页返回数量, 最少返回5条"
+        },
+        "datasetName": {
+          "type": "string",
+          "title": "数据集名"
+        },
+        "opUser": {
+          "type": "string",
+          "title": "操作人"
+        }
+      }
+    },
+    "datasetSearchDatasetRsp": {
+      "type": "object",
+      "properties": {
+        "dataset": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/datasetSearchDatasetLine"
+          },
+          "title": "搜索结果"
         }
       }
     },

@@ -2327,6 +2327,361 @@ var _ interface {
 	ErrorName() string
 } = AdminStopProcessDatasetRspValidationError{}
 
+// Validate checks the field values on SearchDatasetLine with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *SearchDatasetLine) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SearchDatasetLine with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// SearchDatasetLineMultiError, or nil if none found.
+func (m *SearchDatasetLine) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SearchDatasetLine) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for DatasetId
+
+	// no validation rules for DatasetName
+
+	if len(errors) > 0 {
+		return SearchDatasetLineMultiError(errors)
+	}
+
+	return nil
+}
+
+// SearchDatasetLineMultiError is an error wrapping multiple validation errors
+// returned by SearchDatasetLine.ValidateAll() if the designated constraints
+// aren't met.
+type SearchDatasetLineMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SearchDatasetLineMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SearchDatasetLineMultiError) AllErrors() []error { return m }
+
+// SearchDatasetLineValidationError is the validation error returned by
+// SearchDatasetLine.Validate if the designated constraints aren't met.
+type SearchDatasetLineValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SearchDatasetLineValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SearchDatasetLineValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SearchDatasetLineValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SearchDatasetLineValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SearchDatasetLineValidationError) ErrorName() string {
+	return "SearchDatasetLineValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e SearchDatasetLineValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSearchDatasetLine.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SearchDatasetLineValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SearchDatasetLineValidationError{}
+
+// Validate checks the field values on SearchDatasetReq with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *SearchDatasetReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SearchDatasetReq with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// SearchDatasetReqMultiError, or nil if none found.
+func (m *SearchDatasetReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SearchDatasetReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetPageSize() < 5 {
+		err := SearchDatasetReqValidationError{
+			field:  "PageSize",
+			reason: "value must be greater than or equal to 5",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for DatasetName
+
+	// no validation rules for OpUser
+
+	if len(errors) > 0 {
+		return SearchDatasetReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// SearchDatasetReqMultiError is an error wrapping multiple validation errors
+// returned by SearchDatasetReq.ValidateAll() if the designated constraints
+// aren't met.
+type SearchDatasetReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SearchDatasetReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SearchDatasetReqMultiError) AllErrors() []error { return m }
+
+// SearchDatasetReqValidationError is the validation error returned by
+// SearchDatasetReq.Validate if the designated constraints aren't met.
+type SearchDatasetReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SearchDatasetReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SearchDatasetReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SearchDatasetReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SearchDatasetReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SearchDatasetReqValidationError) ErrorName() string { return "SearchDatasetReqValidationError" }
+
+// Error satisfies the builtin error interface
+func (e SearchDatasetReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSearchDatasetReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SearchDatasetReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SearchDatasetReqValidationError{}
+
+// Validate checks the field values on SearchDatasetRsp with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *SearchDatasetRsp) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SearchDatasetRsp with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// SearchDatasetRspMultiError, or nil if none found.
+func (m *SearchDatasetRsp) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SearchDatasetRsp) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetDataset() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, SearchDatasetRspValidationError{
+						field:  fmt.Sprintf("Dataset[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, SearchDatasetRspValidationError{
+						field:  fmt.Sprintf("Dataset[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return SearchDatasetRspValidationError{
+					field:  fmt.Sprintf("Dataset[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return SearchDatasetRspMultiError(errors)
+	}
+
+	return nil
+}
+
+// SearchDatasetRspMultiError is an error wrapping multiple validation errors
+// returned by SearchDatasetRsp.ValidateAll() if the designated constraints
+// aren't met.
+type SearchDatasetRspMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SearchDatasetRspMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SearchDatasetRspMultiError) AllErrors() []error { return m }
+
+// SearchDatasetRspValidationError is the validation error returned by
+// SearchDatasetRsp.Validate if the designated constraints aren't met.
+type SearchDatasetRspValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SearchDatasetRspValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SearchDatasetRspValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SearchDatasetRspValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SearchDatasetRspValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SearchDatasetRspValidationError) ErrorName() string { return "SearchDatasetRspValidationError" }
+
+// Error satisfies the builtin error interface
+func (e SearchDatasetRspValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSearchDatasetRsp.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SearchDatasetRspValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SearchDatasetRspValidationError{}
+
 // Validate checks the field values on DatasetInfoByListA with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -2353,11 +2708,9 @@ func (m *DatasetInfoByListA) validate(all bool) error {
 
 	// no validation rules for DatasetName
 
+	// no validation rules for Remark
+
 	// no validation rules for ValueTotal
-
-	// no validation rules for Status
-
-	// no validation rules for StatusInfo
 
 	// no validation rules for CreateTime
 
@@ -2389,6 +2742,10 @@ func (m *DatasetInfoByListA) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Status
+
+	// no validation rules for StatusInfo
 
 	if len(errors) > 0 {
 		return DatasetInfoByListAMultiError(errors)
@@ -2525,13 +2882,11 @@ func (m *QueryDatasetListReq) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	// no validation rules for Status
-
 	// no validation rules for StartTime
 
 	// no validation rules for EndTime
 
-	// no validation rules for OpUser
+	// no validation rules for NextCursor
 
 	if len(errors) > 0 {
 		return QueryDatasetListReqMultiError(errors)
@@ -2635,9 +2990,7 @@ func (m *QueryDatasetListRsp) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Total
-
-	// no validation rules for PageSize
+	// no validation rules for NextCursor
 
 	for idx, item := range m.GetLines() {
 		_, _ = idx, item
@@ -2810,6 +3163,12 @@ func (m *DatasetInfoA) validate(all bool) error {
 		}
 	}
 
+	// no validation rules for ValueTotal
+
+	// no validation rules for CreateTime
+
+	// no validation rules for ProcessedTime
+
 	if all {
 		switch v := interface{}(m.GetOp()).(type) {
 		case interface{ ValidateAll() error }:
@@ -2840,6 +3199,10 @@ func (m *DatasetInfoA) validate(all bool) error {
 	}
 
 	// no validation rules for Status
+
+	// no validation rules for StatusInfo
+
+	// no validation rules for ActivateTime
 
 	if len(errors) > 0 {
 		return DatasetInfoAMultiError(errors)

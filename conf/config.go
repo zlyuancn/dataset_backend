@@ -13,9 +13,11 @@ const (
 
 	defDatasetOpLockKeyPrefix = "dataset:op_lock:"
 	defAdminOpLockTtl         = 10
-	defStopProcessFlagPrefix  = "batch_job:stop:"
-	defRunProcessLockPrefix   = "batch_job:run:"
+	defStopProcessFlagPrefix  = "dataset:stop_flag:"
+	defRunProcessLockPrefix   = "dataset:run_lock:"
 	defRunProcessLockExtraTtl = 600
+	defDatasetInfoKeyPrefix   = "dataset:info:"
+	defDatasetInfoCacheTtl    = 3600
 )
 
 var Conf = Config{
@@ -27,6 +29,8 @@ var Conf = Config{
 	StopProcessFlagPrefix:  defStopProcessFlagPrefix,
 	RunProcessLockPrefix:   defRunProcessLockPrefix,
 	RunProcessLockExtraTtl: defRunProcessLockExtraTtl,
+	DatasetInfoKeyPrefix:   defDatasetInfoKeyPrefix,
+	DatasetInfoCacheTtl:    defDatasetInfoCacheTtl,
 }
 
 type Config struct {
@@ -42,6 +46,8 @@ type Config struct {
 	StopProcessFlagPrefix  string // 数据集停止处理flag
 	RunProcessLockPrefix   string // 运行处理锁前缀
 	RunProcessLockExtraTtl int    // 任务处理运行锁的ttl, 单位秒, 用于防止重复运行启动器
+	DatasetInfoKeyPrefix   string // 数据集信息缓存前缀
+	DatasetInfoCacheTtl    int    // 数据集信息缓存ttl秒数
 }
 
 func (conf *Config) Check() {
@@ -66,6 +72,12 @@ func (conf *Config) Check() {
 	}
 	if conf.RunProcessLockExtraTtl < 1 {
 		conf.RunProcessLockExtraTtl = defRunProcessLockExtraTtl
+	}
+	if conf.DatasetInfoKeyPrefix == "" {
+		conf.DatasetInfoKeyPrefix = defDatasetInfoKeyPrefix
+	}
+	if conf.DatasetInfoCacheTtl < 1 {
+		conf.DatasetInfoCacheTtl = defDatasetInfoCacheTtl
 	}
 }
 
