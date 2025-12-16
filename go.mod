@@ -7,6 +7,7 @@ require (
 	github.com/didi/gendry v1.8.2
 	github.com/envoyproxy/protoc-gen-validate v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.3
+	github.com/spf13/cast v1.10.0
 	github.com/zly-app/cache/v2 v2.0.11
 	github.com/zly-app/component/redis v0.0.0-20251205041122-9e84deef01af
 	github.com/zly-app/component/sqlx v0.0.0-20251205041122-9e84deef01af
@@ -14,7 +15,7 @@ require (
 	github.com/zly-app/service/cron v0.0.0-20251201123525-ab839839c4b2
 	github.com/zly-app/uapp v0.0.0-20251201110646-673ce4a3e75f
 	github.com/zly-app/zapp v1.4.2
-	github.com/zlyuancn/redis_tool v0.0.0-20251214075858-9ec96559a67f
+	github.com/zlyuancn/redis_tool v0.0.0-20251216042311-cf7350789353
 	go.uber.org/zap v1.27.1
 	google.golang.org/genproto/googleapis/api v0.0.0-20251213004720-97cd9d5aeac2
 	google.golang.org/grpc v1.77.0
@@ -70,7 +71,6 @@ require (
 	github.com/shirou/gopsutil/v3 v3.23.10 // indirect
 	github.com/shirou/gopsutil/v4 v4.25.7 // indirect
 	github.com/spf13/afero v1.10.0 // indirect
-	github.com/spf13/cast v1.10.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.8.1 // indirect

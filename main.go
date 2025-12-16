@@ -8,6 +8,7 @@ import (
 	"github.com/zly-app/uapp"
 	"github.com/zly-app/zapp/config"
 	"github.com/zly-app/zapp/log"
+	"github.com/zlyuancn/redis_tool"
 
 	"github.com/zlyuancn/dataset/pb"
 
@@ -16,6 +17,7 @@ import (
 )
 
 func main() {
+	redis_tool.SetManualInit()
 	config.RegistryApolloNeedParseNamespace(conf.ConfigKey)
 
 	app := uapp.NewApp("dataset",
@@ -30,6 +32,9 @@ func main() {
 		log.Error("Init config fail. err=", err)
 		return
 	}
+
+	redis_tool.RedisClientName = conf.Conf.RedisName
+	redis_tool.ManualInit()
 
 	// rpc服务
 	pb.RegisterDatasetServiceServer(grpc.Server("dataset"), logic.NewServer())
