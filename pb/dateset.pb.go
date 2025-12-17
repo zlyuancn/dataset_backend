@@ -90,7 +90,6 @@ const (
 	Status_Status_Finished     Status = 3 // 已完成
 	Status_Status_Stopping     Status = 4 // 正在停止
 	Status_Status_Stopped      Status = 5 // 已停止
-	Status_Status_Finishing    Status = 6 // 正在完成
 	Status_Status_Deleting     Status = 7 // 正在删除
 	Status_Status_ChunkDeleted Status = 8 // 元数据已删除
 )
@@ -103,7 +102,6 @@ var (
 		3: "Status_Finished",
 		4: "Status_Stopping",
 		5: "Status_Stopped",
-		6: "Status_Finishing",
 		7: "Status_Deleting",
 		8: "Status_ChunkDeleted",
 	}
@@ -113,7 +111,6 @@ var (
 		"Status_Finished":     3,
 		"Status_Stopping":     4,
 		"Status_Stopped":      5,
-		"Status_Finishing":    6,
 		"Status_Deleting":     7,
 		"Status_ChunkDeleted": 8,
 	}
@@ -2380,14 +2377,13 @@ const file_dateset_proto_rawDesc = "" +
 	"\fOpCmd_Delete\x10\x03\x12\r\n" +
 	"\tOpCmd_Run\x10\x04\x12\x0e\n" +
 	"\n" +
-	"OpCmd_Stop\x10\x05*\xb2\x01\n" +
+	"OpCmd_Stop\x10\x05*\x9c\x01\n" +
 	"\x06Status\x12\x12\n" +
 	"\x0eStatus_Created\x10\x00\x12\x12\n" +
 	"\x0eStatus_Running\x10\x02\x12\x13\n" +
 	"\x0fStatus_Finished\x10\x03\x12\x13\n" +
 	"\x0fStatus_Stopping\x10\x04\x12\x12\n" +
-	"\x0eStatus_Stopped\x10\x05\x12\x14\n" +
-	"\x10Status_Finishing\x10\x06\x12\x13\n" +
+	"\x0eStatus_Stopped\x10\x05\x12\x13\n" +
 	"\x0fStatus_Deleting\x10\a\x12\x17\n" +
 	"\x13Status_ChunkDeleted\x10\b*9\n" +
 	"\n" +

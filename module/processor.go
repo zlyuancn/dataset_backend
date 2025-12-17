@@ -455,6 +455,7 @@ func (p *processorLauncher) Run() {
 	}
 	if err != nil {
 		p.submitStopFlag("ChunkStore err=%s" + err.Error())
+		log.Error(p.ctx, "Run call WaitNoChunkSnOffset fail.", zap.Error(err))
 		return
 	}
 

@@ -65,9 +65,6 @@ func (d *Dataset) QueryDatasetList(ctx context.Context, req *pb.QueryDatasetList
 			return nil, err
 		}
 		ret := []*pb.DatasetInfoByListA{d.datasetDBModel2ListPb(line)}
-
-		// todo 对于运行中的任务, 进度需要从redis获取
-
 		return &pb.QueryDatasetListRsp{Lines: ret}, nil
 	}
 
@@ -243,7 +240,7 @@ func (*Dataset) batchRenderRunningProcess(ctx context.Context, ret []*pb.Dataset
 	pipe := rdb.Pipeline()
 	for _, l := range ret {
 		switch l.Status {
-		case pb.Status_Status_Running, pb.Status_Status_Stopping, pb.Status_Status_Finishing, pb.Status_Status_Deleting:
+		case pb.Status_Status_Running, pb.Status_Status_Stopping, pb.Status_Status_Deleting:
 		default:
 			continue
 		}

@@ -216,7 +216,7 @@ func (*Dataset) AdminDelDataset(ctx context.Context, req *pb.AdminDelDatasetReq)
 	// 检查状态
 	switch pb.Status(d.Status) {
 	case pb.Status_Status_Created, pb.Status_Status_Finished, pb.Status_Status_Stopped:
-	case pb.Status_Status_Running, pb.Status_Status_Stopping, pb.Status_Status_Finishing, pb.Status_Status_Deleting, pb.Status_Status_ChunkDeleted:
+	case pb.Status_Status_Running, pb.Status_Status_Stopping, pb.Status_Status_Deleting, pb.Status_Status_ChunkDeleted:
 		log.Error(ctx, "AdminDelDataset fail. status is running", zap.Int64("dataset", req.GetDatasetId()))
 		return nil, errors.New("Dataset status is running")
 	default:
@@ -278,7 +278,7 @@ func (*Dataset) AdminDelDataset(ctx context.Context, req *pb.AdminDelDatasetReq)
 		return nil
 	}, nil)
 
-	// todo 删除已持久化的chunk
+	// todo 尝试启动删除程序
 
 	return &pb.AdminDelDatasetRsp{}, nil
 }
@@ -306,7 +306,7 @@ func (*Dataset) AdminRunProcessDataset(ctx context.Context, req *pb.AdminRunProc
 	case pb.Status_Status_Running, pb.Status_Status_Stopping:
 		log.Error(ctx, "AdminRunProcessDataset fail. status is running", zap.Int64("dataset", req.GetDatasetId()))
 		return nil, errors.New("AdminRunProcessDataset status is running")
-	case pb.Status_Status_Finishing, pb.Status_Status_Finished:
+	case pb.Status_Status_Finished:
 		log.Error(ctx, "AdminRunProcessDataset fail. status is finished", zap.Int64("dataset", req.GetDatasetId()))
 		return nil, errors.New("AdminRunProcessDataset status is finished")
 	case pb.Status_Status_Deleting, pb.Status_Status_ChunkDeleted:
@@ -419,7 +419,7 @@ func (*Dataset) AdminStopProcessDataset(ctx context.Context, req *pb.AdminStopPr
 	case pb.Status_Status_Deleting, pb.Status_Status_ChunkDeleted:
 		log.Error(ctx, "AdminStopProcessDataset fail. status is deleted", zap.Int64("dataset", req.GetDatasetId()))
 		return nil, errors.New("Dataset status is deleted")
-	case pb.Status_Status_Created, pb.Status_Status_Stopping, pb.Status_Status_Stopped, pb.Status_Status_Finishing, pb.Status_Status_Finished:
+	case pb.Status_Status_Created, pb.Status_Status_Stopping, pb.Status_Status_Stopped, pb.Status_Status_Finished:
 		log.Error(ctx, "AdminStopProcessDataset fail. status not running", zap.Int64("dataset", req.GetDatasetId()))
 		return nil, errors.New("Dataset status is not running")
 	default:
@@ -457,6 +457,14 @@ func (*Dataset) AdminStopProcessDataset(ctx context.Context, req *pb.AdminStopPr
 		return nil, err
 	}
 
+	// 更新 dataset 数据
+	d.Status = v.Status
+	d.OpSource = req.GetOp().GetOpSource()
+	d.OpUserId = req.GetOp().GetOpUserid()
+	d.OpUserName = req.GetOp().GetOpUserName()
+	d.OpRemark = req.GetOp().GetOpRemark()
+	d.StatusInfo = v.StatusInfo
+
 	cloneCtx := utils.Ctx.CloneContext(ctx)
 	// 添加历史记录
 	h := &dataset_history.Model{
@@ -488,7 +496,11 @@ func (*Dataset) AdminStopProcessDataset(ctx context.Context, req *pb.AdminStopPr
 		return nil
 	}, nil)
 
-	// todo 尝试获取运行处理锁, 直接更新状态为已停止
+	// 尝试立即更新为停止状态
+	gpool.GetDefGPool().Go(func() error {
+		module.Processor.RestorerStop(cloneCtx, d)
+		return nil
+	}, nil)
 
 	return &pb.AdminStopProcessDatasetRsp{}, nil
 }

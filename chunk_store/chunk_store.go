@@ -5,9 +5,11 @@ import (
 	"errors"
 	"sync/atomic"
 
+	"github.com/zly-app/zapp/log"
 	"github.com/zlyuancn/dataset/conf"
 	"github.com/zlyuancn/dataset/pb"
 	"github.com/zlyuancn/splitter"
+	"go.uber.org/zap"
 )
 
 var ErrStop = errors.New("stop")
@@ -48,6 +50,8 @@ type chunkStore struct {
 	fcb FlushedLastedCallback
 	lcb FlushedLastedCallback
 
+	csp ChunkStorePersist
+
 	threadLock chan struct{}     // 线程锁
 	doneCh     chan *flushResult // 所有 FlushChunk 完成后，将结果发到这个 channel
 
@@ -62,10 +66,19 @@ type chunkStore struct {
 
 func NewChunkStore(ctx context.Context, cp *pb.ChunkProcess,
 	fcb FlushedLastedCallback, lcb FlushedLastedCallback) (ChunkStore, error) {
+
+	csp, err := NewChunkStorePersist(ctx, cp)
+	if err != nil {
+		log.Error(ctx, "NewChunkStore call NewChunkStorePersist fail.", zap.Error(err))
+		return nil, err
+	}
+
 	c := &chunkStore{
 		cp:  cp,
 		fcb: fcb,
 		lcb: lcb,
+
+		csp: csp,
 
 		threadLock: make(chan struct{}, conf.Conf.ChunkStoreThreadCount),
 		doneCh:     make(chan *flushResult, max(conf.Conf.ChunkStoreThreadCount, 16)),
@@ -111,8 +124,12 @@ func (c *chunkStore) FlushChunk(ctx context.Context, args *splitter.FlushChunkAr
 			<-c.threadLock
 		}()
 
-		// todo 处理
+		// 处理
 		fr := &flushResult{args: args}
+		fr.err = c.csp.FlushChunk(ctx, args)
+		if fr.err != nil {
+			log.Error(ctx, "FlushChunk call csp.FlushChunk fail.", zap.Any("args", args), zap.Error(fr.err))
+		}
 
 		// 处理完成后将结果输出
 		select {

@@ -9,6 +9,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.3
 	github.com/spf13/cast v1.10.0
 	github.com/zly-app/cache/v2 v2.0.11
+	github.com/zly-app/component/http v0.0.0-20251201104934-96e59c17144e
 	github.com/zly-app/component/redis v0.0.0-20251205041122-9e84deef01af
 	github.com/zly-app/component/sqlx v0.0.0-20251205041122-9e84deef01af
 	github.com/zly-app/grpc v0.5.4
@@ -82,7 +83,6 @@ require (
 	github.com/vmihailenco/msgpack/v5 v5.3.5 // indirect
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
-	github.com/zly-app/component/http v0.0.0-20251201104934-96e59c17144e // indirect
 	github.com/zly-app/plugin/otlp v0.0.0-20251201105815-b4c372b9135e // indirect
 	github.com/zly-app/plugin/pprof v0.0.0-20251201105815-b4c372b9135e // indirect
 	github.com/zlyuancn/connpool v0.0.0-20240529080113-fdbaa79cba97 // indirect

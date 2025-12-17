@@ -955,12 +955,11 @@
         "Status_Finished",
         "Status_Stopping",
         "Status_Stopped",
-        "Status_Finishing",
         "Status_Deleting",
         "Status_ChunkDeleted"
       ],
       "default": "Status_Created",
-      "description": "- Status_Created: 已创建\n - Status_Running: 运行中\n - Status_Finished: 已完成\n - Status_Stopping: 正在停止\n - Status_Stopped: 已停止\n - Status_Finishing: 正在完成\n - Status_Deleting: 正在删除\n - Status_ChunkDeleted: 元数据已删除",
+      "description": "- Status_Created: 已创建\n - Status_Running: 运行中\n - Status_Finished: 已完成\n - Status_Stopping: 正在停止\n - Status_Stopped: 已停止\n - Status_Deleting: 正在删除\n - Status_ChunkDeleted: 元数据已删除",
       "title": "状态"
     },
     "datasetValueProcess": {
