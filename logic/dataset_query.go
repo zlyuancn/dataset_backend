@@ -262,8 +262,8 @@ func (*Dataset) batchRenderRunningProcess(ctx context.Context, ret []*pb.Dataset
 			s := &model.CacheDatasetProcessStatus{}
 			_ = sonic.UnmarshalString(status[i].Val(), s)
 			line.ChunkTotal = s.ChunkTotal
-			line.ChunkProcessedCount = s.ChunkProcessedCount
-			line.ValueTotal = s.ValueProcessedCount
+			line.ChunkProcessedCount = s.ChunkFinishedCount
+			line.ValueTotal = s.ValueFinishedCount
 		}
 	}
 	return nil

@@ -1,0 +1,72 @@
+package chunk_store
+
+import (
+	"context"
+	"testing"
+
+	"github.com/zlyuancn/dataset/conf"
+	"github.com/zlyuancn/dataset/pb"
+	"github.com/zlyuancn/splitter"
+)
+
+func TestChunkStore(t *testing.T) {
+	const chunkTotal = 100         // chunk总数
+	const finishedChunkCount = 30  // chunk已完成数
+	const oneChunkValueCount = 100 // 一个 chunk 有多少 value
+	const oneValueSize = 100       // 一个 value 数据有多长
+
+	conf.Conf.ChunkStoreThreadCount = 20
+
+	lastFinishedChunkSn := finishedChunkCount - 1
+
+	cp := &pb.ChunkProcess{
+		StoreType:    0,
+		CompressType: 0,
+	}
+	fcb := func(args *splitter.FlushChunkArgs) {
+		t.Logf("fcb args=%+v", args)
+		lastFinishedChunkSn = args.ChunkSn
+	}
+	lcb := func(args *splitter.FlushChunkArgs) {
+		t.Logf("lcb!!!! args=%+v", args)
+		lastFinishedChunkSn = args.ChunkSn
+	}
+
+	cs, err := NewChunkStore(context.Background(), cp, fcb, lcb)
+	if err != nil {
+		t.Fatalf("NewChunkStore fail. err=%s", err)
+		return
+	}
+	defer cs.Close()
+
+	cs.Init(&ResumePoint{
+		ChunkFinishedCount: finishedChunkCount,
+		ValueFinishedCount: finishedChunkCount * oneChunkValueCount,
+		ResumePointOffset:  finishedChunkCount * oneChunkValueCount * oneValueSize,
+	})
+
+	lastChunkSn := -1
+	for i := 0; i < chunkTotal-finishedChunkCount; i++ {
+		lastChunkSn = i
+		cs.FlushChunk(context.Background(), &splitter.FlushChunkArgs{
+			ChunkSn:      i,
+			StartValueSn: int64(i * oneChunkValueCount),
+			EndValueSn:   int64((i+1)*oneChunkValueCount - 1),
+			ChunkData:    nil,
+			ScanByteNum:  int64((i + 1) * oneChunkValueCount * oneValueSize),
+		})
+	}
+
+	err = cs.WaitNoChunkSnOffset(context.Background(), int32(lastChunkSn))
+	if err != nil {
+		t.Fatalf("Wait fail. err=%s", err)
+		return
+	}
+
+	if lastFinishedChunkSn != chunkTotal-1 {
+		t.Fatalf("lastFinishedChunkSn(%d) != chunkCount-1(%d)", lastFinishedChunkSn, chunkTotal-1)
+		return
+	}
+
+	t.Log("ok")
+}

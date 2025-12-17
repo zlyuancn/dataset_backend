@@ -10,13 +10,13 @@ import (
 
 type DataSource interface {
 	// 设置断点, 如果设置成功则返回true, 设置失败表示从头开始读取
-	SetBreakpoint(offset int64) (bool, error)
+	SetBreakpoint(ctx context.Context, offset int64) (bool, error)
 	// 尝试获取数据流长度
-	GetDataStreamLen() int64
+	GetDataStreamLen(ctx context.Context) int64
 	// 获取读取器
-	GetReader() (io.Reader, error)
+	GetReader(ctx context.Context, ) (io.Reader, error)
 	// 关闭
-	Close() error
+	Close()
 }
 
 type creatorFunc func(ctx context.Context, dp *pb.DataProcess) (DataSource, error)

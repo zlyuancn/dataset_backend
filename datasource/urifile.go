@@ -16,16 +16,16 @@ type uriFileDataSource struct {
 	closer io.Closer
 }
 
-func (u *uriFileDataSource) SetBreakpoint(offset int64) (bool, error) {
+func (u *uriFileDataSource) SetBreakpoint(ctx context.Context, offset int64) (bool, error) {
 	// 暂不支持断点续传
 	return false, nil
 }
 
-func (u *uriFileDataSource) GetDataStreamLen() int64 {
+func (u *uriFileDataSource) GetDataStreamLen(ctx context.Context) int64 {
 	return 0
 }
 
-func (u *uriFileDataSource) GetReader() (io.Reader, error) {
+func (u *uriFileDataSource) GetReader(ctx context.Context) (io.Reader, error) {
 	method := strings.ToUpper(u.uf.GetMethod())
 	if method == "" {
 		method = "GET"
@@ -43,7 +43,7 @@ func (u *uriFileDataSource) GetReader() (io.Reader, error) {
 		Proxy:              u.uf.GetProxy(),
 	}
 
-	ctx := filter.WithoutFilterName(u.ctx, "base.timeout", "base.gpool")
+	ctx = filter.WithoutFilterName(ctx, "base.timeout", "base.gpool")
 	sp, err := http.NewClient("uriFileDataSource").Do(ctx, r)
 	if err != nil {
 		return nil, err
@@ -52,14 +52,14 @@ func (u *uriFileDataSource) GetReader() (io.Reader, error) {
 	return sp.BodyStream, nil
 }
 
-func (u *uriFileDataSource) Close() error {
-	return u.closer.Close()
+func (u *uriFileDataSource) Close() {
+	_ = u.closer.Close()
+	return
 }
 
 func newUriFileDataSource(ctx context.Context, dp *pb.DataProcess) (DataSource, error) {
 	u := &uriFileDataSource{
-		ctx: ctx,
-		uf:  dp.GetUriFile(),
+		uf: dp.GetUriFile(),
 	}
 	return u, nil
 }

@@ -474,19 +474,19 @@
     "datasetChunkProcess": {
       "type": "object",
       "properties": {
-        "persistenceType": {
+        "storeType": {
           "type": "integer",
           "format": "int32",
           "title": "持久化类型"
         },
-        "compressorType": {
-          "$ref": "#/definitions/datasetCompressorType",
+        "compressType": {
+          "$ref": "#/definitions/datasetCompressType",
           "title": "压缩类型"
         }
       },
       "title": "描述chunk如何处理"
     },
-    "datasetCompressorType": {
+    "datasetCompressType": {
       "type": "string",
       "enum": [
         "CompressorType_None",

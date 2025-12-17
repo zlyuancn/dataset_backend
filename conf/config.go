@@ -22,9 +22,12 @@ const (
 	defDatasetInfoKeyPrefix              = "dataset:info:"
 	defDatasetInfoCacheTtl               = 3600
 	defDatasetProcessStatusPrefix        = "dataset:status:"
-	defChunkSizeLimit                    = 8 * 1024 * 1024
-	defMinChunkSizeLimit                 = 1 * 1024
-	defValueMaxScanSizeLimit             = 1 * 1024 * 1024
+	defChunkMetaKeyPrefix                = "dataset:chunk_meta:"
+
+	defChunkSizeLimit        = 8 * 1024 * 1024
+	defMinChunkSizeLimit     = 1 * 1024
+	defValueMaxScanSizeLimit = 1 * 1024 * 1024
+	defChunkStoreThreadCount = 5
 )
 
 var Conf = Config{
@@ -42,9 +45,11 @@ var Conf = Config{
 	DatasetInfoKeyPrefix:              defDatasetInfoKeyPrefix,
 	DatasetInfoCacheTtl:               defDatasetInfoCacheTtl,
 	DatasetProcessStatusPrefix:        defDatasetProcessStatusPrefix,
+	ChunkMetaKeyPrefix:                defChunkMetaKeyPrefix,
 
 	ChunkSizeLimit:        defChunkSizeLimit,
 	ValueMaxScanSizeLimit: defValueMaxScanSizeLimit,
+	ChunkStoreThreadCount: defChunkStoreThreadCount,
 }
 
 type Config struct {
@@ -66,11 +71,13 @@ type Config struct {
 	DatasetInfoKeyPrefix              string // 数据集信息缓存前缀
 	DatasetInfoCacheTtl               int    // 数据集信息缓存ttl秒数
 	DatasetProcessStatusPrefix        string // 数据集处理状态缓存前缀
+	ChunkMetaKeyPrefix                string // chunk meta key 前缀
 
 	// chunk
 
 	ChunkSizeLimit        int32 // chunk 大小限制
 	ValueMaxScanSizeLimit int   // value 扫描最大长度限制
+	ChunkStoreThreadCount int   // chunk 持久化线程数
 }
 
 func (conf *Config) Check() {
@@ -84,41 +91,31 @@ func (conf *Config) Check() {
 	if conf.DatasetOpLockKeyPrefix == "" {
 		conf.DatasetOpLockKeyPrefix = defDatasetOpLockKeyPrefix
 	}
-	if conf.AdminOpLockTtl < 1 {
-		conf.AdminOpLockTtl = defAdminOpLockTtl
-	}
+	conf.AdminOpLockTtl = max(conf.AdminOpLockTtl, defAdminOpLockTtl)
 	if conf.StopProcessFlagPrefix == "" {
 		conf.StopProcessFlagPrefix = defStopProcessFlagPrefix
 	}
-	if conf.CheckStopFlagInterval < 1 {
-		conf.CheckStopFlagInterval = 1
-	}
+	conf.CheckStopFlagInterval = max(conf.CheckStopFlagInterval, defCheckStopFlagInterval)
 	if conf.RunLockPrefix == "" {
 		conf.RunLockPrefix = defRunLockPrefix
 	}
-	if conf.RunLockExtraTtl < 1 {
-		conf.RunLockExtraTtl = defRunLockExtraTtl
-	}
-	if conf.RunLockRenewInterval < 1 {
-		conf.RunLockRenewInterval = defRunLockRenewInterval
-	}
-	if conf.RunLockRenewMaxContinuousErrCount < 1 {
-		conf.RunLockRenewMaxContinuousErrCount = defRunLockRenewMaxContinuousErrCount
-	}
+	conf.RunLockExtraTtl = max(conf.RunLockExtraTtl, defRunLockExtraTtl)
+	conf.RunLockRenewInterval = max(conf.RunLockRenewInterval, defRunLockRenewInterval)
+	conf.RunLockRenewMaxContinuousErrCount = max(conf.RunLockRenewMaxContinuousErrCount, defRunLockRenewMaxContinuousErrCount)
 	if conf.DatasetInfoKeyPrefix == "" {
 		conf.DatasetInfoKeyPrefix = defDatasetInfoKeyPrefix
 	}
-	if conf.DatasetInfoCacheTtl < 1 {
-		conf.DatasetInfoCacheTtl = defDatasetInfoCacheTtl
-	}
+	conf.DatasetInfoCacheTtl = max(conf.DatasetInfoCacheTtl, defDatasetInfoCacheTtl)
 	if conf.DatasetProcessStatusPrefix == "" {
 		conf.DatasetProcessStatusPrefix = defDatasetProcessStatusPrefix
 	}
+	if conf.ChunkMetaKeyPrefix == "" {
+		conf.ChunkMetaKeyPrefix = defChunkMetaKeyPrefix
+	}
 
 	conf.ChunkSizeLimit = max(conf.ChunkSizeLimit, defMinChunkSizeLimit)
-	if conf.ValueMaxScanSizeLimit < 1 {
-		conf.ValueMaxScanSizeLimit = conf.ValueMaxScanSizeLimit
-	}
+	conf.ValueMaxScanSizeLimit = max(conf.ValueMaxScanSizeLimit, defValueMaxScanSizeLimit)
+	conf.ChunkStoreThreadCount = max(conf.ChunkStoreThreadCount, defChunkStoreThreadCount)
 }
 
 func Init() error {

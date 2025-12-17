@@ -25,6 +25,10 @@ func (*cacheKeyCli) GetCacheDatasetProcessStatus(datasetId int) string {
 	return conf.Conf.DatasetProcessStatusPrefix + strconv.Itoa(datasetId)
 }
 
+func (*cacheKeyCli) GetChunkMeta(datasetId int) string {
+	return conf.Conf.ChunkMetaKeyPrefix + strconv.Itoa(datasetId)
+}
+
 // 获取运行处理锁
 func (*cacheKeyCli) GetRunProcessLock(datasetId int) string {
 	return conf.Conf.RunLockPrefix + strconv.Itoa(datasetId)

@@ -113,7 +113,6 @@ enum Status {
   Status_Finished = 3; // 已完成
   Status_Stopping = 4; // 正在停止
   Status_Stopped = 5; // 已停止
-  Status_Finishing = 6; // 正在完成
   Status_Deleting = 7; // 正在删除
   Status_ChunkDeleted = 8; // 元数据已删除
 }
@@ -146,11 +145,11 @@ message DataSourceUriFile {
 
 // 描述chunk如何处理
 message ChunkProcess {
-  int32 persistenceType = 1; // 持久化类型
-  CompressorType compressorType = 2; // 压缩类型
+  int32 storeType = 1; // 持久化类型
+  CompressType compressType = 2; // 压缩类型
 }
 
-enum CompressorType {
+enum CompressType {
   CompressorType_None = 0; // 不压缩
   CompressorType_Lz4 = 1;
 }

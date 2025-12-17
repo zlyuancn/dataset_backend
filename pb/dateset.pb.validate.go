@@ -647,9 +647,9 @@ func (m *ChunkProcess) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for PersistenceType
+	// no validation rules for StoreType
 
-	// no validation rules for CompressorType
+	// no validation rules for CompressType
 
 	if len(errors) > 0 {
 		return ChunkProcessMultiError(errors)

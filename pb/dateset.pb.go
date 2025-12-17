@@ -192,49 +192,49 @@ func (DataSource) EnumDescriptor() ([]byte, []int) {
 	return file_dateset_proto_rawDescGZIP(), []int{2}
 }
 
-type CompressorType int32
+type CompressType int32
 
 const (
-	CompressorType_CompressorType_None CompressorType = 0 // 不压缩
-	CompressorType_CompressorType_Lz4  CompressorType = 1
+	CompressType_CompressorType_None CompressType = 0 // 不压缩
+	CompressType_CompressorType_Lz4  CompressType = 1
 )
 
-// Enum value maps for CompressorType.
+// Enum value maps for CompressType.
 var (
-	CompressorType_name = map[int32]string{
+	CompressType_name = map[int32]string{
 		0: "CompressorType_None",
 		1: "CompressorType_Lz4",
 	}
-	CompressorType_value = map[string]int32{
+	CompressType_value = map[string]int32{
 		"CompressorType_None": 0,
 		"CompressorType_Lz4":  1,
 	}
 )
 
-func (x CompressorType) Enum() *CompressorType {
-	p := new(CompressorType)
+func (x CompressType) Enum() *CompressType {
+	p := new(CompressType)
 	*p = x
 	return p
 }
 
-func (x CompressorType) String() string {
+func (x CompressType) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (CompressorType) Descriptor() protoreflect.EnumDescriptor {
+func (CompressType) Descriptor() protoreflect.EnumDescriptor {
 	return file_dateset_proto_enumTypes[3].Descriptor()
 }
 
-func (CompressorType) Type() protoreflect.EnumType {
+func (CompressType) Type() protoreflect.EnumType {
 	return &file_dateset_proto_enumTypes[3]
 }
 
-func (x CompressorType) Number() protoreflect.EnumNumber {
+func (x CompressType) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use CompressorType.Descriptor instead.
-func (CompressorType) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use CompressType.Descriptor instead.
+func (CompressType) EnumDescriptor() ([]byte, []int) {
 	return file_dateset_proto_rawDescGZIP(), []int{3}
 }
 
@@ -568,11 +568,11 @@ func (x *DataSourceUriFile) GetMethod() string {
 
 // 描述chunk如何处理
 type ChunkProcess struct {
-	state           protoimpl.MessageState `protogen:"open.v1"`
-	PersistenceType int32                  `protobuf:"varint,1,opt,name=persistenceType,proto3" json:"persistenceType,omitempty"`                           // 持久化类型
-	CompressorType  CompressorType         `protobuf:"varint,2,opt,name=compressorType,proto3,enum=dataset.CompressorType" json:"compressorType,omitempty"` // 压缩类型
-	unknownFields   protoimpl.UnknownFields
-	sizeCache       protoimpl.SizeCache
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	StoreType     int32                  `protobuf:"varint,1,opt,name=storeType,proto3" json:"storeType,omitempty"`                                 // 持久化类型
+	CompressType  CompressType           `protobuf:"varint,2,opt,name=compressType,proto3,enum=dataset.CompressType" json:"compressType,omitempty"` // 压缩类型
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ChunkProcess) Reset() {
@@ -605,18 +605,18 @@ func (*ChunkProcess) Descriptor() ([]byte, []int) {
 	return file_dateset_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *ChunkProcess) GetPersistenceType() int32 {
+func (x *ChunkProcess) GetStoreType() int32 {
 	if x != nil {
-		return x.PersistenceType
+		return x.StoreType
 	}
 	return 0
 }
 
-func (x *ChunkProcess) GetCompressorType() CompressorType {
+func (x *ChunkProcess) GetCompressType() CompressType {
 	if x != nil {
-		return x.CompressorType
+		return x.CompressType
 	}
-	return CompressorType_CompressorType_None
+	return CompressType_CompressorType_None
 }
 
 // 描述值如何处理
@@ -2233,10 +2233,10 @@ const file_dateset_proto_rawDesc = "" +
 	"\aheaders\x18\x02 \x03(\v2\v.dataset.KVR\aheaders\x12.\n" +
 	"\x12insecureSkipVerify\x18\x03 \x01(\bR\x12insecureSkipVerify\x12\x14\n" +
 	"\x05proxy\x18\x04 \x01(\tR\x05proxy\x12\x16\n" +
-	"\x06method\x18\x05 \x01(\tR\x06method\"y\n" +
-	"\fChunkProcess\x12(\n" +
-	"\x0fpersistenceType\x18\x01 \x01(\x05R\x0fpersistenceType\x12?\n" +
-	"\x0ecompressorType\x18\x02 \x01(\x0e2\x17.dataset.CompressorTypeR\x0ecompressorType\"\xf4\x01\n" +
+	"\x06method\x18\x05 \x01(\tR\x06method\"g\n" +
+	"\fChunkProcess\x12\x1c\n" +
+	"\tstoreType\x18\x01 \x01(\x05R\tstoreType\x129\n" +
+	"\fcompressType\x18\x02 \x01(\x0e2\x15.dataset.CompressTypeR\fcompressType\"\xf4\x01\n" +
 	"\fValueProcess\x12\x14\n" +
 	"\x05delim\x18\x01 \x01(\tR\x05delim\x12\x1c\n" +
 	"\ttrimSpace\x18\x02 \x01(\bR\ttrimSpace\x12\x1e\n" +
@@ -2393,8 +2393,8 @@ const file_dateset_proto_rawDesc = "" +
 	"\n" +
 	"DataSource\x12\x13\n" +
 	"\x0fDataSource_None\x10\x00\x12\x16\n" +
-	"\x12DataSource_UriFile\x10\x01*A\n" +
-	"\x0eCompressorType\x12\x17\n" +
+	"\x12DataSource_UriFile\x10\x01*?\n" +
+	"\fCompressType\x12\x17\n" +
 	"\x13CompressorType_None\x10\x00\x12\x16\n" +
 	"\x12CompressorType_Lz4\x10\x012\xef\t\n" +
 	"\x0eDatasetService\x12p\n" +
@@ -2427,7 +2427,7 @@ var file_dateset_proto_goTypes = []any{
 	(OpCmd)(0),                         // 0: dataset.OpCmd
 	(Status)(0),                        // 1: dataset.Status
 	(DataSource)(0),                    // 2: dataset.DataSource
-	(CompressorType)(0),                // 3: dataset.CompressorType
+	(CompressType)(0),                  // 3: dataset.CompressType
 	(*OpInfoQ)(nil),                    // 4: dataset.OpInfoQ
 	(*OpInfoA)(nil),                    // 5: dataset.OpInfoA
 	(*KV)(nil),                         // 6: dataset.KV
@@ -2465,7 +2465,7 @@ var file_dateset_proto_depIdxs = []int32{
 	2,  // 0: dataset.DataProcess.dataSource:type_name -> dataset.DataSource
 	8,  // 1: dataset.DataProcess.uriFile:type_name -> dataset.DataSourceUriFile
 	6,  // 2: dataset.DataSourceUriFile.headers:type_name -> dataset.KV
-	3,  // 3: dataset.ChunkProcess.compressorType:type_name -> dataset.CompressorType
+	3,  // 3: dataset.ChunkProcess.compressType:type_name -> dataset.CompressType
 	7,  // 4: dataset.DatasetExtend.dataProcess:type_name -> dataset.DataProcess
 	9,  // 5: dataset.DatasetExtend.chunkProcess:type_name -> dataset.ChunkProcess
 	10, // 6: dataset.DatasetExtend.valueProcess:type_name -> dataset.ValueProcess

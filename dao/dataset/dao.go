@@ -238,3 +238,29 @@ func MultiGetId(ctx context.Context, where map[string]any) ([]uint, error) {
 	}
 	return ret, nil
 }
+
+func UpdateOne(ctx context.Context, datasetId int, updateData map[string]interface{}, whereStatus byte) error {
+	where := map[string]any{
+		"dataset_id": datasetId,
+		"_limit":     1,
+	}
+	if whereStatus > 0 {
+		where["status"] = whereStatus
+	}
+	cond, vals, err := builder.BuildUpdate(tableName, where, updateData)
+	if err != nil {
+		log.Error(ctx, "UpdateOne BuildUpdate err",
+			zap.Int("datasetId", datasetId),
+			zap.Any("updateData", updateData),
+			zap.Error(err),
+		)
+		return err
+	}
+
+	_, err = db.GetSqlx().Exec(ctx, cond, vals...)
+	if err != nil {
+		log.Error(ctx, "UpdateOne fail.", zap.Int("datasetId", datasetId), zap.Any("updateData", updateData), zap.Error(err))
+		return err
+	}
+	return nil
+}
