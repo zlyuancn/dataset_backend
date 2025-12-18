@@ -15,13 +15,26 @@ import (
 	"go.uber.org/zap"
 )
 
-func (*Dataset) SearchDataset(ctx context.Context, req *pb.SearchDatasetReq) (*pb.SearchDatasetRsp, error) {
+func (*Dataset) SearchDatasetName(ctx context.Context, req *pb.SearchDatasetNameReq) (*pb.SearchDatasetNameRsp, error) {
 	where := map[string]any{}
 	switch {
 	case req.GetDatasetName() != "": // 仅搜索数据集名
 		where["dataset_name"] = req.GetDatasetName()
+	case req.GetDatasetId() > 0: // 直接根据数据集id搜索
+		d, err := module.Dataset.GetDatasetInfoByCache(ctx, uint(req.GetDatasetId()))
+		if err != nil {
+			log.Error(ctx, "SearchDatasetName call GetDatasetInfoByCache fail.", zap.Error(err))
+			return nil, err
+		}
+		data := []*pb.SearchDatasetLine{
+			{
+				DatasetId:   int64(d.DatasetId),
+				DatasetName: d.DatasetName,
+			},
+		}
+		return &pb.SearchDatasetNameRsp{Dataset: data}, nil
 	default:
-		return &pb.SearchDatasetRsp{}, nil
+		return &pb.SearchDatasetNameRsp{}, nil
 	}
 
 	pageSize := max(req.GetPageSize(), 5)
@@ -41,7 +54,7 @@ func (*Dataset) SearchDataset(ctx context.Context, req *pb.SearchDatasetReq) (*p
 			DatasetName: lines[i].DatasetName,
 		}
 	}
-	return &pb.SearchDatasetRsp{Dataset: data}, nil
+	return &pb.SearchDatasetNameRsp{Dataset: data}, nil
 }
 
 func (d *Dataset) QueryDatasetList(ctx context.Context, req *pb.QueryDatasetListReq) (*pb.QueryDatasetListRsp, error) {

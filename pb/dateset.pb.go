@@ -1335,28 +1335,29 @@ func (x *SearchDatasetLine) GetDatasetName() string {
 	return ""
 }
 
-type SearchDatasetReq struct {
+type SearchDatasetNameReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	PageSize      int32                  `protobuf:"varint,1,opt,name=pageSize,proto3" json:"pageSize,omitempty"`      // 每页返回数量, 最少返回5条
 	DatasetName   string                 `protobuf:"bytes,2,opt,name=datasetName,proto3" json:"datasetName,omitempty"` // 数据集名
+	DatasetId     int64                  `protobuf:"varint,3,opt,name=datasetId,proto3" json:"datasetId,omitempty"`    // 直接根据数据集id搜索
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *SearchDatasetReq) Reset() {
-	*x = SearchDatasetReq{}
+func (x *SearchDatasetNameReq) Reset() {
+	*x = SearchDatasetNameReq{}
 	mi := &file_dateset_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SearchDatasetReq) String() string {
+func (x *SearchDatasetNameReq) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SearchDatasetReq) ProtoMessage() {}
+func (*SearchDatasetNameReq) ProtoMessage() {}
 
-func (x *SearchDatasetReq) ProtoReflect() protoreflect.Message {
+func (x *SearchDatasetNameReq) ProtoReflect() protoreflect.Message {
 	mi := &file_dateset_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1368,46 +1369,53 @@ func (x *SearchDatasetReq) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SearchDatasetReq.ProtoReflect.Descriptor instead.
-func (*SearchDatasetReq) Descriptor() ([]byte, []int) {
+// Deprecated: Use SearchDatasetNameReq.ProtoReflect.Descriptor instead.
+func (*SearchDatasetNameReq) Descriptor() ([]byte, []int) {
 	return file_dateset_proto_rawDescGZIP(), []int{19}
 }
 
-func (x *SearchDatasetReq) GetPageSize() int32 {
+func (x *SearchDatasetNameReq) GetPageSize() int32 {
 	if x != nil {
 		return x.PageSize
 	}
 	return 0
 }
 
-func (x *SearchDatasetReq) GetDatasetName() string {
+func (x *SearchDatasetNameReq) GetDatasetName() string {
 	if x != nil {
 		return x.DatasetName
 	}
 	return ""
 }
 
-type SearchDatasetRsp struct {
+func (x *SearchDatasetNameReq) GetDatasetId() int64 {
+	if x != nil {
+		return x.DatasetId
+	}
+	return 0
+}
+
+type SearchDatasetNameRsp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Dataset       []*SearchDatasetLine   `protobuf:"bytes,1,rep,name=dataset,proto3" json:"dataset,omitempty"` // 搜索结果
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *SearchDatasetRsp) Reset() {
-	*x = SearchDatasetRsp{}
+func (x *SearchDatasetNameRsp) Reset() {
+	*x = SearchDatasetNameRsp{}
 	mi := &file_dateset_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *SearchDatasetRsp) String() string {
+func (x *SearchDatasetNameRsp) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*SearchDatasetRsp) ProtoMessage() {}
+func (*SearchDatasetNameRsp) ProtoMessage() {}
 
-func (x *SearchDatasetRsp) ProtoReflect() protoreflect.Message {
+func (x *SearchDatasetNameRsp) ProtoReflect() protoreflect.Message {
 	mi := &file_dateset_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1419,12 +1427,12 @@ func (x *SearchDatasetRsp) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use SearchDatasetRsp.ProtoReflect.Descriptor instead.
-func (*SearchDatasetRsp) Descriptor() ([]byte, []int) {
+// Deprecated: Use SearchDatasetNameRsp.ProtoReflect.Descriptor instead.
+func (*SearchDatasetNameRsp) Descriptor() ([]byte, []int) {
 	return file_dateset_proto_rawDescGZIP(), []int{20}
 }
 
-func (x *SearchDatasetRsp) GetDataset() []*SearchDatasetLine {
+func (x *SearchDatasetNameRsp) GetDataset() []*SearchDatasetLine {
 	if x != nil {
 		return x.Dataset
 	}
@@ -2281,11 +2289,12 @@ const file_dateset_proto_rawDesc = "" +
 	"\x1aAdminStopProcessDatasetRsp\"S\n" +
 	"\x11SearchDatasetLine\x12\x1c\n" +
 	"\tdatasetId\x18\x01 \x01(\x03R\tdatasetId\x12 \n" +
-	"\vdatasetName\x18\x02 \x01(\tR\vdatasetName\"Y\n" +
-	"\x10SearchDatasetReq\x12#\n" +
+	"\vdatasetName\x18\x02 \x01(\tR\vdatasetName\"{\n" +
+	"\x14SearchDatasetNameReq\x12#\n" +
 	"\bpageSize\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02(\x05R\bpageSize\x12 \n" +
-	"\vdatasetName\x18\x02 \x01(\tR\vdatasetName\"H\n" +
-	"\x10SearchDatasetRsp\x124\n" +
+	"\vdatasetName\x18\x02 \x01(\tR\vdatasetName\x12\x1c\n" +
+	"\tdatasetId\x18\x03 \x01(\x03R\tdatasetId\"L\n" +
+	"\x14SearchDatasetNameRsp\x124\n" +
 	"\adataset\x18\x01 \x03(\v2\x1a.dataset.SearchDatasetLineR\adataset\"\x97\x02\n" +
 	"\x12DatasetInfoByListA\x12\x1c\n" +
 	"\tdatasetId\x18\x01 \x01(\x03R\tdatasetId\x12 \n" +
@@ -2392,14 +2401,14 @@ const file_dateset_proto_rawDesc = "" +
 	"\x12DataSource_UriFile\x10\x01*?\n" +
 	"\fCompressType\x12\x17\n" +
 	"\x13CompressorType_None\x10\x00\x12\x16\n" +
-	"\x12CompressorType_Lz4\x10\x012\xef\t\n" +
+	"\x12CompressorType_Lz4\x10\x012\xff\t\n" +
 	"\x0eDatasetService\x12p\n" +
 	"\x0fAdminAddDataset\x12\x1b.dataset.AdminAddDatasetReq\x1a\x1b.dataset.AdminAddDatasetRsp\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/Dataset/AdminAddDataset\x12|\n" +
 	"\x12AdminUpdateDataset\x12\x1e.dataset.AdminUpdateDatasetReq\x1a\x1e.dataset.AdminUpdateDatasetRsp\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/Dataset/AdminUpdateDataset\x12p\n" +
 	"\x0fAdminDelDataset\x12\x1b.dataset.AdminDelDatasetReq\x1a\x1b.dataset.AdminDelDatasetRsp\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/Dataset/AdminDelDataset\x12\x8c\x01\n" +
 	"\x16AdminRunProcessDataset\x12\".dataset.AdminRunProcessDatasetReq\x1a\".dataset.AdminRunProcessDatasetRsp\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/Dataset/AdminRunProcessDataset\x12\x90\x01\n" +
-	"\x17AdminStopProcessDataset\x12#.dataset.AdminStopProcessDatasetReq\x1a#.dataset.AdminStopProcessDatasetRsp\"+\x82\xd3\xe4\x93\x02%:\x01*\" /Dataset/AdminStopProcessDataset\x12h\n" +
-	"\rSearchDataset\x12\x19.dataset.SearchDatasetReq\x1a\x19.dataset.SearchDatasetRsp\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/Dataset/SearchDataset\x12t\n" +
+	"\x17AdminStopProcessDataset\x12#.dataset.AdminStopProcessDatasetReq\x1a#.dataset.AdminStopProcessDatasetRsp\"+\x82\xd3\xe4\x93\x02%:\x01*\" /Dataset/AdminStopProcessDataset\x12x\n" +
+	"\x11SearchDatasetName\x12\x1d.dataset.SearchDatasetNameReq\x1a\x1d.dataset.SearchDatasetNameRsp\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/Dataset/SearchDatasetName\x12t\n" +
 	"\x10QueryDatasetList\x12\x1c.dataset.QueryDatasetListReq\x1a\x1c.dataset.QueryDatasetListRsp\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/Dataset/QueryDatasetList\x12t\n" +
 	"\x10QueryDatasetInfo\x12\x1c.dataset.QueryDatasetInfoReq\x1a\x1c.dataset.QueryDatasetInfoRsp\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/Dataset/QueryDatasetInfo\x12\x8c\x01\n" +
 	"\x16QueryDatasetStatusInfo\x12\".dataset.QueryDatasetStatusInfoReq\x1a\".dataset.QueryDatasetStatusInfoRsp\"*\x82\xd3\xe4\x93\x02$:\x01*\"\x1f/Dataset/QueryDatasetStatusInfo\x12t\n" +
@@ -2443,8 +2452,8 @@ var file_dateset_proto_goTypes = []any{
 	(*AdminStopProcessDatasetReq)(nil), // 20: dataset.AdminStopProcessDatasetReq
 	(*AdminStopProcessDatasetRsp)(nil), // 21: dataset.AdminStopProcessDatasetRsp
 	(*SearchDatasetLine)(nil),          // 22: dataset.SearchDatasetLine
-	(*SearchDatasetReq)(nil),           // 23: dataset.SearchDatasetReq
-	(*SearchDatasetRsp)(nil),           // 24: dataset.SearchDatasetRsp
+	(*SearchDatasetNameReq)(nil),       // 23: dataset.SearchDatasetNameReq
+	(*SearchDatasetNameRsp)(nil),       // 24: dataset.SearchDatasetNameRsp
 	(*DatasetInfoByListA)(nil),         // 25: dataset.DatasetInfoByListA
 	(*QueryDatasetListReq)(nil),        // 26: dataset.QueryDatasetListReq
 	(*QueryDatasetListRsp)(nil),        // 27: dataset.QueryDatasetListRsp
@@ -2474,7 +2483,7 @@ var file_dateset_proto_depIdxs = []int32{
 	4,  // 13: dataset.AdminDelDatasetReq.op:type_name -> dataset.OpInfoQ
 	4,  // 14: dataset.AdminRunProcessDatasetReq.op:type_name -> dataset.OpInfoQ
 	4,  // 15: dataset.AdminStopProcessDatasetReq.op:type_name -> dataset.OpInfoQ
-	22, // 16: dataset.SearchDatasetRsp.dataset:type_name -> dataset.SearchDatasetLine
+	22, // 16: dataset.SearchDatasetNameRsp.dataset:type_name -> dataset.SearchDatasetLine
 	5,  // 17: dataset.DatasetInfoByListA.op:type_name -> dataset.OpInfoA
 	1,  // 18: dataset.DatasetInfoByListA.status:type_name -> dataset.Status
 	1,  // 19: dataset.QueryDatasetListReq.status:type_name -> dataset.Status
@@ -2491,7 +2500,7 @@ var file_dateset_proto_depIdxs = []int32{
 	16, // 30: dataset.DatasetService.AdminDelDataset:input_type -> dataset.AdminDelDatasetReq
 	18, // 31: dataset.DatasetService.AdminRunProcessDataset:input_type -> dataset.AdminRunProcessDatasetReq
 	20, // 32: dataset.DatasetService.AdminStopProcessDataset:input_type -> dataset.AdminStopProcessDatasetReq
-	23, // 33: dataset.DatasetService.SearchDataset:input_type -> dataset.SearchDatasetReq
+	23, // 33: dataset.DatasetService.SearchDatasetName:input_type -> dataset.SearchDatasetNameReq
 	26, // 34: dataset.DatasetService.QueryDatasetList:input_type -> dataset.QueryDatasetListReq
 	29, // 35: dataset.DatasetService.QueryDatasetInfo:input_type -> dataset.QueryDatasetInfoReq
 	31, // 36: dataset.DatasetService.QueryDatasetStatusInfo:input_type -> dataset.QueryDatasetStatusInfoReq
@@ -2501,7 +2510,7 @@ var file_dateset_proto_depIdxs = []int32{
 	17, // 40: dataset.DatasetService.AdminDelDataset:output_type -> dataset.AdminDelDatasetRsp
 	19, // 41: dataset.DatasetService.AdminRunProcessDataset:output_type -> dataset.AdminRunProcessDatasetRsp
 	21, // 42: dataset.DatasetService.AdminStopProcessDataset:output_type -> dataset.AdminStopProcessDatasetRsp
-	24, // 43: dataset.DatasetService.SearchDataset:output_type -> dataset.SearchDatasetRsp
+	24, // 43: dataset.DatasetService.SearchDatasetName:output_type -> dataset.SearchDatasetNameRsp
 	27, // 44: dataset.DatasetService.QueryDatasetList:output_type -> dataset.QueryDatasetListRsp
 	30, // 45: dataset.DatasetService.QueryDatasetInfo:output_type -> dataset.QueryDatasetInfoRsp
 	33, // 46: dataset.DatasetService.QueryDatasetStatusInfo:output_type -> dataset.QueryDatasetStatusInfoRsp

@@ -313,15 +313,15 @@
         ]
       }
     },
-    "/Dataset/SearchDataset": {
+    "/Dataset/SearchDatasetName": {
       "post": {
-        "summary": "搜索数据集",
-        "operationId": "DatasetService_SearchDataset",
+        "summary": "搜索数据集名",
+        "operationId": "DatasetService_SearchDatasetName",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/datasetSearchDatasetRsp"
+              "$ref": "#/definitions/datasetSearchDatasetNameRsp"
             }
           },
           "default": {
@@ -337,7 +337,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/datasetSearchDatasetReq"
+              "$ref": "#/definitions/datasetSearchDatasetNameReq"
             }
           }
         ],
@@ -920,7 +920,7 @@
       },
       "title": "查询方式仅支持一种"
     },
-    "datasetSearchDatasetReq": {
+    "datasetSearchDatasetNameReq": {
       "type": "object",
       "properties": {
         "pageSize": {
@@ -931,10 +931,15 @@
         "datasetName": {
           "type": "string",
           "title": "数据集名"
+        },
+        "datasetId": {
+          "type": "string",
+          "format": "int64",
+          "title": "直接根据数据集id搜索"
         }
       }
     },
-    "datasetSearchDatasetRsp": {
+    "datasetSearchDatasetNameRsp": {
       "type": "object",
       "properties": {
         "dataset": {

@@ -24,7 +24,7 @@ const (
 	DatasetService_AdminDelDataset_FullMethodName         = "/dataset.DatasetService/AdminDelDataset"
 	DatasetService_AdminRunProcessDataset_FullMethodName  = "/dataset.DatasetService/AdminRunProcessDataset"
 	DatasetService_AdminStopProcessDataset_FullMethodName = "/dataset.DatasetService/AdminStopProcessDataset"
-	DatasetService_SearchDataset_FullMethodName           = "/dataset.DatasetService/SearchDataset"
+	DatasetService_SearchDatasetName_FullMethodName       = "/dataset.DatasetService/SearchDatasetName"
 	DatasetService_QueryDatasetList_FullMethodName        = "/dataset.DatasetService/QueryDatasetList"
 	DatasetService_QueryDatasetInfo_FullMethodName        = "/dataset.DatasetService/QueryDatasetInfo"
 	DatasetService_QueryDatasetStatusInfo_FullMethodName  = "/dataset.DatasetService/QueryDatasetStatusInfo"
@@ -47,8 +47,8 @@ type DatasetServiceClient interface {
 	AdminRunProcessDataset(ctx context.Context, in *AdminRunProcessDatasetReq, opts ...grpc.CallOption) (*AdminRunProcessDatasetRsp, error)
 	// 停止处理
 	AdminStopProcessDataset(ctx context.Context, in *AdminStopProcessDatasetReq, opts ...grpc.CallOption) (*AdminStopProcessDatasetRsp, error)
-	// 搜索数据集
-	SearchDataset(ctx context.Context, in *SearchDatasetReq, opts ...grpc.CallOption) (*SearchDatasetRsp, error)
+	// 搜索数据集名
+	SearchDatasetName(ctx context.Context, in *SearchDatasetNameReq, opts ...grpc.CallOption) (*SearchDatasetNameRsp, error)
 	// 查询数据集列表
 	QueryDatasetList(ctx context.Context, in *QueryDatasetListReq, opts ...grpc.CallOption) (*QueryDatasetListRsp, error)
 	// 查询数据集基本信息
@@ -117,10 +117,10 @@ func (c *datasetServiceClient) AdminStopProcessDataset(ctx context.Context, in *
 	return out, nil
 }
 
-func (c *datasetServiceClient) SearchDataset(ctx context.Context, in *SearchDatasetReq, opts ...grpc.CallOption) (*SearchDatasetRsp, error) {
+func (c *datasetServiceClient) SearchDatasetName(ctx context.Context, in *SearchDatasetNameReq, opts ...grpc.CallOption) (*SearchDatasetNameRsp, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SearchDatasetRsp)
-	err := c.cc.Invoke(ctx, DatasetService_SearchDataset_FullMethodName, in, out, cOpts...)
+	out := new(SearchDatasetNameRsp)
+	err := c.cc.Invoke(ctx, DatasetService_SearchDatasetName_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -183,8 +183,8 @@ type DatasetServiceServer interface {
 	AdminRunProcessDataset(context.Context, *AdminRunProcessDatasetReq) (*AdminRunProcessDatasetRsp, error)
 	// 停止处理
 	AdminStopProcessDataset(context.Context, *AdminStopProcessDatasetReq) (*AdminStopProcessDatasetRsp, error)
-	// 搜索数据集
-	SearchDataset(context.Context, *SearchDatasetReq) (*SearchDatasetRsp, error)
+	// 搜索数据集名
+	SearchDatasetName(context.Context, *SearchDatasetNameReq) (*SearchDatasetNameRsp, error)
 	// 查询数据集列表
 	QueryDatasetList(context.Context, *QueryDatasetListReq) (*QueryDatasetListRsp, error)
 	// 查询数据集基本信息
@@ -218,8 +218,8 @@ func (UnimplementedDatasetServiceServer) AdminRunProcessDataset(context.Context,
 func (UnimplementedDatasetServiceServer) AdminStopProcessDataset(context.Context, *AdminStopProcessDatasetReq) (*AdminStopProcessDatasetRsp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AdminStopProcessDataset not implemented")
 }
-func (UnimplementedDatasetServiceServer) SearchDataset(context.Context, *SearchDatasetReq) (*SearchDatasetRsp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SearchDataset not implemented")
+func (UnimplementedDatasetServiceServer) SearchDatasetName(context.Context, *SearchDatasetNameReq) (*SearchDatasetNameRsp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SearchDatasetName not implemented")
 }
 func (UnimplementedDatasetServiceServer) QueryDatasetList(context.Context, *QueryDatasetListReq) (*QueryDatasetListRsp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method QueryDatasetList not implemented")
@@ -344,20 +344,20 @@ func _DatasetService_AdminStopProcessDataset_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DatasetService_SearchDataset_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchDatasetReq)
+func _DatasetService_SearchDatasetName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchDatasetNameReq)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DatasetServiceServer).SearchDataset(ctx, in)
+		return srv.(DatasetServiceServer).SearchDatasetName(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DatasetService_SearchDataset_FullMethodName,
+		FullMethod: DatasetService_SearchDatasetName_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DatasetServiceServer).SearchDataset(ctx, req.(*SearchDatasetReq))
+		return srv.(DatasetServiceServer).SearchDatasetName(ctx, req.(*SearchDatasetNameReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -462,8 +462,8 @@ var DatasetService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _DatasetService_AdminStopProcessDataset_Handler,
 		},
 		{
-			MethodName: "SearchDataset",
-			Handler:    _DatasetService_SearchDataset_Handler,
+			MethodName: "SearchDatasetName",
+			Handler:    _DatasetService_SearchDatasetName_Handler,
 		},
 		{
 			MethodName: "QueryDatasetList",

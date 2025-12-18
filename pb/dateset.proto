@@ -43,10 +43,10 @@ service DatasetService {
     };
   }
 
-  // 搜索数据集
-  rpc SearchDataset(SearchDatasetReq) returns (SearchDatasetRsp){
+  // 搜索数据集名
+  rpc SearchDatasetName(SearchDatasetNameReq) returns (SearchDatasetNameRsp){
     option (google.api.http) = {
-      post: "/Dataset/SearchDataset",
+      post: "/Dataset/SearchDatasetName",
       body: "*",
     };
   }
@@ -222,11 +222,12 @@ message SearchDatasetLine {
   int64 datasetId = 1; // 数据集
   string datasetName = 2; // 数据集名
 }
-message SearchDatasetReq {
+message SearchDatasetNameReq {
   int32 pageSize = 1 [(validate.rules).int32.gte = 5]; // 每页返回数量, 最少返回5条
   string datasetName = 2; // 数据集名
+  int64 datasetId = 3; // 直接根据数据集id搜索
 }
-message SearchDatasetRsp {
+message SearchDatasetNameRsp {
   repeated SearchDatasetLine dataset = 1; // 搜索结果
 }
 
