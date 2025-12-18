@@ -76,6 +76,16 @@ func (d *Dataset) QueryDatasetList(ctx context.Context, req *pb.QueryDatasetList
 	if req.GetEndTime() > 0 {
 		where["create_time <="] = req.GetEndTime()
 	}
+	if req.GetOpUser() != "" {
+		where["_or"] = []map[string]interface{}{
+			{
+				"op_user_id like": req.GetOpUser() + "%",
+			},
+			{
+				"op_user_name like": req.GetOpUser() + "%",
+			},
+		}
+	}
 
 	pageSize := max(req.GetPageSize(), 5)
 	where["_limit"] = []uint{0, uint(pageSize)}

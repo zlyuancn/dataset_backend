@@ -1541,6 +1541,7 @@ type QueryDatasetListReq struct {
 	StartTime     int64                  `protobuf:"varint,5,opt,name=startTime,proto3" json:"startTime,omitempty"`                      // 开始时间, 秒级时间戳. 0表示不限制
 	EndTime       int64                  `protobuf:"varint,6,opt,name=endTime,proto3" json:"endTime,omitempty"`                          // 结束时间, 秒级时间戳. 0表示不限制
 	NextCursor    int64                  `protobuf:"varint,7,opt,name=nextCursor,proto3" json:"nextCursor,omitempty"`                    // 游标
+	OpUser        string                 `protobuf:"bytes,8,opt,name=opUser,proto3" json:"opUser,omitempty"`                             // 操作人
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1622,6 +1623,13 @@ func (x *QueryDatasetListReq) GetNextCursor() int64 {
 		return x.NextCursor
 	}
 	return 0
+}
+
+func (x *QueryDatasetListReq) GetOpUser() string {
+	if x != nil {
+		return x.OpUser
+	}
+	return ""
 }
 
 type QueryDatasetListRsp struct {
@@ -2294,7 +2302,7 @@ const file_dateset_proto_rawDesc = "" +
 	"\n" +
 	"statusInfo\x18\n" +
 	" \x01(\tR\n" +
-	"statusInfo\"\xff\x01\n" +
+	"statusInfo\"\x97\x02\n" +
 	"\x13QueryDatasetListReq\x12\x1b\n" +
 	"\x04page\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x04page\x12#\n" +
 	"\bpageSize\x18\x02 \x01(\x05B\a\xfaB\x04\x1a\x02(\x05R\bpageSize\x12%\n" +
@@ -2304,7 +2312,8 @@ const file_dateset_proto_rawDesc = "" +
 	"\aendTime\x18\x06 \x01(\x03R\aendTime\x12\x1e\n" +
 	"\n" +
 	"nextCursor\x18\a \x01(\x03R\n" +
-	"nextCursor\"h\n" +
+	"nextCursor\x12\x16\n" +
+	"\x06opUser\x18\b \x01(\tR\x06opUser\"h\n" +
 	"\x13QueryDatasetListRsp\x12\x1e\n" +
 	"\n" +
 	"nextCursor\x18\x01 \x01(\x03R\n" +

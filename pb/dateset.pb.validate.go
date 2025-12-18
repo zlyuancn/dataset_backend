@@ -2888,6 +2888,8 @@ func (m *QueryDatasetListReq) validate(all bool) error {
 
 	// no validation rules for NextCursor
 
+	// no validation rules for OpUser
+
 	if len(errors) > 0 {
 		return QueryDatasetListReqMultiError(errors)
 	}

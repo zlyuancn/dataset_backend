@@ -855,6 +855,10 @@
           "type": "string",
           "format": "int64",
           "title": "游标"
+        },
+        "opUser": {
+          "type": "string",
+          "title": "操作人"
         }
       }
     },

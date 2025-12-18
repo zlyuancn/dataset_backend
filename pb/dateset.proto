@@ -249,6 +249,7 @@ message QueryDatasetListReq {
   int64 startTime = 5; // 开始时间, 秒级时间戳. 0表示不限制
   int64 endTime = 6; // 结束时间, 秒级时间戳. 0表示不限制
   int64 nextCursor = 7; // 游标
+  string opUser = 8; // 操作人
 }
 message QueryDatasetListRsp {
   int64 nextCursor = 1; // 下一页游标
