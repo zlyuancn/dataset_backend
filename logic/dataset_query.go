@@ -20,15 +20,6 @@ func (*Dataset) SearchDataset(ctx context.Context, req *pb.SearchDatasetReq) (*p
 	switch {
 	case req.GetDatasetName() != "": // 仅搜索数据集名
 		where["dataset_name"] = req.GetDatasetName()
-	case req.GetOpUser() != "": // 仅搜索用户名
-		where["_or"] = []map[string]interface{}{
-			{
-				"op_user_id like": req.GetOpUser() + "%",
-			},
-			{
-				"op_user_name like": req.GetOpUser() + "%",
-			},
-		}
 	default:
 		return &pb.SearchDatasetRsp{}, nil
 	}

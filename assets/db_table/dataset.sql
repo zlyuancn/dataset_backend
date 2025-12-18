@@ -17,9 +17,10 @@ CREATE TABLE `dataset`
     `status_info`    varchar(1024)    NOT NULL DEFAULT '' COMMENT '状态信息',
     `activate_time`  datetime         NOT NULL DEFAULT '1000-01-01 00:00:00' comment '最后激活时间',
     PRIMARY KEY (`dataset_id`),
-    KEY `idx_dataset_name` (`dataset_name`(8)),
-    KEY `idx_op_user_id` (`op_user_id`(8)),
-    KEY `idx_op_user_name` (`op_user_name`(8)),
+    KEY `idx_status_create_time` (`status`, `create_time` desc),
+    KEY `idx_dataset_name` (`dataset_name`(8)) comment '仅作为前缀搜索指定数据',
+    KEY `idx_op_user_id` (`op_user_id`(8), `create_time` desc),
+    KEY `idx_op_user_name` (`op_user_name`(8), `create_time` desc),
     KEY `idx_activate_time_status_index` (`activate_time` desc, `status`) comment '恢复器扫描处理中的数据集'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -41,8 +42,7 @@ CREATE TABLE `dataset_history`
     `status`         tinyint unsigned NOT NULL DEFAULT 0 COMMENT '任务状态 0=已创建 2=运行中 3=已完成 4=正在停止 5=已停止 6=已删除',
     `status_info`    varchar(1024)    NOT NULL DEFAULT '' COMMENT '状态信息',
     PRIMARY KEY (`id`),
-    KEY `idx_create_time` (`dataset_id`),
-    KEY `idx_dataset_name` (`dataset_name`(8)),
+    KEY `idx_dataset_id` (`dataset_id`),
     KEY `idx_op_user_id` (`op_user_id`(8)),
     KEY `idx_op_user_name` (`op_user_name`(8))
 ) ENGINE = InnoDB

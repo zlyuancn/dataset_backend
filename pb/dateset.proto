@@ -225,7 +225,6 @@ message SearchDatasetLine {
 message SearchDatasetReq {
   int32 pageSize = 1 [(validate.rules).int32.gte = 5]; // 每页返回数量, 最少返回5条
   string datasetName = 2; // 数据集名
-  string opUser = 3; // 操作人
 }
 message SearchDatasetRsp {
   repeated SearchDatasetLine dataset = 1; // 搜索结果

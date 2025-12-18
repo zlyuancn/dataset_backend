@@ -1339,7 +1339,6 @@ type SearchDatasetReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	PageSize      int32                  `protobuf:"varint,1,opt,name=pageSize,proto3" json:"pageSize,omitempty"`      // 每页返回数量, 最少返回5条
 	DatasetName   string                 `protobuf:"bytes,2,opt,name=datasetName,proto3" json:"datasetName,omitempty"` // 数据集名
-	OpUser        string                 `protobuf:"bytes,3,opt,name=opUser,proto3" json:"opUser,omitempty"`           // 操作人
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1384,13 +1383,6 @@ func (x *SearchDatasetReq) GetPageSize() int32 {
 func (x *SearchDatasetReq) GetDatasetName() string {
 	if x != nil {
 		return x.DatasetName
-	}
-	return ""
-}
-
-func (x *SearchDatasetReq) GetOpUser() string {
-	if x != nil {
-		return x.OpUser
 	}
 	return ""
 }
@@ -2281,11 +2273,10 @@ const file_dateset_proto_rawDesc = "" +
 	"\x1aAdminStopProcessDatasetRsp\"S\n" +
 	"\x11SearchDatasetLine\x12\x1c\n" +
 	"\tdatasetId\x18\x01 \x01(\x03R\tdatasetId\x12 \n" +
-	"\vdatasetName\x18\x02 \x01(\tR\vdatasetName\"q\n" +
+	"\vdatasetName\x18\x02 \x01(\tR\vdatasetName\"Y\n" +
 	"\x10SearchDatasetReq\x12#\n" +
 	"\bpageSize\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02(\x05R\bpageSize\x12 \n" +
-	"\vdatasetName\x18\x02 \x01(\tR\vdatasetName\x12\x16\n" +
-	"\x06opUser\x18\x03 \x01(\tR\x06opUser\"H\n" +
+	"\vdatasetName\x18\x02 \x01(\tR\vdatasetName\"H\n" +
 	"\x10SearchDatasetRsp\x124\n" +
 	"\adataset\x18\x01 \x03(\v2\x1a.dataset.SearchDatasetLineR\adataset\"\x97\x02\n" +
 	"\x12DatasetInfoByListA\x12\x1c\n" +

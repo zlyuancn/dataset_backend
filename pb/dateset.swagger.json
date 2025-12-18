@@ -927,10 +927,6 @@
         "datasetName": {
           "type": "string",
           "title": "数据集名"
-        },
-        "opUser": {
-          "type": "string",
-          "title": "操作人"
         }
       }
     },

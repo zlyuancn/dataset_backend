@@ -2470,8 +2470,6 @@ func (m *SearchDatasetReq) validate(all bool) error {
 
 	// no validation rules for DatasetName
 
-	// no validation rules for OpUser
-
 	if len(errors) > 0 {
 		return SearchDatasetReqMultiError(errors)
 	}
