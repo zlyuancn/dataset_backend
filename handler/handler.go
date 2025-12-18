@@ -7,12 +7,12 @@ import (
 	"github.com/zly-app/zapp/component/gpool"
 	"github.com/zly-app/zapp/pkg/utils"
 
-	"github.com/zlyuancn/dataset/dao/dataset"
+	"github.com/zlyuancn/dataset/dao/dataset_list"
 )
 
 type Info struct {
-	T       time.Time      // 触发时间
-	Dataset *dataset.Model // 数据集
+	T       time.Time           // 触发时间
+	Dataset *dataset_list.Model // 数据集
 }
 
 type Handler func(ctx context.Context, handlerType HandlerType, info *Info)

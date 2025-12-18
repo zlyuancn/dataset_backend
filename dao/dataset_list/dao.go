@@ -1,4 +1,4 @@
-package dataset
+package dataset_list
 
 import (
 	"context"
@@ -31,7 +31,7 @@ var (
 )
 
 const (
-	tableName = "dataset"
+	tableName = "dataset_list"
 )
 
 type Model struct {

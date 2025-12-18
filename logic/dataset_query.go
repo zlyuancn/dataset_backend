@@ -8,7 +8,7 @@ import (
 	"github.com/zly-app/component/redis"
 	"github.com/zly-app/zapp/log"
 	"github.com/zlyuancn/dataset/client/db"
-	"github.com/zlyuancn/dataset/dao/dataset"
+	"github.com/zlyuancn/dataset/dao/dataset_list"
 	"github.com/zlyuancn/dataset/model"
 	"github.com/zlyuancn/dataset/module"
 	"github.com/zlyuancn/dataset/pb"
@@ -41,7 +41,7 @@ func (*Dataset) SearchDatasetName(ctx context.Context, req *pb.SearchDatasetName
 	where["_limit"] = []uint{0, uint(pageSize)}
 	where["_orderby"] = "dataset_id desc"
 
-	lines, err := dataset.MultiGetBySelect(ctx, where, []string{"dataset_id", "dataset_name"})
+	lines, err := dataset_list.MultiGetBySelect(ctx, where, []string{"dataset_id", "dataset_name"})
 	if err != nil {
 		log.Error(ctx, "SearchDatasetName call dataset.MultiGetBySelect", zap.Error(err))
 		return nil, err
@@ -106,7 +106,7 @@ func (d *Dataset) QueryDatasetList(ctx context.Context, req *pb.QueryDatasetList
 	where["_orderby"] = "dataset_id desc"
 
 	// 获取id列表
-	ids, err := dataset.MultiGetId(ctx, where)
+	ids, err := dataset_list.MultiGetId(ctx, where)
 	if err != nil {
 		log.Error(ctx, "QueryDatasetList call dataset.MultiGetId", zap.Error(err))
 		return nil, err
@@ -145,7 +145,7 @@ func (d *Dataset) QueryDatasetInfo(ctx context.Context, req *pb.QueryDatasetInfo
 	return &pb.QueryDatasetInfoRsp{Line: ret}, nil
 }
 
-func (d *Dataset) datasetDbModel2Pb(line *dataset.Model) *pb.DatasetInfoA {
+func (d *Dataset) datasetDbModel2Pb(line *dataset_list.Model) *pb.DatasetInfoA {
 	de := &pb.DatasetExtend{}
 	if line.DatasetExtend != "" {
 		_ = sonic.UnmarshalString(line.DatasetExtend, de)
@@ -172,7 +172,7 @@ func (d *Dataset) datasetDbModel2Pb(line *dataset.Model) *pb.DatasetInfoA {
 	return ret
 }
 
-func (d *Dataset) datasetDBModel2ListPb(line *dataset.Model) *pb.DatasetInfoByListA {
+func (d *Dataset) datasetDBModel2ListPb(line *dataset_list.Model) *pb.DatasetInfoByListA {
 	de := &pb.DatasetExtend{}
 	if line.DatasetExtend != "" {
 		_ = sonic.UnmarshalString(line.DatasetExtend, de)
@@ -196,7 +196,7 @@ func (d *Dataset) datasetDBModel2ListPb(line *dataset.Model) *pb.DatasetInfoByLi
 	return ret
 }
 
-func (d *Dataset) datasetDBModel2StatusPb(line *dataset.Model) *pb.DatasetStateInfo {
+func (d *Dataset) datasetDBModel2StatusPb(line *dataset_list.Model) *pb.DatasetStateInfo {
 	de := &pb.DatasetExtend{}
 	if line.DatasetExtend != "" {
 		_ = sonic.UnmarshalString(line.DatasetExtend, de)

@@ -1,4 +1,4 @@
-CREATE TABLE `dataset`
+CREATE TABLE `dataset_list`
 (
     `dataset_id`     bigint unsigned  NOT NULL AUTO_INCREMENT COMMENT '数据集id',
     `dataset_name`   varchar(32)      NOT NULL COMMENT '数据集名',

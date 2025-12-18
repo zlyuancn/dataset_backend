@@ -18,7 +18,7 @@ import (
 	"github.com/zlyuancn/dataset/module"
 
 	"github.com/zlyuancn/dataset/conf"
-	"github.com/zlyuancn/dataset/dao/dataset"
+	"github.com/zlyuancn/dataset/dao/dataset_list"
 	"github.com/zlyuancn/dataset/dao/dataset_history"
 	"github.com/zlyuancn/dataset/handler"
 	"github.com/zlyuancn/dataset/model"
@@ -32,7 +32,7 @@ func (*Dataset) AdminAddDataset(ctx context.Context, req *pb.AdminAddDatasetReq)
 		return nil, err
 	}
 
-	v := &dataset.Model{
+	v := &dataset_list.Model{
 		DatasetName:   req.GetDatasetName(),
 		Remark:        req.GetRemark(),
 		DatasetExtend: de,
@@ -49,7 +49,7 @@ func (*Dataset) AdminAddDataset(ctx context.Context, req *pb.AdminAddDatasetReq)
 	}
 
 	// 写入数据库
-	datasetId, err := dataset.CreateOneModel(ctx, v)
+	datasetId, err := dataset_list.CreateOneModel(ctx, v)
 	if err != nil {
 		log.Error(ctx, "AdminAddDataset call CreateOneModel fail.", zap.Error(err))
 		return nil, err
@@ -114,7 +114,7 @@ func (*Dataset) AdminUpdateDataset(ctx context.Context, req *pb.AdminUpdateDatas
 	defer unlock()
 
 	// 获取数据集
-	d, err := dataset.GetOneByDatasetId(ctx, int(req.GetDatasetId()))
+	d, err := dataset_list.GetOneByDatasetId(ctx, int(req.GetDatasetId()))
 	if err != nil {
 		log.Error(ctx, "AdminUpdateDataset call dataset.GetOneByDatasetId fail.", zap.Error(err))
 		return nil, err
@@ -122,7 +122,7 @@ func (*Dataset) AdminUpdateDataset(ctx context.Context, req *pb.AdminUpdateDatas
 	oldStatus := d.Status
 
 	// 写入数据库的数据
-	v := &dataset.Model{
+	v := &dataset_list.Model{
 		DatasetName: req.GetDatasetName(),
 		Remark:      req.GetRemark(),
 		OpSource:    req.GetOp().GetOpSource(),
@@ -137,7 +137,7 @@ func (*Dataset) AdminUpdateDataset(ctx context.Context, req *pb.AdminUpdateDatas
 	}
 
 	// 写入数据库
-	_, err = dataset.AdminUpdateDataset(ctx, v, oldStatus)
+	_, err = dataset_list.AdminUpdateDataset(ctx, v, oldStatus)
 	if err != nil {
 		log.Error(ctx, "AdminUpdateDataset call dataset.AdminUpdateDataset fail.", zap.Error(err))
 		return nil, err
@@ -206,7 +206,7 @@ func (*Dataset) AdminDelDataset(ctx context.Context, req *pb.AdminDelDatasetReq)
 	defer unlock()
 
 	// 获取数据集
-	d, err := dataset.GetOneByDatasetId(ctx, int(req.GetDatasetId()))
+	d, err := dataset_list.GetOneByDatasetId(ctx, int(req.GetDatasetId()))
 	if err != nil {
 		log.Error(ctx, "AdminDelDataset call dataset.GetOneByDatasetId fail.", zap.Error(err))
 		return nil, err
@@ -225,7 +225,7 @@ func (*Dataset) AdminDelDataset(ctx context.Context, req *pb.AdminDelDatasetReq)
 	}
 
 	// 写入数据库的数据
-	v := &dataset.Model{
+	v := &dataset_list.Model{
 		DatasetId:  uint(req.GetDatasetId()),
 		Status:     byte(pb.Status_Status_Deleting),
 		OpSource:   req.GetOp().GetOpSource(),
@@ -236,7 +236,7 @@ func (*Dataset) AdminDelDataset(ctx context.Context, req *pb.AdminDelDatasetReq)
 	}
 
 	// 更新数据为删除中
-	count, err := dataset.AdminUpdateStatus(ctx, v, oldStatus)
+	count, err := dataset_list.AdminUpdateStatus(ctx, v, oldStatus)
 	if err != nil {
 		log.Error(ctx, "AdminDelDataset call dataset.AdminUpdateStatus fail.", zap.Error(err))
 		return nil, err
@@ -294,7 +294,7 @@ func (*Dataset) AdminRunProcessDataset(ctx context.Context, req *pb.AdminRunProc
 	defer unlock()
 
 	// 获取数据集
-	d, err := dataset.GetOneByDatasetId(ctx, int(req.GetDatasetId()))
+	d, err := dataset_list.GetOneByDatasetId(ctx, int(req.GetDatasetId()))
 	if err != nil {
 		log.Error(ctx, "AdminRunProcessDataset call dataset.GetOneByDatasetId fail.", zap.Error(err))
 		return nil, err
@@ -319,7 +319,7 @@ func (*Dataset) AdminRunProcessDataset(ctx context.Context, req *pb.AdminRunProc
 	}
 
 	// 写入数据库的数据
-	v := &dataset.Model{
+	v := &dataset_list.Model{
 		DatasetId:  uint(req.GetDatasetId()),
 		Status:     byte(pb.Status_Status_Running),
 		OpSource:   req.GetOp().GetOpSource(),
@@ -336,7 +336,7 @@ func (*Dataset) AdminRunProcessDataset(ctx context.Context, req *pb.AdminRunProc
 	d.StatusInfo = v.StatusInfo
 
 	// 更新数据为处理中
-	count, err := dataset.AdminUpdateStatus(ctx, v, oldStatus)
+	count, err := dataset_list.AdminUpdateStatus(ctx, v, oldStatus)
 	if err != nil {
 		log.Error(ctx, "AdminRunProcessDataset call dataset.AdminUpdateStatus fail.", zap.Error(err))
 		return nil, err
@@ -406,7 +406,7 @@ func (*Dataset) AdminStopProcessDataset(ctx context.Context, req *pb.AdminStopPr
 	defer unlock()
 
 	// 获取数据集
-	d, err := dataset.GetOneByDatasetId(ctx, int(req.GetDatasetId()))
+	d, err := dataset_list.GetOneByDatasetId(ctx, int(req.GetDatasetId()))
 	if err != nil {
 		log.Error(ctx, "AdminStopProcessDataset call dataset.GetOneByDatasetId fail.", zap.Error(err))
 		return nil, err
@@ -435,7 +435,7 @@ func (*Dataset) AdminStopProcessDataset(ctx context.Context, req *pb.AdminStopPr
 	}
 
 	// 写入数据库的数据
-	v := &dataset.Model{
+	v := &dataset_list.Model{
 		DatasetId:  uint(req.GetDatasetId()),
 		Status:     byte(pb.Status_Status_Stopping),
 		OpSource:   req.GetOp().GetOpSource(),
@@ -446,7 +446,7 @@ func (*Dataset) AdminStopProcessDataset(ctx context.Context, req *pb.AdminStopPr
 	}
 
 	// 更新数据为停止中
-	count, err := dataset.AdminUpdateStatus(ctx, v, oldStatus)
+	count, err := dataset_list.AdminUpdateStatus(ctx, v, oldStatus)
 	if err != nil {
 		log.Error(ctx, "AdminStopProcessDataset call dataset.AdminUpdateStatus fail.", zap.Error(err))
 		return nil, err

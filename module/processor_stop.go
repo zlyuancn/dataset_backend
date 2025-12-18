@@ -7,7 +7,7 @@ import (
 	"github.com/zly-app/cache/v2"
 	"github.com/zly-app/zapp/log"
 	"github.com/zlyuancn/dataset/conf"
-	"github.com/zlyuancn/dataset/dao/dataset"
+	"github.com/zlyuancn/dataset/dao/dataset_list"
 	"github.com/zlyuancn/dataset/handler"
 	"github.com/zlyuancn/dataset/pb"
 	"github.com/zlyuancn/redis_tool"
@@ -15,7 +15,7 @@ import (
 )
 
 // 尝试停止
-func (processorCli) RestorerStop(ctx context.Context, datasetInfo *dataset.Model) {
+func (processorCli) RestorerStop(ctx context.Context, datasetInfo *dataset_list.Model) {
 	// 获取运行锁
 	lockKey := CacheKey.GetRunProcessLock(int(datasetInfo.DatasetId))
 	unlock, _, err := redis_tool.AutoLock(ctx, lockKey, time.Duration(conf.Conf.RunLockExtraTtl)*time.Second)
@@ -32,7 +32,7 @@ func (processorCli) RestorerStop(ctx context.Context, datasetInfo *dataset.Model
 	updateData := map[string]any{
 		"status": int(pb.Status_Status_Stopped),
 	}
-	err = dataset.UpdateOne(ctx, int(datasetInfo.DatasetId), updateData, 0)
+	err = dataset_list.UpdateOne(ctx, int(datasetInfo.DatasetId), updateData, 0)
 	if err != nil {
 		log.Error(ctx, "RestorerStop call UpdateOne fail.", zap.Error(err))
 		return

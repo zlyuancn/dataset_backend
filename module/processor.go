@@ -17,7 +17,7 @@ import (
 	"github.com/zlyuancn/dataset/chunk_store"
 	"github.com/zlyuancn/dataset/client/db"
 	"github.com/zlyuancn/dataset/conf"
-	"github.com/zlyuancn/dataset/dao/dataset"
+	"github.com/zlyuancn/dataset/dao/dataset_list"
 	"github.com/zlyuancn/dataset/datasource"
 	"github.com/zlyuancn/dataset/handler"
 	"github.com/zlyuancn/dataset/model"
@@ -33,7 +33,7 @@ var Processor = processorCli{}
 type processorCli struct{}
 
 // 创建处理器
-func (processorCli) CreateProcessor(ctx context.Context, datasetInfo *dataset.Model) {
+func (processorCli) CreateProcessor(ctx context.Context, datasetInfo *dataset_list.Model) {
 	// 加运行处理锁
 	lockKey := CacheKey.GetRunProcessLock(int(datasetInfo.DatasetId))
 	unlock, renew, err := redis_tool.AutoLock(ctx, lockKey, time.Duration(conf.Conf.RunLockExtraTtl)*time.Second)
@@ -67,7 +67,7 @@ type processorLauncher struct {
 	ctx    context.Context
 	cancel context.CancelFunc
 
-	datasetInfo *dataset.Model
+	datasetInfo *dataset_list.Model
 	de          *pb.DatasetExtend
 	pStatus     *model.CacheDatasetProcessStatus // 处理状态
 	chunkMeta   model.ChunkMeta                  // chunk元数据
@@ -88,7 +88,7 @@ type processorLauncher struct {
 	statusInfo  string         // 停止时的状态信息传递
 }
 
-func newProcessorLauncher(datasetInfo *dataset.Model,
+func newProcessorLauncher(datasetInfo *dataset_list.Model,
 	unlock redis_tool.KeyUnlock, renew redis_tool.KeyTtlRenew) (*processorLauncher, error) {
 
 	de := &pb.DatasetExtend{}
@@ -518,7 +518,7 @@ func (p *processorLauncher) stopSideEffect() {
 		"status":         int(status),
 		"status_info":    statusInfo,
 	}
-	err = dataset.UpdateOne(p.ctx, int(p.datasetInfo.DatasetId), updateData, 0)
+	err = dataset_list.UpdateOne(p.ctx, int(p.datasetInfo.DatasetId), updateData, 0)
 	if err != nil {
 		log.Error(p.ctx, "stopSideEffect call UpdateOne fail.", zap.Error(err))
 		return // 这里失败等重试

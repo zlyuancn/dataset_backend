@@ -13,7 +13,7 @@ import (
 	"github.com/zly-app/zapp/pkg/utils"
 	"github.com/zlyuancn/dataset/client/db"
 	"github.com/zlyuancn/dataset/conf"
-	"github.com/zlyuancn/dataset/dao/dataset"
+	"github.com/zlyuancn/dataset/dao/dataset_list"
 	"github.com/zlyuancn/dataset/model"
 	"go.uber.org/zap"
 )
@@ -57,11 +57,11 @@ func (*datasetCli) GetStopFlag(ctx context.Context, datasetId int) (model.StopFl
 }
 
 // 获取数据集信息, 使用缓存
-func (*datasetCli) GetDatasetInfoByCache(ctx context.Context, datasetId uint) (*dataset.Model, error) {
+func (*datasetCli) GetDatasetInfoByCache(ctx context.Context, datasetId uint) (*dataset_list.Model, error) {
 	key := CacheKey.GetDatasetInfo(int(datasetId))
-	ret := &dataset.Model{}
+	ret := &dataset_list.Model{}
 	err := cache.GetDefCache().Get(ctx, key, ret, cache.WithLoadFn(func(ctx context.Context, key string) (interface{}, error) {
-		v, err := dataset.GetOneByDatasetId(ctx, int(datasetId))
+		v, err := dataset_list.GetOneByDatasetId(ctx, int(datasetId))
 		if err == sqlx.ErrNoRows {
 			return nil, nil
 		}
@@ -71,9 +71,9 @@ func (*datasetCli) GetDatasetInfoByCache(ctx context.Context, datasetId uint) (*
 }
 
 // 批量获取数据集信息, 使用缓存
-func (d *datasetCli) BatchGetDatasetInfoByCache(ctx context.Context, datasetId []uint) ([]*dataset.Model, error) {
+func (d *datasetCli) BatchGetDatasetInfoByCache(ctx context.Context, datasetId []uint) ([]*dataset_list.Model, error) {
 	// 批量获取数据
-	lines, err := utils.GoQuery(datasetId, func(id uint) (*dataset.Model, error) {
+	lines, err := utils.GoQuery(datasetId, func(id uint) (*dataset_list.Model, error) {
 		line, err := d.GetDatasetInfoByCache(ctx, id)
 		if err != nil {
 			log.Error(ctx, "BatchGetDatasetInfoByCache call GetDatasetInfoByCache fail.", zap.Uint("id", id), zap.Error(err))
