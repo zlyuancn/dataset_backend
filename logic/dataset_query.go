@@ -26,7 +26,7 @@ func (*Dataset) SearchDatasetName(ctx context.Context, req *pb.SearchDatasetName
 			log.Error(ctx, "SearchDatasetName call GetDatasetInfoByCache fail.", zap.Error(err))
 			return nil, err
 		}
-		data := []*pb.SearchDatasetLine{
+		data := []*pb.SearchDatasetNameLine{
 			{
 				DatasetId:   int64(d.DatasetId),
 				DatasetName: d.DatasetName,
@@ -47,9 +47,9 @@ func (*Dataset) SearchDatasetName(ctx context.Context, req *pb.SearchDatasetName
 		return nil, err
 	}
 
-	data := make([]*pb.SearchDatasetLine, len(lines))
+	data := make([]*pb.SearchDatasetNameLine, len(lines))
 	for i := range lines {
-		data[i] = &pb.SearchDatasetLine{
+		data[i] = &pb.SearchDatasetNameLine{
 			DatasetId:   int64(lines[i].DatasetId),
 			DatasetName: lines[i].DatasetName,
 		}

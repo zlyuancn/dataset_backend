@@ -905,7 +905,7 @@
         }
       }
     },
-    "datasetSearchDatasetLine": {
+    "datasetSearchDatasetNameLine": {
       "type": "object",
       "properties": {
         "datasetId": {
@@ -917,8 +917,7 @@
           "type": "string",
           "title": "数据集名"
         }
-      },
-      "title": "查询方式仅支持一种"
+      }
     },
     "datasetSearchDatasetNameReq": {
       "type": "object",
@@ -946,7 +945,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/datasetSearchDatasetLine"
+            "$ref": "#/definitions/datasetSearchDatasetNameLine"
           },
           "title": "搜索结果"
         }

@@ -217,8 +217,7 @@ message AdminStopProcessDatasetReq {
 }
 message AdminStopProcessDatasetRsp {}
 
-// 查询方式仅支持一种
-message SearchDatasetLine {
+message SearchDatasetNameLine {
   int64 datasetId = 1; // 数据集
   string datasetName = 2; // 数据集名
 }
@@ -228,7 +227,7 @@ message SearchDatasetNameReq {
   int64 datasetId = 3; // 直接根据数据集id搜索
 }
 message SearchDatasetNameRsp {
-  repeated SearchDatasetLine dataset = 1; // 搜索结果
+  repeated SearchDatasetNameLine dataset = 1; // 搜索结果
 }
 
 // 数据集基础信息-响应

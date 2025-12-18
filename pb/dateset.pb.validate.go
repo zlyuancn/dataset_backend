@@ -2329,22 +2329,22 @@ var _ interface {
 	ErrorName() string
 } = AdminStopProcessDatasetRspValidationError{}
 
-// Validate checks the field values on SearchDatasetLine with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *SearchDatasetLine) Validate() error {
+// Validate checks the field values on SearchDatasetNameLine with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *SearchDatasetNameLine) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on SearchDatasetLine with the rules
+// ValidateAll checks the field values on SearchDatasetNameLine with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// SearchDatasetLineMultiError, or nil if none found.
-func (m *SearchDatasetLine) ValidateAll() error {
+// SearchDatasetNameLineMultiError, or nil if none found.
+func (m *SearchDatasetNameLine) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *SearchDatasetLine) validate(all bool) error {
+func (m *SearchDatasetNameLine) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -2356,19 +2356,19 @@ func (m *SearchDatasetLine) validate(all bool) error {
 	// no validation rules for DatasetName
 
 	if len(errors) > 0 {
-		return SearchDatasetLineMultiError(errors)
+		return SearchDatasetNameLineMultiError(errors)
 	}
 
 	return nil
 }
 
-// SearchDatasetLineMultiError is an error wrapping multiple validation errors
-// returned by SearchDatasetLine.ValidateAll() if the designated constraints
-// aren't met.
-type SearchDatasetLineMultiError []error
+// SearchDatasetNameLineMultiError is an error wrapping multiple validation
+// errors returned by SearchDatasetNameLine.ValidateAll() if the designated
+// constraints aren't met.
+type SearchDatasetNameLineMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m SearchDatasetLineMultiError) Error() string {
+func (m SearchDatasetNameLineMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -2377,11 +2377,11 @@ func (m SearchDatasetLineMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m SearchDatasetLineMultiError) AllErrors() []error { return m }
+func (m SearchDatasetNameLineMultiError) AllErrors() []error { return m }
 
-// SearchDatasetLineValidationError is the validation error returned by
-// SearchDatasetLine.Validate if the designated constraints aren't met.
-type SearchDatasetLineValidationError struct {
+// SearchDatasetNameLineValidationError is the validation error returned by
+// SearchDatasetNameLine.Validate if the designated constraints aren't met.
+type SearchDatasetNameLineValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -2389,24 +2389,24 @@ type SearchDatasetLineValidationError struct {
 }
 
 // Field function returns field value.
-func (e SearchDatasetLineValidationError) Field() string { return e.field }
+func (e SearchDatasetNameLineValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e SearchDatasetLineValidationError) Reason() string { return e.reason }
+func (e SearchDatasetNameLineValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e SearchDatasetLineValidationError) Cause() error { return e.cause }
+func (e SearchDatasetNameLineValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e SearchDatasetLineValidationError) Key() bool { return e.key }
+func (e SearchDatasetNameLineValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e SearchDatasetLineValidationError) ErrorName() string {
-	return "SearchDatasetLineValidationError"
+func (e SearchDatasetNameLineValidationError) ErrorName() string {
+	return "SearchDatasetNameLineValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e SearchDatasetLineValidationError) Error() string {
+func (e SearchDatasetNameLineValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -2418,14 +2418,14 @@ func (e SearchDatasetLineValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sSearchDatasetLine.%s: %s%s",
+		"invalid %sSearchDatasetNameLine.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = SearchDatasetLineValidationError{}
+var _ error = SearchDatasetNameLineValidationError{}
 
 var _ interface {
 	Field() string
@@ -2433,7 +2433,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = SearchDatasetLineValidationError{}
+} = SearchDatasetNameLineValidationError{}
 
 // Validate checks the field values on SearchDatasetNameReq with the rules
 // defined in the proto definition for this message. If any rules are
