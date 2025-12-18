@@ -242,7 +242,6 @@ message DatasetInfoByListA {
   string statusInfo = 10; // 状态信息
 }
 message QueryDatasetListReq {
-  int32 page = 1 [(validate.rules).int32.gt = 0]; // 页号, 从1开始
   int32 pageSize = 2 [(validate.rules).int32.gte = 5]; // 每页返回数量, 最少返回5条
   int64 datasetId = 3 [(validate.rules).int64.gte = 0]; // 数据集id
   repeated Status status = 4; // 状态

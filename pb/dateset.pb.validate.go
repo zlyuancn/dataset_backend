@@ -2855,17 +2855,6 @@ func (m *QueryDatasetListReq) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetPage() <= 0 {
-		err := QueryDatasetListReqValidationError{
-			field:  "Page",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if m.GetPageSize() < 5 {
 		err := QueryDatasetListReqValidationError{
 			field:  "PageSize",

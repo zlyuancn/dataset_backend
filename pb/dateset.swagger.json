@@ -819,11 +819,6 @@
     "datasetQueryDatasetListReq": {
       "type": "object",
       "properties": {
-        "page": {
-          "type": "integer",
-          "format": "int32",
-          "title": "页号, 从1开始"
-        },
         "pageSize": {
           "type": "integer",
           "format": "int32",

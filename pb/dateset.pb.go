@@ -1541,7 +1541,6 @@ func (x *DatasetInfoByListA) GetStatusInfo() string {
 
 type QueryDatasetListReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Page          int32                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`                                // 页号, 从1开始
 	PageSize      int32                  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`                        // 每页返回数量, 最少返回5条
 	DatasetId     int64                  `protobuf:"varint,3,opt,name=datasetId,proto3" json:"datasetId,omitempty"`                      // 数据集id
 	Status        []Status               `protobuf:"varint,4,rep,packed,name=status,proto3,enum=dataset.Status" json:"status,omitempty"` // 状态
@@ -1581,13 +1580,6 @@ func (x *QueryDatasetListReq) ProtoReflect() protoreflect.Message {
 // Deprecated: Use QueryDatasetListReq.ProtoReflect.Descriptor instead.
 func (*QueryDatasetListReq) Descriptor() ([]byte, []int) {
 	return file_dateset_proto_rawDescGZIP(), []int{22}
-}
-
-func (x *QueryDatasetListReq) GetPage() int32 {
-	if x != nil {
-		return x.Page
-	}
-	return 0
 }
 
 func (x *QueryDatasetListReq) GetPageSize() int32 {
@@ -2310,9 +2302,8 @@ const file_dateset_proto_rawDesc = "" +
 	"\n" +
 	"statusInfo\x18\n" +
 	" \x01(\tR\n" +
-	"statusInfo\"\x97\x02\n" +
-	"\x13QueryDatasetListReq\x12\x1b\n" +
-	"\x04page\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02 \x00R\x04page\x12#\n" +
+	"statusInfo\"\xfa\x01\n" +
+	"\x13QueryDatasetListReq\x12#\n" +
 	"\bpageSize\x18\x02 \x01(\x05B\a\xfaB\x04\x1a\x02(\x05R\bpageSize\x12%\n" +
 	"\tdatasetId\x18\x03 \x01(\x03B\a\xfaB\x04\"\x02(\x00R\tdatasetId\x12'\n" +
 	"\x06status\x18\x04 \x03(\x0e2\x0f.dataset.StatusR\x06status\x12\x1c\n" +
