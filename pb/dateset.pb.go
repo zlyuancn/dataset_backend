@@ -1396,7 +1396,7 @@ func (x *SearchDatasetNameReq) GetDatasetId() int64 {
 
 type SearchDatasetNameRsp struct {
 	state         protoimpl.MessageState   `protogen:"open.v1"`
-	Dataset       []*SearchDatasetNameLine `protobuf:"bytes,1,rep,name=dataset,proto3" json:"dataset,omitempty"` // 搜索结果
+	Lines         []*SearchDatasetNameLine `protobuf:"bytes,1,rep,name=lines,proto3" json:"lines,omitempty"` // 搜索结果
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1431,9 +1431,9 @@ func (*SearchDatasetNameRsp) Descriptor() ([]byte, []int) {
 	return file_dateset_proto_rawDescGZIP(), []int{20}
 }
 
-func (x *SearchDatasetNameRsp) GetDataset() []*SearchDatasetNameLine {
+func (x *SearchDatasetNameRsp) GetLines() []*SearchDatasetNameLine {
 	if x != nil {
-		return x.Dataset
+		return x.Lines
 	}
 	return nil
 }
@@ -2292,9 +2292,9 @@ const file_dateset_proto_rawDesc = "" +
 	"\x14SearchDatasetNameReq\x12#\n" +
 	"\bpageSize\x18\x01 \x01(\x05B\a\xfaB\x04\x1a\x02(\x05R\bpageSize\x12 \n" +
 	"\vdatasetName\x18\x02 \x01(\tR\vdatasetName\x12\x1c\n" +
-	"\tdatasetId\x18\x03 \x01(\x03R\tdatasetId\"P\n" +
-	"\x14SearchDatasetNameRsp\x128\n" +
-	"\adataset\x18\x01 \x03(\v2\x1e.dataset.SearchDatasetNameLineR\adataset\"\x97\x02\n" +
+	"\tdatasetId\x18\x03 \x01(\x03R\tdatasetId\"L\n" +
+	"\x14SearchDatasetNameRsp\x124\n" +
+	"\x05lines\x18\x01 \x03(\v2\x1e.dataset.SearchDatasetNameLineR\x05lines\"\x97\x02\n" +
 	"\x12DatasetInfoByListA\x12\x1c\n" +
 	"\tdatasetId\x18\x01 \x01(\x03R\tdatasetId\x12 \n" +
 	"\vdatasetName\x18\x02 \x01(\tR\vdatasetName\x12\x16\n" +
@@ -2482,7 +2482,7 @@ var file_dateset_proto_depIdxs = []int32{
 	4,  // 13: dataset.AdminDelDatasetReq.op:type_name -> dataset.OpInfoQ
 	4,  // 14: dataset.AdminRunProcessDatasetReq.op:type_name -> dataset.OpInfoQ
 	4,  // 15: dataset.AdminStopProcessDatasetReq.op:type_name -> dataset.OpInfoQ
-	22, // 16: dataset.SearchDatasetNameRsp.dataset:type_name -> dataset.SearchDatasetNameLine
+	22, // 16: dataset.SearchDatasetNameRsp.lines:type_name -> dataset.SearchDatasetNameLine
 	5,  // 17: dataset.DatasetInfoByListA.op:type_name -> dataset.OpInfoA
 	1,  // 18: dataset.DatasetInfoByListA.status:type_name -> dataset.Status
 	1,  // 19: dataset.QueryDatasetListReq.status:type_name -> dataset.Status

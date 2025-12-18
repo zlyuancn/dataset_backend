@@ -32,7 +32,7 @@ func (*Dataset) SearchDatasetName(ctx context.Context, req *pb.SearchDatasetName
 				DatasetName: d.DatasetName,
 			},
 		}
-		return &pb.SearchDatasetNameRsp{Dataset: data}, nil
+		return &pb.SearchDatasetNameRsp{Lines: data}, nil
 	default:
 		return &pb.SearchDatasetNameRsp{}, nil
 	}
@@ -54,7 +54,7 @@ func (*Dataset) SearchDatasetName(ctx context.Context, req *pb.SearchDatasetName
 			DatasetName: lines[i].DatasetName,
 		}
 	}
-	return &pb.SearchDatasetNameRsp{Dataset: data}, nil
+	return &pb.SearchDatasetNameRsp{Lines: data}, nil
 }
 
 func (d *Dataset) QueryDatasetList(ctx context.Context, req *pb.QueryDatasetListReq) (*pb.QueryDatasetListRsp, error) {

@@ -2574,7 +2574,7 @@ func (m *SearchDatasetNameRsp) validate(all bool) error {
 
 	var errors []error
 
-	for idx, item := range m.GetDataset() {
+	for idx, item := range m.GetLines() {
 		_, _ = idx, item
 
 		if all {
@@ -2582,7 +2582,7 @@ func (m *SearchDatasetNameRsp) validate(all bool) error {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, SearchDatasetNameRspValidationError{
-						field:  fmt.Sprintf("Dataset[%v]", idx),
+						field:  fmt.Sprintf("Lines[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -2590,7 +2590,7 @@ func (m *SearchDatasetNameRsp) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, SearchDatasetNameRspValidationError{
-						field:  fmt.Sprintf("Dataset[%v]", idx),
+						field:  fmt.Sprintf("Lines[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -2599,7 +2599,7 @@ func (m *SearchDatasetNameRsp) validate(all bool) error {
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return SearchDatasetNameRspValidationError{
-					field:  fmt.Sprintf("Dataset[%v]", idx),
+					field:  fmt.Sprintf("Lines[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
 				}

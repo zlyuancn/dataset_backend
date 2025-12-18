@@ -941,7 +941,7 @@
     "datasetSearchDatasetNameRsp": {
       "type": "object",
       "properties": {
-        "dataset": {
+        "lines": {
           "type": "array",
           "items": {
             "type": "object",

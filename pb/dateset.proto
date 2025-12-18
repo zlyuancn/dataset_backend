@@ -227,7 +227,7 @@ message SearchDatasetNameReq {
   int64 datasetId = 3; // 直接根据数据集id搜索
 }
 message SearchDatasetNameRsp {
-  repeated SearchDatasetNameLine dataset = 1; // 搜索结果
+  repeated SearchDatasetNameLine lines = 1; // 搜索结果
 }
 
 // 数据集基础信息-响应
