@@ -1121,8 +1121,6 @@ func (m *AdminAddDatasetReq) validate(all bool) error {
 		}
 	}
 
-	// no validation rules for Status
-
 	// no validation rules for StartProcessNow
 
 	if len(errors) > 0 {
@@ -1412,8 +1410,6 @@ func (m *AdminUpdateDatasetReq) validate(all bool) error {
 			}
 		}
 	}
-
-	// no validation rules for Status
 
 	if len(errors) > 0 {
 		return AdminUpdateDatasetReqMultiError(errors)

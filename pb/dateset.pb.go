@@ -772,12 +772,11 @@ func (x *DatasetExtend) GetValueProcess() *ValueProcess {
 
 type AdminAddDatasetReq struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	DatasetName     string                 `protobuf:"bytes,2,opt,name=datasetName,proto3" json:"datasetName,omitempty"`            // 数据集名
-	Remark          string                 `protobuf:"bytes,3,opt,name=remark,proto3" json:"remark,omitempty"`                      // 备注
-	DatasetExtend   *DatasetExtend         `protobuf:"bytes,5,opt,name=datasetExtend,proto3" json:"datasetExtend,omitempty"`        // 数据源扩展数据
-	Op              *OpInfoQ               `protobuf:"bytes,6,opt,name=op,proto3" json:"op,omitempty"`                              // 操作信息
-	Status          Status                 `protobuf:"varint,7,opt,name=status,proto3,enum=dataset.Status" json:"status,omitempty"` // 状态
-	StartProcessNow bool                   `protobuf:"varint,8,opt,name=startProcessNow,proto3" json:"startProcessNow,omitempty"`   // 创建后是否立即启动处理
+	DatasetName     string                 `protobuf:"bytes,2,opt,name=datasetName,proto3" json:"datasetName,omitempty"`          // 数据集名
+	Remark          string                 `protobuf:"bytes,3,opt,name=remark,proto3" json:"remark,omitempty"`                    // 备注
+	DatasetExtend   *DatasetExtend         `protobuf:"bytes,5,opt,name=datasetExtend,proto3" json:"datasetExtend,omitempty"`      // 数据源扩展数据
+	Op              *OpInfoQ               `protobuf:"bytes,6,opt,name=op,proto3" json:"op,omitempty"`                            // 操作信息
+	StartProcessNow bool                   `protobuf:"varint,8,opt,name=startProcessNow,proto3" json:"startProcessNow,omitempty"` // 创建后是否立即启动处理
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -840,13 +839,6 @@ func (x *AdminAddDatasetReq) GetOp() *OpInfoQ {
 	return nil
 }
 
-func (x *AdminAddDatasetReq) GetStatus() Status {
-	if x != nil {
-		return x.Status
-	}
-	return Status_Status_Created
-}
-
 func (x *AdminAddDatasetReq) GetStartProcessNow() bool {
 	if x != nil {
 		return x.StartProcessNow
@@ -900,12 +892,11 @@ func (x *AdminAddDatasetRsp) GetDatasetId() int64 {
 
 type AdminUpdateDatasetReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	DatasetId     int64                  `protobuf:"varint,1,opt,name=datasetId,proto3" json:"datasetId,omitempty"`               // 数据集id. 必填
-	DatasetName   string                 `protobuf:"bytes,2,opt,name=datasetName,proto3" json:"datasetName,omitempty"`            // 数据集名
-	Remark        string                 `protobuf:"bytes,3,opt,name=remark,proto3" json:"remark,omitempty"`                      // 备注
-	DatasetExtend *DatasetExtend         `protobuf:"bytes,5,opt,name=datasetExtend,proto3" json:"datasetExtend,omitempty"`        // 数据源扩展数据
-	Op            *OpInfoQ               `protobuf:"bytes,6,opt,name=op,proto3" json:"op,omitempty"`                              // 操作信息
-	Status        Status                 `protobuf:"varint,7,opt,name=status,proto3,enum=dataset.Status" json:"status,omitempty"` // 状态
+	DatasetId     int64                  `protobuf:"varint,1,opt,name=datasetId,proto3" json:"datasetId,omitempty"`        // 数据集id. 必填
+	DatasetName   string                 `protobuf:"bytes,2,opt,name=datasetName,proto3" json:"datasetName,omitempty"`     // 数据集名
+	Remark        string                 `protobuf:"bytes,3,opt,name=remark,proto3" json:"remark,omitempty"`               // 备注
+	DatasetExtend *DatasetExtend         `protobuf:"bytes,5,opt,name=datasetExtend,proto3" json:"datasetExtend,omitempty"` // 数据源扩展数据
+	Op            *OpInfoQ               `protobuf:"bytes,6,opt,name=op,proto3" json:"op,omitempty"`                       // 操作信息
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -973,13 +964,6 @@ func (x *AdminUpdateDatasetReq) GetOp() *OpInfoQ {
 		return x.Op
 	}
 	return nil
-}
-
-func (x *AdminUpdateDatasetReq) GetStatus() Status {
-	if x != nil {
-		return x.Status
-	}
-	return Status_Status_Created
 }
 
 type AdminUpdateDatasetRsp struct {
@@ -2248,23 +2232,21 @@ const file_dateset_proto_rawDesc = "" +
 	"\rDatasetExtend\x126\n" +
 	"\vdataProcess\x18\x01 \x01(\v2\x14.dataset.DataProcessR\vdataProcess\x129\n" +
 	"\fchunkProcess\x18\x02 \x01(\v2\x15.dataset.ChunkProcessR\fchunkProcess\x129\n" +
-	"\fvalueProcess\x18\x03 \x01(\v2\x15.dataset.ValueProcessR\fvalueProcess\"\x8a\x02\n" +
+	"\fvalueProcess\x18\x03 \x01(\v2\x15.dataset.ValueProcessR\fvalueProcess\"\xe1\x01\n" +
 	"\x12AdminAddDatasetReq\x12)\n" +
 	"\vdatasetName\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\vdatasetName\x12\x16\n" +
 	"\x06remark\x18\x03 \x01(\tR\x06remark\x12<\n" +
 	"\rdatasetExtend\x18\x05 \x01(\v2\x16.dataset.DatasetExtendR\rdatasetExtend\x12 \n" +
-	"\x02op\x18\x06 \x01(\v2\x10.dataset.OpInfoQR\x02op\x12'\n" +
-	"\x06status\x18\a \x01(\x0e2\x0f.dataset.StatusR\x06status\x12(\n" +
+	"\x02op\x18\x06 \x01(\v2\x10.dataset.OpInfoQR\x02op\x12(\n" +
 	"\x0fstartProcessNow\x18\b \x01(\bR\x0fstartProcessNow\"2\n" +
 	"\x12AdminAddDatasetRsp\x12\x1c\n" +
-	"\tdatasetId\x18\x01 \x01(\x03R\tdatasetId\"\x8a\x02\n" +
+	"\tdatasetId\x18\x01 \x01(\x03R\tdatasetId\"\xe1\x01\n" +
 	"\x15AdminUpdateDatasetReq\x12%\n" +
 	"\tdatasetId\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\tdatasetId\x12)\n" +
 	"\vdatasetName\x18\x02 \x01(\tB\a\xfaB\x04r\x02\x10\x01R\vdatasetName\x12\x16\n" +
 	"\x06remark\x18\x03 \x01(\tR\x06remark\x12<\n" +
 	"\rdatasetExtend\x18\x05 \x01(\v2\x16.dataset.DatasetExtendR\rdatasetExtend\x12 \n" +
-	"\x02op\x18\x06 \x01(\v2\x10.dataset.OpInfoQR\x02op\x12'\n" +
-	"\x06status\x18\a \x01(\x0e2\x0f.dataset.StatusR\x06status\"\x17\n" +
+	"\x02op\x18\x06 \x01(\v2\x10.dataset.OpInfoQR\x02op\"\x17\n" +
 	"\x15AdminUpdateDatasetRsp\"]\n" +
 	"\x12AdminDelDatasetReq\x12%\n" +
 	"\tdatasetId\x18\x01 \x01(\x03B\a\xfaB\x04\"\x02 \x00R\tdatasetId\x12 \n" +
@@ -2466,50 +2448,48 @@ var file_dateset_proto_depIdxs = []int32{
 	10, // 6: dataset.DatasetExtend.valueProcess:type_name -> dataset.ValueProcess
 	11, // 7: dataset.AdminAddDatasetReq.datasetExtend:type_name -> dataset.DatasetExtend
 	4,  // 8: dataset.AdminAddDatasetReq.op:type_name -> dataset.OpInfoQ
-	1,  // 9: dataset.AdminAddDatasetReq.status:type_name -> dataset.Status
-	11, // 10: dataset.AdminUpdateDatasetReq.datasetExtend:type_name -> dataset.DatasetExtend
-	4,  // 11: dataset.AdminUpdateDatasetReq.op:type_name -> dataset.OpInfoQ
-	1,  // 12: dataset.AdminUpdateDatasetReq.status:type_name -> dataset.Status
-	4,  // 13: dataset.AdminDelDatasetReq.op:type_name -> dataset.OpInfoQ
-	4,  // 14: dataset.AdminRunProcessDatasetReq.op:type_name -> dataset.OpInfoQ
-	4,  // 15: dataset.AdminStopProcessDatasetReq.op:type_name -> dataset.OpInfoQ
-	22, // 16: dataset.SearchDatasetNameRsp.lines:type_name -> dataset.SearchDatasetNameLine
-	5,  // 17: dataset.DatasetInfoByListA.op:type_name -> dataset.OpInfoA
-	1,  // 18: dataset.DatasetInfoByListA.status:type_name -> dataset.Status
-	1,  // 19: dataset.QueryDatasetListReq.status:type_name -> dataset.Status
-	25, // 20: dataset.QueryDatasetListRsp.lines:type_name -> dataset.DatasetInfoByListA
-	11, // 21: dataset.DatasetInfoA.datasetExtend:type_name -> dataset.DatasetExtend
-	5,  // 22: dataset.DatasetInfoA.op:type_name -> dataset.OpInfoA
-	1,  // 23: dataset.DatasetInfoA.status:type_name -> dataset.Status
-	28, // 24: dataset.QueryDatasetInfoRsp.line:type_name -> dataset.DatasetInfoA
-	1,  // 25: dataset.DatasetStateInfo.status:type_name -> dataset.Status
-	5,  // 26: dataset.DatasetStateInfo.op:type_name -> dataset.OpInfoA
-	32, // 27: dataset.QueryDatasetStatusInfoRsp.datasetStateInfos:type_name -> dataset.DatasetStateInfo
-	12, // 28: dataset.DatasetService.AdminAddDataset:input_type -> dataset.AdminAddDatasetReq
-	14, // 29: dataset.DatasetService.AdminUpdateDataset:input_type -> dataset.AdminUpdateDatasetReq
-	16, // 30: dataset.DatasetService.AdminDelDataset:input_type -> dataset.AdminDelDatasetReq
-	18, // 31: dataset.DatasetService.AdminRunProcessDataset:input_type -> dataset.AdminRunProcessDatasetReq
-	20, // 32: dataset.DatasetService.AdminStopProcessDataset:input_type -> dataset.AdminStopProcessDatasetReq
-	23, // 33: dataset.DatasetService.SearchDatasetName:input_type -> dataset.SearchDatasetNameReq
-	26, // 34: dataset.DatasetService.QueryDatasetList:input_type -> dataset.QueryDatasetListReq
-	29, // 35: dataset.DatasetService.QueryDatasetInfo:input_type -> dataset.QueryDatasetInfoReq
-	31, // 36: dataset.DatasetService.QueryDatasetStatusInfo:input_type -> dataset.QueryDatasetStatusInfoReq
-	34, // 37: dataset.DatasetService.QueryDatasetData:input_type -> dataset.QueryDatasetDataReq
-	13, // 38: dataset.DatasetService.AdminAddDataset:output_type -> dataset.AdminAddDatasetRsp
-	15, // 39: dataset.DatasetService.AdminUpdateDataset:output_type -> dataset.AdminUpdateDatasetRsp
-	17, // 40: dataset.DatasetService.AdminDelDataset:output_type -> dataset.AdminDelDatasetRsp
-	19, // 41: dataset.DatasetService.AdminRunProcessDataset:output_type -> dataset.AdminRunProcessDatasetRsp
-	21, // 42: dataset.DatasetService.AdminStopProcessDataset:output_type -> dataset.AdminStopProcessDatasetRsp
-	24, // 43: dataset.DatasetService.SearchDatasetName:output_type -> dataset.SearchDatasetNameRsp
-	27, // 44: dataset.DatasetService.QueryDatasetList:output_type -> dataset.QueryDatasetListRsp
-	30, // 45: dataset.DatasetService.QueryDatasetInfo:output_type -> dataset.QueryDatasetInfoRsp
-	33, // 46: dataset.DatasetService.QueryDatasetStatusInfo:output_type -> dataset.QueryDatasetStatusInfoRsp
-	35, // 47: dataset.DatasetService.QueryDatasetData:output_type -> dataset.QueryDatasetDataRsp
-	38, // [38:48] is the sub-list for method output_type
-	28, // [28:38] is the sub-list for method input_type
-	28, // [28:28] is the sub-list for extension type_name
-	28, // [28:28] is the sub-list for extension extendee
-	0,  // [0:28] is the sub-list for field type_name
+	11, // 9: dataset.AdminUpdateDatasetReq.datasetExtend:type_name -> dataset.DatasetExtend
+	4,  // 10: dataset.AdminUpdateDatasetReq.op:type_name -> dataset.OpInfoQ
+	4,  // 11: dataset.AdminDelDatasetReq.op:type_name -> dataset.OpInfoQ
+	4,  // 12: dataset.AdminRunProcessDatasetReq.op:type_name -> dataset.OpInfoQ
+	4,  // 13: dataset.AdminStopProcessDatasetReq.op:type_name -> dataset.OpInfoQ
+	22, // 14: dataset.SearchDatasetNameRsp.lines:type_name -> dataset.SearchDatasetNameLine
+	5,  // 15: dataset.DatasetInfoByListA.op:type_name -> dataset.OpInfoA
+	1,  // 16: dataset.DatasetInfoByListA.status:type_name -> dataset.Status
+	1,  // 17: dataset.QueryDatasetListReq.status:type_name -> dataset.Status
+	25, // 18: dataset.QueryDatasetListRsp.lines:type_name -> dataset.DatasetInfoByListA
+	11, // 19: dataset.DatasetInfoA.datasetExtend:type_name -> dataset.DatasetExtend
+	5,  // 20: dataset.DatasetInfoA.op:type_name -> dataset.OpInfoA
+	1,  // 21: dataset.DatasetInfoA.status:type_name -> dataset.Status
+	28, // 22: dataset.QueryDatasetInfoRsp.line:type_name -> dataset.DatasetInfoA
+	1,  // 23: dataset.DatasetStateInfo.status:type_name -> dataset.Status
+	5,  // 24: dataset.DatasetStateInfo.op:type_name -> dataset.OpInfoA
+	32, // 25: dataset.QueryDatasetStatusInfoRsp.datasetStateInfos:type_name -> dataset.DatasetStateInfo
+	12, // 26: dataset.DatasetService.AdminAddDataset:input_type -> dataset.AdminAddDatasetReq
+	14, // 27: dataset.DatasetService.AdminUpdateDataset:input_type -> dataset.AdminUpdateDatasetReq
+	16, // 28: dataset.DatasetService.AdminDelDataset:input_type -> dataset.AdminDelDatasetReq
+	18, // 29: dataset.DatasetService.AdminRunProcessDataset:input_type -> dataset.AdminRunProcessDatasetReq
+	20, // 30: dataset.DatasetService.AdminStopProcessDataset:input_type -> dataset.AdminStopProcessDatasetReq
+	23, // 31: dataset.DatasetService.SearchDatasetName:input_type -> dataset.SearchDatasetNameReq
+	26, // 32: dataset.DatasetService.QueryDatasetList:input_type -> dataset.QueryDatasetListReq
+	29, // 33: dataset.DatasetService.QueryDatasetInfo:input_type -> dataset.QueryDatasetInfoReq
+	31, // 34: dataset.DatasetService.QueryDatasetStatusInfo:input_type -> dataset.QueryDatasetStatusInfoReq
+	34, // 35: dataset.DatasetService.QueryDatasetData:input_type -> dataset.QueryDatasetDataReq
+	13, // 36: dataset.DatasetService.AdminAddDataset:output_type -> dataset.AdminAddDatasetRsp
+	15, // 37: dataset.DatasetService.AdminUpdateDataset:output_type -> dataset.AdminUpdateDatasetRsp
+	17, // 38: dataset.DatasetService.AdminDelDataset:output_type -> dataset.AdminDelDatasetRsp
+	19, // 39: dataset.DatasetService.AdminRunProcessDataset:output_type -> dataset.AdminRunProcessDatasetRsp
+	21, // 40: dataset.DatasetService.AdminStopProcessDataset:output_type -> dataset.AdminStopProcessDatasetRsp
+	24, // 41: dataset.DatasetService.SearchDatasetName:output_type -> dataset.SearchDatasetNameRsp
+	27, // 42: dataset.DatasetService.QueryDatasetList:output_type -> dataset.QueryDatasetListRsp
+	30, // 43: dataset.DatasetService.QueryDatasetInfo:output_type -> dataset.QueryDatasetInfoRsp
+	33, // 44: dataset.DatasetService.QueryDatasetStatusInfo:output_type -> dataset.QueryDatasetStatusInfoRsp
+	35, // 45: dataset.DatasetService.QueryDatasetData:output_type -> dataset.QueryDatasetDataRsp
+	36, // [36:46] is the sub-list for method output_type
+	26, // [26:36] is the sub-list for method input_type
+	26, // [26:26] is the sub-list for extension type_name
+	26, // [26:26] is the sub-list for extension extendee
+	0,  // [0:26] is the sub-list for field type_name
 }
 
 func init() { file_dateset_proto_init() }

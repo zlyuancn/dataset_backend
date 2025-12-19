@@ -179,7 +179,6 @@ message AdminAddDatasetReq {
   DatasetExtend datasetExtend = 5; // 数据源扩展数据
 
   OpInfoQ op = 6; // 操作信息
-  Status status = 7; // 状态
 
   bool startProcessNow = 8; // 创建后是否立即启动处理
 }
@@ -195,7 +194,6 @@ message AdminUpdateDatasetReq {
   DatasetExtend datasetExtend = 5; // 数据源扩展数据
 
   OpInfoQ op = 6; // 操作信息
-  Status status = 7; // 状态
 }
 message AdminUpdateDatasetRsp {}
 

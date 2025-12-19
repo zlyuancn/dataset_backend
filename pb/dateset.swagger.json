@@ -367,10 +367,6 @@
           "$ref": "#/definitions/datasetOpInfoQ",
           "title": "操作信息"
         },
-        "status": {
-          "$ref": "#/definitions/datasetStatus",
-          "title": "状态"
-        },
         "startProcessNow": {
           "type": "boolean",
           "title": "创建后是否立即启动处理"
@@ -461,10 +457,6 @@
         "op": {
           "$ref": "#/definitions/datasetOpInfoQ",
           "title": "操作信息"
-        },
-        "status": {
-          "$ref": "#/definitions/datasetStatus",
-          "title": "状态"
         }
       }
     },
