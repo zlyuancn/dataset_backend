@@ -19,10 +19,11 @@ const (
 	defRunLockExtraTtl                   = 600
 	defRunLockRenewInterval              = 120
 	defRunLockRenewMaxContinuousErrCount = 3
-	defDatasetInfoKeyPrefix              = "dataset:info:"
-	defDatasetInfoCacheTtl               = 3600
 	defDatasetProcessStatusPrefix        = "dataset:status:"
 	defChunkMetaKeyPrefix                = "dataset:chunk_meta:"
+
+	defDatasetInfoKeyPrefix = "dataset:info:"
+	defDatasetInfoCacheTtl  = 3600
 
 	defChunkSizeLimit        = 8 * 1024 * 1024
 	defMinChunkSizeLimit     = 1 * 1024
@@ -34,6 +35,7 @@ var Conf = Config{
 	SqlxName:  defSqlxName,
 	RedisName: defRedisName,
 
+	// redis Key
 	DatasetOpLockKeyPrefix:            defDatasetOpLockKeyPrefix,
 	AdminOpLockTtl:                    defAdminOpLockTtl,
 	StopProcessFlagPrefix:             defStopProcessFlagPrefix,
@@ -42,10 +44,15 @@ var Conf = Config{
 	RunLockExtraTtl:                   defRunLockExtraTtl,
 	RunLockRenewInterval:              defRunLockRenewInterval,
 	RunLockRenewMaxContinuousErrCount: defRunLockRenewMaxContinuousErrCount,
-	DatasetInfoKeyPrefix:              defDatasetInfoKeyPrefix,
-	DatasetInfoCacheTtl:               defDatasetInfoCacheTtl,
 	DatasetProcessStatusPrefix:        defDatasetProcessStatusPrefix,
 	ChunkMetaKeyPrefix:                defChunkMetaKeyPrefix,
+
+	// cache Key
+
+	DatasetInfoKeyPrefix: defDatasetInfoKeyPrefix,
+	DatasetInfoCacheTtl:  defDatasetInfoCacheTtl,
+
+	// chunk
 
 	ChunkSizeLimit:        defChunkSizeLimit,
 	ValueMaxScanSizeLimit: defValueMaxScanSizeLimit,
@@ -68,10 +75,13 @@ type Config struct {
 	RunLockExtraTtl                   int    // 任务处理运行锁的ttl, 单位秒, 用于防止重复运行启动器
 	RunLockRenewInterval              int    // 任务处理运行锁续期间隔秒数
 	RunLockRenewMaxContinuousErrCount int    // 续期最大连续错误次数
-	DatasetInfoKeyPrefix              string // 数据集信息缓存前缀
-	DatasetInfoCacheTtl               int    // 数据集信息缓存ttl秒数
 	DatasetProcessStatusPrefix        string // 数据集处理状态缓存前缀
 	ChunkMetaKeyPrefix                string // chunk meta key 前缀
+
+	// cache Key
+
+	DatasetInfoKeyPrefix string // 数据集信息缓存前缀
+	DatasetInfoCacheTtl  int    // 数据集信息缓存ttl秒数
 
 	// chunk
 
@@ -102,16 +112,17 @@ func (conf *Config) Check() {
 	conf.RunLockExtraTtl = max(conf.RunLockExtraTtl, defRunLockExtraTtl)
 	conf.RunLockRenewInterval = max(conf.RunLockRenewInterval, defRunLockRenewInterval)
 	conf.RunLockRenewMaxContinuousErrCount = max(conf.RunLockRenewMaxContinuousErrCount, defRunLockRenewMaxContinuousErrCount)
-	if conf.DatasetInfoKeyPrefix == "" {
-		conf.DatasetInfoKeyPrefix = defDatasetInfoKeyPrefix
-	}
-	conf.DatasetInfoCacheTtl = max(conf.DatasetInfoCacheTtl, defDatasetInfoCacheTtl)
 	if conf.DatasetProcessStatusPrefix == "" {
 		conf.DatasetProcessStatusPrefix = defDatasetProcessStatusPrefix
 	}
 	if conf.ChunkMetaKeyPrefix == "" {
 		conf.ChunkMetaKeyPrefix = defChunkMetaKeyPrefix
 	}
+
+	if conf.DatasetInfoKeyPrefix == "" {
+		conf.DatasetInfoKeyPrefix = defDatasetInfoKeyPrefix
+	}
+	conf.DatasetInfoCacheTtl = max(conf.DatasetInfoCacheTtl, defDatasetInfoCacheTtl)
 
 	conf.ChunkSizeLimit = max(conf.ChunkSizeLimit, defMinChunkSizeLimit)
 	conf.ValueMaxScanSizeLimit = max(conf.ValueMaxScanSizeLimit, defValueMaxScanSizeLimit)
