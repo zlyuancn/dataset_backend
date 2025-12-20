@@ -479,13 +479,14 @@
       "title": "描述chunk如何处理"
     },
     "datasetCompressType": {
-      "type": "string",
+      "type": "integer",
+      "format": "int32",
       "enum": [
-        "CompressorType_None",
-        "CompressorType_Lz4"
+        0,
+        1
       ],
-      "default": "CompressorType_None",
-      "title": "- CompressorType_None: 不压缩"
+      "default": 0,
+      "title": "- 0: 不压缩"
     },
     "datasetDataProcess": {
       "type": "object",
@@ -501,13 +502,14 @@
       "title": "描述如何处理"
     },
     "datasetDataSource": {
-      "type": "string",
+      "type": "integer",
+      "format": "int32",
       "enum": [
-        "DataSource_None",
-        "DataSource_UriFile"
+        0,
+        1
       ],
-      "default": "DataSource_None",
-      "title": "- DataSource_UriFile: uri文件"
+      "default": 0,
+      "title": "- 1: uri文件"
     },
     "datasetDataSourceUriFile": {
       "type": "object",
@@ -939,18 +941,19 @@
       }
     },
     "datasetStatus": {
-      "type": "string",
+      "type": "integer",
+      "format": "int32",
       "enum": [
-        "Status_Created",
-        "Status_Running",
-        "Status_Finished",
-        "Status_Stopping",
-        "Status_Stopped",
-        "Status_Deleting",
-        "Status_ChunkDeleted"
+        0,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8
       ],
-      "default": "Status_Created",
-      "description": "- Status_Created: 已创建\n - Status_Running: 运行中\n - Status_Finished: 已完成\n - Status_Stopping: 正在停止\n - Status_Stopped: 已停止\n - Status_Deleting: 正在删除\n - Status_ChunkDeleted: 元数据已删除",
+      "default": 0,
+      "description": "- 0: 已创建\n - 2: 运行中\n - 3: 已完成\n - 4: 正在停止\n - 5: 已停止\n - 7: 正在删除\n - 8: 元数据已删除",
       "title": "状态"
     },
     "datasetValueProcess": {

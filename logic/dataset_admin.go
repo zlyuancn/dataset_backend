@@ -18,8 +18,8 @@ import (
 	"github.com/zlyuancn/dataset/module"
 
 	"github.com/zlyuancn/dataset/conf"
-	"github.com/zlyuancn/dataset/dao/dataset_list"
 	"github.com/zlyuancn/dataset/dao/dataset_history"
+	"github.com/zlyuancn/dataset/dao/dataset_list"
 	"github.com/zlyuancn/dataset/handler"
 	"github.com/zlyuancn/dataset/model"
 	"github.com/zlyuancn/dataset/pb"
@@ -123,6 +123,7 @@ func (*Dataset) AdminUpdateDataset(ctx context.Context, req *pb.AdminUpdateDatas
 
 	// 写入数据库的数据
 	v := &dataset_list.Model{
+		DatasetId:   uint(req.GetDatasetId()),
 		DatasetName: req.GetDatasetName(),
 		Remark:      req.GetRemark(),
 		OpSource:    req.GetOp().GetOpSource(),

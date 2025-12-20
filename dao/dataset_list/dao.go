@@ -130,7 +130,7 @@ func AdminUpdateDataset(ctx context.Context, v *Model, whereStatus byte) (int64,
 	where := map[string]any{
 		"dataset_id": v.DatasetId,
 		"status":     whereStatus,
-		"_limit":     []uint{1},
+		"_limit":     1,
 	}
 	update := map[string]any{
 		"dataset_name":  v.DatasetName,
