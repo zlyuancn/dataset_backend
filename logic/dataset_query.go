@@ -7,12 +7,13 @@ import (
 	"github.com/zly-app/cache/v2"
 	"github.com/zly-app/component/redis"
 	"github.com/zly-app/zapp/log"
+	"go.uber.org/zap"
+
 	"github.com/zlyuancn/dataset/client/db"
 	"github.com/zlyuancn/dataset/dao/dataset_list"
 	"github.com/zlyuancn/dataset/model"
 	"github.com/zlyuancn/dataset/module"
 	"github.com/zlyuancn/dataset/pb"
-	"go.uber.org/zap"
 )
 
 func (*Dataset) SearchDatasetName(ctx context.Context, req *pb.SearchDatasetNameReq) (*pb.SearchDatasetNameRsp, error) {
@@ -178,11 +179,13 @@ func (d *Dataset) datasetDBModel2ListPb(line *dataset_list.Model) *pb.DatasetInf
 		_ = sonic.UnmarshalString(line.DatasetExtend, de)
 	}
 	ret := &pb.DatasetInfoByListA{
-		DatasetId:   int64(line.DatasetId),
-		DatasetName: line.DatasetName,
-		Remark:      line.Remark,
-		ValueTotal:  line.ValueTotal,
-		CreateTime:  line.CreateTime.Unix(),
+		DatasetId:     int64(line.DatasetId),
+		DatasetName:   line.DatasetName,
+		Remark:        line.Remark,
+		Delim:         de.ValueProcess.Delim,
+		ValueTotal:    line.ValueTotal,
+		CreateTime:    line.CreateTime.Unix(),
+		ProcessedTime: line.ProcessedTime,
 		Op: &pb.OpInfoA{
 			OpSource:   line.OpSource,
 			OpUserid:   line.OpUserId,
@@ -208,6 +211,7 @@ func (d *Dataset) datasetDBModel2StatusPb(line *dataset_list.Model) *pb.DatasetS
 		ValueTotal:          line.ValueTotal,
 		Status:              pb.Status(line.Status),
 		StatusInfo:          line.StatusInfo,
+		ProcessedTime:       line.ProcessedTime,
 		Op: &pb.OpInfoA{
 			OpSource:   line.OpSource,
 			OpUserid:   line.OpUserId,
@@ -240,7 +244,7 @@ func (d *Dataset) QueryDatasetStatusInfo(ctx context.Context, req *pb.QueryDatas
 	// 对于运行中的任务, 进度需要从redis获取
 	_ = d.batchRenderRunningProcess(ctx, ret)
 
-	return &pb.QueryDatasetStatusInfoRsp{}, nil
+	return &pb.QueryDatasetStatusInfoRsp{DatasetStateInfos: ret}, nil
 }
 
 // 批量渲染运行中任务进度

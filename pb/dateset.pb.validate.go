@@ -754,16 +754,6 @@ func (m *ValueProcess) validate(all bool) error {
 
 	// no validation rules for TrimSpace
 
-	// no validation rules for TrimPrefix
-
-	// no validation rules for TrimSuffix
-
-	// no validation rules for FilterSubString
-
-	// no validation rules for FilterPrefix
-
-	// no validation rules for FilterSuffix
-
 	if len(errors) > 0 {
 		return ValueProcessMultiError(errors)
 	}
@@ -2712,6 +2702,8 @@ func (m *DatasetInfoByListA) validate(all bool) error {
 
 	// no validation rules for Remark
 
+	// no validation rules for Delim
+
 	// no validation rules for ValueTotal
 
 	// no validation rules for CreateTime
@@ -2748,6 +2740,8 @@ func (m *DatasetInfoByListA) validate(all bool) error {
 	// no validation rules for Status
 
 	// no validation rules for StatusInfo
+
+	// no validation rules for ProcessedTime
 
 	if len(errors) > 0 {
 		return DatasetInfoByListAMultiError(errors)
@@ -3682,6 +3676,8 @@ func (m *DatasetStateInfo) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for ProcessedTime
 
 	if len(errors) > 0 {
 		return DatasetStateInfoMultiError(errors)

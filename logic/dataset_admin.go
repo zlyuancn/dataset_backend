@@ -89,7 +89,14 @@ func (*Dataset) AdminAddDataset(ctx context.Context, req *pb.AdminAddDatasetReq)
 	// 立即启动处理
 	if req.GetStartProcessNow() {
 		gpool.GetDefGPool().Go(func() error {
-			module.Processor.CreateProcessor(cloneCtx, v)
+			// 获取数据集
+			d, err := dataset_list.GetOneByDatasetId(cloneCtx, int(datasetId))
+			if err != nil {
+				log.Error(ctx, "AdminAddDataset call dataset.GetOneByDatasetId fail.", zap.Error(err))
+				return err
+			}
+
+			module.Processor.CreateProcessor(cloneCtx, d)
 			return nil
 		}, nil)
 	}
@@ -389,7 +396,7 @@ func (*Dataset) AdminRunProcessDataset(ctx context.Context, req *pb.AdminRunProc
 		}
 
 		// 开始处理
-		module.Processor.CreateProcessor(ctx, d)
+		module.Processor.CreateProcessor(cloneCtx, d)
 		return nil
 	}, nil)
 

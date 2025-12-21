@@ -14,6 +14,10 @@ import (
 	"github.com/zly-app/zapp/component/gpool"
 	"github.com/zly-app/zapp/log"
 	"github.com/zly-app/zapp/pkg/utils"
+	"github.com/zlyuancn/redis_tool"
+	"github.com/zlyuancn/splitter"
+	"go.uber.org/zap"
+
 	"github.com/zlyuancn/dataset/chunk_store"
 	"github.com/zlyuancn/dataset/client/db"
 	"github.com/zlyuancn/dataset/conf"
@@ -23,9 +27,6 @@ import (
 	"github.com/zlyuancn/dataset/model"
 	"github.com/zlyuancn/dataset/pb"
 	"github.com/zlyuancn/dataset/value_filter"
-	"github.com/zlyuancn/redis_tool"
-	"github.com/zlyuancn/splitter"
-	"go.uber.org/zap"
 )
 
 var Processor = processorCli{}
@@ -109,6 +110,10 @@ func newProcessorLauncher(datasetInfo *dataset_list.Model,
 		renewKeyStopChan: make(chan struct{}),
 	}
 	p.ctx, p.cancel = context.WithCancel(context.Background())
+	p.ctx = utils.Trace.CtxStart(p.ctx, "newProcessorLauncher")
+	defer utils.Trace.CtxEnd(p.ctx)
+
+	log.Info(p.ctx, "newProcessorLauncher", zap.Any("datasetInfo", datasetInfo))
 
 	// 从cache加载状态
 	err = p.loadCacheStatus()
@@ -139,7 +144,7 @@ func newProcessorLauncher(datasetInfo *dataset_list.Model,
 	}
 
 	// chunk 储存
-	p.cs, err = chunk_store.NewChunkStore(p.ctx, de.GetChunkProcess(), p.flushChunkHandler, p.flushLastedChunkHandler)
+	p.cs, err = chunk_store.NewChunkStore(p.ctx, datasetInfo.DatasetId, de.GetChunkProcess(), p.flushChunkHandler, p.flushLastedChunkHandler)
 	if err != nil {
 		log.Error(p.ctx, "newProcessorLauncher call NewChunkStore fail", zap.Any("dataset", datasetInfo), zap.Error(err))
 		return nil, err
@@ -163,10 +168,12 @@ func (p *processorLauncher) loadCacheStatus() error {
 // 加载元数据
 func (p *processorLauncher) loadChunkMeta() error {
 	chunkMeta := make(model.ChunkMeta, 0)
-	err := sonic.UnmarshalString(p.datasetInfo.ChunkMeta, &chunkMeta)
-	if err != nil {
-		log.Error(p.ctx, "loadChunkMeta call UnmarshalString db ChunkMeta fail.", zap.Error(err))
-		return err
+	if p.datasetInfo.ChunkMeta != "" {
+		err := sonic.UnmarshalString(p.datasetInfo.ChunkMeta, &chunkMeta)
+		if err != nil {
+			log.Error(p.ctx, "loadChunkMeta call UnmarshalString db ChunkMeta fail.", zap.Error(err))
+			return err
+		}
 	}
 
 	// 加载缓存的 ChunkMeta
@@ -282,7 +289,7 @@ func (p *processorLauncher) loopCheckStopFlag() {
 // 尝试恢复断点
 func (p *processorLauncher) tryResumePointOffset() {
 	// 尝试断点续传
-	if p.pStatus.ResumePointOffset > 0 {
+	if p.pStatus != nil && p.pStatus.ResumePointOffset > 0 {
 		resume, err := p.ds.SetBreakpoint(p.ctx, p.pStatus.ResumePointOffset)
 		if err != nil {
 			log.Error(p.ctx, "try ResumePointOffset fail.", zap.Error(err))
@@ -454,7 +461,7 @@ func (p *processorLauncher) Run() {
 		return
 	}
 	if err != nil {
-		p.submitStopFlag("ChunkStore err=%s" + err.Error())
+		p.submitStopFlag("ChunkStore err=" + err.Error())
 		log.Error(p.ctx, "Run call WaitNoChunkSnOffset fail.", zap.Error(err))
 		return
 	}

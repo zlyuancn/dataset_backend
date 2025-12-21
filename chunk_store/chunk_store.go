@@ -6,10 +6,11 @@ import (
 	"sync/atomic"
 
 	"github.com/zly-app/zapp/log"
-	"github.com/zlyuancn/dataset/conf"
-	"github.com/zlyuancn/dataset/pb"
 	"github.com/zlyuancn/splitter"
 	"go.uber.org/zap"
+
+	"github.com/zlyuancn/dataset/conf"
+	"github.com/zlyuancn/dataset/pb"
 )
 
 var ErrStop = errors.New("stop")
@@ -46,9 +47,10 @@ type flushResult struct {
 }
 
 type chunkStore struct {
-	cp  *pb.ChunkProcess
-	fcb FlushedLastedCallback
-	lcb FlushedLastedCallback
+	datasetId uint
+	cp        *pb.ChunkProcess
+	fcb       FlushedLastedCallback
+	lcb       FlushedLastedCallback
 
 	csp ChunkStorePersist
 
@@ -64,19 +66,20 @@ type chunkStore struct {
 	resumePoint    *ResumePoint
 }
 
-func NewChunkStore(ctx context.Context, cp *pb.ChunkProcess,
+func NewChunkStore(ctx context.Context, datasetId uint, cp *pb.ChunkProcess,
 	fcb FlushedLastedCallback, lcb FlushedLastedCallback) (ChunkStore, error) {
 
-	csp, err := NewChunkStorePersist(ctx, cp)
+	csp, err := NewChunkStorePersist(ctx, datasetId, cp)
 	if err != nil {
 		log.Error(ctx, "NewChunkStore call NewChunkStorePersist fail.", zap.Error(err))
 		return nil, err
 	}
 
 	c := &chunkStore{
-		cp:  cp,
-		fcb: fcb,
-		lcb: lcb,
+		datasetId: datasetId,
+		cp:        cp,
+		fcb:       fcb,
+		lcb:       lcb,
 
 		csp: csp,
 

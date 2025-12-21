@@ -25,10 +25,12 @@ const (
 	defDatasetInfoKeyPrefix = "dataset:info:"
 	defDatasetInfoCacheTtl  = 3600
 
-	defChunkSizeLimit        = 8 * 1024 * 1024
-	defMinChunkSizeLimit     = 1 * 1024
-	defValueMaxScanSizeLimit = 1 * 1024 * 1024
-	defChunkStoreThreadCount = 5
+	defChunkStoreRedisName      = "dataset"
+	defChunkStoreRedisKeyFormat = "dataset:chunk_store:%d_%d"
+	defChunkSizeLimit           = 10 * 1024 // 8 * 1024 * 1024
+	defMinChunkSizeLimit        = 16        // 1 * 1024
+	defValueMaxScanSizeLimit    = 1 * 1024 * 1024
+	defChunkStoreThreadCount    = 5
 )
 
 var Conf = Config{
@@ -54,9 +56,11 @@ var Conf = Config{
 
 	// chunk
 
-	ChunkSizeLimit:        defChunkSizeLimit,
-	ValueMaxScanSizeLimit: defValueMaxScanSizeLimit,
-	ChunkStoreThreadCount: defChunkStoreThreadCount,
+	ChunkStoreRedisName:      defChunkStoreRedisName,
+	ChunkStoreRedisKeyFormat: defChunkStoreRedisKeyFormat,
+	ChunkSizeLimit:           defChunkSizeLimit,
+	ValueMaxScanSizeLimit:    defValueMaxScanSizeLimit,
+	ChunkStoreThreadCount:    defChunkStoreThreadCount,
 }
 
 type Config struct {
@@ -85,9 +89,11 @@ type Config struct {
 
 	// chunk
 
-	ChunkSizeLimit        int32 // chunk 大小限制
-	ValueMaxScanSizeLimit int   // value 扫描最大长度限制
-	ChunkStoreThreadCount int   // chunk 持久化线程数
+	ChunkStoreRedisName      string // chunk store redis 组件名
+	ChunkStoreRedisKeyFormat string // chunk store redis key格式
+	ChunkSizeLimit           int32  // chunk 大小限制
+	ValueMaxScanSizeLimit    int    // value 扫描最大长度限制
+	ChunkStoreThreadCount    int    // chunk 持久化线程数
 }
 
 func (conf *Config) Check() {
@@ -124,6 +130,12 @@ func (conf *Config) Check() {
 	}
 	conf.DatasetInfoCacheTtl = max(conf.DatasetInfoCacheTtl, defDatasetInfoCacheTtl)
 
+	if conf.ChunkStoreRedisName == "" {
+		conf.ChunkStoreRedisName = defChunkStoreRedisName
+	}
+	if conf.ChunkStoreRedisKeyFormat == "" {
+		conf.ChunkStoreRedisKeyFormat = defChunkStoreRedisKeyFormat
+	}
 	conf.ChunkSizeLimit = max(conf.ChunkSizeLimit, defMinChunkSizeLimit)
 	conf.ValueMaxScanSizeLimit = max(conf.ValueMaxScanSizeLimit, defValueMaxScanSizeLimit)
 	conf.ChunkStoreThreadCount = max(conf.ChunkStoreThreadCount, defChunkStoreThreadCount)

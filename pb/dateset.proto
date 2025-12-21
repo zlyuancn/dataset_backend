@@ -158,11 +158,11 @@ enum CompressType {
 message ValueProcess {
   string delim = 1; // 分隔符
   bool trimSpace = 2; // 修剪空字符. 包括 '\t', '\n', '\v', '\f', '\r', ' ', U+0085 (NEL), U+00A0 (NBSP).
-  string trimPrefix = 3; // 修剪前缀
-  string trimSuffix = 4; // 修剪后缀
-  string filterSubString = 5; // 过滤包含子字符串的值
-  string filterPrefix = 6; // 过滤包含前缀的值
-  string filterSuffix = 7; // 过滤包含后缀的值
+  repeated string trimPrefix = 3; // 修剪前缀
+  repeated string trimSuffix = 4; // 修剪后缀
+  repeated string filterSubString = 5; // 过滤包含子字符串的值
+  repeated string filterPrefix = 6; // 过滤包含前缀的值
+  repeated string filterSuffix = 7; // 过滤包含后缀的值
 }
 
 // 处理器扩展数据
@@ -233,11 +233,13 @@ message DatasetInfoByListA {
   int64 datasetId = 1; // 数据集id
   string datasetName = 2; // 数据集名
   string remark = 3; // 备注
+  string delim = 4; // 分隔符
   int64 valueTotal = 5; // value 总数
   int64 createTime = 6; // 创建时间秒级时间戳
   OpInfoA op = 8; // 操作信息
   Status status = 9; // 状态
   string statusInfo = 10; // 状态信息
+  int64 processed_time = 11; // 加工完成时间秒级时间戳
 }
 message QueryDatasetListReq {
   int32 pageSize = 2 [(validate.rules).int32.gte = 5]; // 每页返回数量, 最少返回5条
@@ -285,6 +287,7 @@ message DatasetStateInfo {
   Status status = 5; // 状态
   string statusInfo = 6; // 状态信息
   OpInfoA op = 7; // 操作信息
+  int64 processed_time = 8; // 加工完成时间秒级时间戳
 }
 message QueryDatasetStatusInfoRsp {
   repeated DatasetStateInfo datasetStateInfos = 1;

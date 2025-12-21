@@ -169,7 +169,7 @@ func AdminUpdateStatus(ctx context.Context, v *Model, whereStatus byte) (int64, 
 		return 0, errors.New("AdminUpdateStatus DatasetId is empty")
 	}
 	const cond = `
-update batch_job_list
+update dataset_list
 set 
     status=?,
     update_time=now(),

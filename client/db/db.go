@@ -13,3 +13,6 @@ func GetSqlx() sqlx.Client {
 func GetRedis() (redis.UniversalClient, error) {
 	return redis.GetClient(conf.Conf.RedisName)
 }
+func GetChunkStoreRedis() (redis.UniversalClient, error) {
+	return redis.GetClient(conf.Conf.ChunkStoreRedisName)
+}

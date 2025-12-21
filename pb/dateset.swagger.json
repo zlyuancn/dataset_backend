@@ -630,6 +630,10 @@
           "type": "string",
           "title": "备注"
         },
+        "delim": {
+          "type": "string",
+          "title": "分隔符"
+        },
         "valueTotal": {
           "type": "string",
           "format": "int64",
@@ -651,6 +655,11 @@
         "statusInfo": {
           "type": "string",
           "title": "状态信息"
+        },
+        "processedTime": {
+          "type": "string",
+          "format": "int64",
+          "title": "加工完成时间秒级时间戳"
         }
       },
       "title": "数据集基础信息-响应"
@@ -689,6 +698,11 @@
         "op": {
           "$ref": "#/definitions/datasetOpInfoA",
           "title": "操作信息"
+        },
+        "processedTime": {
+          "type": "string",
+          "format": "int64",
+          "title": "加工完成时间秒级时间戳"
         }
       }
     },
@@ -968,23 +982,38 @@
           "description": "修剪空字符. 包括 '\\t', '\\n', '\\v', '\\f', '\\r', ' ', U+0085 (NEL), U+00A0 (NBSP)."
         },
         "trimPrefix": {
-          "type": "string",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
           "title": "修剪前缀"
         },
         "trimSuffix": {
-          "type": "string",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
           "title": "修剪后缀"
         },
         "filterSubString": {
-          "type": "string",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
           "title": "过滤包含子字符串的值"
         },
         "filterPrefix": {
-          "type": "string",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
           "title": "过滤包含前缀的值"
         },
         "filterSuffix": {
-          "type": "string",
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
           "title": "过滤包含后缀的值"
         }
       },
