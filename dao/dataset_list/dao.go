@@ -239,6 +239,25 @@ func MultiGetId(ctx context.Context, where map[string]any) ([]uint, error) {
 	return ret, nil
 }
 
+func Count(ctx context.Context, where map[string]any) (int64, error) {
+	cond, vals, err := builder.BuildSelect(tableName, where, []string{"count(1)"})
+	if err != nil {
+		log.Error(ctx, "Count BuildSelect err",
+			zap.Any("where", where),
+			zap.Error(err),
+		)
+		return 0, err
+	}
+
+	var ret int64
+	err = db.GetSqlx().FindOne(ctx, &ret, cond, vals...)
+	if err != nil {
+		log.Error(ctx, "Count FindOne fail.", zap.String("cond", cond), zap.Any("vals", vals), zap.Error(err))
+		return 0, err
+	}
+	return ret, nil
+}
+
 func UpdateOne(ctx context.Context, datasetId int, updateData map[string]interface{}, whereStatus byte) error {
 	where := map[string]any{
 		"dataset_id": datasetId,

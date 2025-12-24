@@ -74,9 +74,6 @@ func (d *Dataset) QueryDatasetList(ctx context.Context, req *pb.QueryDatasetList
 	}
 
 	where := map[string]any{}
-	if req.GetNextCursor() > 0 {
-		where["dataset_id < "] = req.NextCursor
-	}
 	if len(req.GetStatus()) > 0 {
 		raw := req.GetStatus()
 		status := make([]int, len(raw))
@@ -102,9 +99,20 @@ func (d *Dataset) QueryDatasetList(ctx context.Context, req *pb.QueryDatasetList
 		}
 	}
 
-	pageSize := max(req.GetPageSize(), 5)
-	where["_limit"] = []uint{0, uint(pageSize)}
+	page, pageSize := max(req.GetPage(), 1), max(req.GetPageSize(), 10)
+
+	var total int64
+	if page == 1 {
+		t, err := dataset_list.Count(ctx, where)
+		if err != nil {
+			log.Error(ctx, "QueryDatasetList call dataset_list.Count", zap.Error(err))
+			return nil, err
+		}
+		total = t
+	}
+
 	where["_orderby"] = "dataset_id desc"
+	where["_limit"] = []uint{uint(page-1) * uint(pageSize), uint(pageSize)}
 
 	// 获取id列表
 	ids, err := dataset_list.MultiGetId(ctx, where)
@@ -126,13 +134,9 @@ func (d *Dataset) QueryDatasetList(ctx context.Context, req *pb.QueryDatasetList
 		ret = append(ret, d.datasetDBModel2ListPb(line))
 	}
 
-	nextCursor := int64(0)
-	if len(ret) > 0 {
-		nextCursor = ret[len(ret)-1].DatasetId
-	}
 	return &pb.QueryDatasetListRsp{
-		NextCursor: nextCursor,
-		Lines:      ret,
+		Total: int32(total),
+		Lines: ret,
 	}, nil
 }
 

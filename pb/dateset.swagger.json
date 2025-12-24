@@ -827,6 +827,11 @@
     "datasetQueryDatasetListReq": {
       "type": "object",
       "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int32",
+          "title": "页号, 从1开始"
+        },
         "pageSize": {
           "type": "integer",
           "format": "int32",
@@ -854,11 +859,6 @@
           "format": "int64",
           "title": "结束时间, 秒级时间戳. 0表示不限制"
         },
-        "nextCursor": {
-          "type": "string",
-          "format": "int64",
-          "title": "游标"
-        },
         "opUser": {
           "type": "string",
           "title": "操作人"
@@ -868,10 +868,10 @@
     "datasetQueryDatasetListRsp": {
       "type": "object",
       "properties": {
-        "nextCursor": {
-          "type": "string",
-          "format": "int64",
-          "title": "下一页游标"
+        "total": {
+          "type": "integer",
+          "format": "int32",
+          "title": "总条数"
         },
         "lines": {
           "type": "array",

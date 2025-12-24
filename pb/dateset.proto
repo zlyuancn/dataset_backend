@@ -242,16 +242,16 @@ message DatasetInfoByListA {
   int64 processed_time = 11; // 加工完成时间秒级时间戳
 }
 message QueryDatasetListReq {
+  int32 page = 1 [(validate.rules).int32.gt = 0]; // 页号, 从1开始
   int32 pageSize = 2 [(validate.rules).int32.gte = 5]; // 每页返回数量, 最少返回5条
   int64 datasetId = 3 [(validate.rules).int64.gte = 0]; // 数据集id
   repeated Status status = 4; // 状态
   int64 startTime = 5; // 开始时间, 秒级时间戳. 0表示不限制
   int64 endTime = 6; // 结束时间, 秒级时间戳. 0表示不限制
-  int64 nextCursor = 7; // 游标
   string opUser = 8; // 操作人
 }
 message QueryDatasetListRsp {
-  int64 nextCursor = 1; // 下一页游标
+  int32 total = 1; // 总条数
   repeated DatasetInfoByListA lines = 3; // 数据集任务信息
 }
 
