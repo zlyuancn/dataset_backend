@@ -13,11 +13,13 @@ import (
 
 type redisCsp struct {
 	datasetId uint
+	de        *pb.DatasetExtend
 }
 
-func newRedisCsp(ctx context.Context, datasetId uint, cp *pb.ChunkProcess) (ChunkStorePersist, error) {
+func newRedisCsp(ctx context.Context, datasetId uint, de *pb.DatasetExtend) (ChunkStorePersist, error) {
 	r := &redisCsp{
 		datasetId: datasetId,
+		de:        de,
 	}
 	return r, nil
 }

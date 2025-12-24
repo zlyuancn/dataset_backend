@@ -12,6 +12,6 @@ type noneCsp struct{}
 
 func (noneCsp) FlushChunk(ctx context.Context, args *splitter.FlushChunkArgs) error { return nil }
 
-func newNoneCsp(ctx context.Context, datasetId uint, cp *pb.ChunkProcess) (ChunkStorePersist, error) {
+func newNoneCsp(ctx context.Context, datasetId uint, de *pb.DatasetExtend) (ChunkStorePersist, error) {
 	return noneCsp{}, nil
 }

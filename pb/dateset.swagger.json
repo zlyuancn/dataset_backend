@@ -497,6 +497,14 @@
         },
         "uriFile": {
           "$ref": "#/definitions/datasetDataSourceUriFile"
+        },
+        "trimUtf8Bom": {
+          "type": "boolean"
+        },
+        "rateLimit": {
+          "type": "string",
+          "format": "int64",
+          "title": "数据处理限速字节"
         }
       },
       "title": "描述如何处理"

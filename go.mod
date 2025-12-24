@@ -17,7 +17,7 @@ require (
 	github.com/zly-app/uapp v0.0.0-20251201110646-673ce4a3e75f
 	github.com/zly-app/zapp v1.4.2
 	github.com/zlyuancn/redis_tool v0.0.0-20251216042311-cf7350789353
-	github.com/zlyuancn/splitter v0.0.0-20251214080342-5f516467a746
+	github.com/zlyuancn/splitter v0.0.0-20251224094610-7c1796632d69
 	go.uber.org/zap v1.27.1
 	google.golang.org/genproto/googleapis/api v0.0.0-20251213004720-97cd9d5aeac2
 	google.golang.org/grpc v1.77.0
@@ -114,6 +114,7 @@ require (
 	golang.org/x/net v0.46.1-0.20251013234738-63d1a5100f82 // indirect
 	golang.org/x/sys v0.37.0 // indirect
 	golang.org/x/text v0.30.0 // indirect
+	golang.org/x/time v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20251124214823-79d6a2a48846 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
 	gopkg.in/ugjka/go-tz.v2 v2.0.12 // indirect

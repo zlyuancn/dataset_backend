@@ -1,6 +1,7 @@
 package chunk_store
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"sync/atomic"
@@ -48,7 +49,7 @@ type flushResult struct {
 
 type chunkStore struct {
 	datasetId uint
-	cp        *pb.ChunkProcess
+	de        *pb.DatasetExtend
 	fcb       FlushedLastedCallback
 	lcb       FlushedLastedCallback
 
@@ -66,10 +67,10 @@ type chunkStore struct {
 	resumePoint    *ResumePoint
 }
 
-func NewChunkStore(ctx context.Context, datasetId uint, cp *pb.ChunkProcess,
+func NewChunkStore(ctx context.Context, datasetId uint, de *pb.DatasetExtend,
 	fcb FlushedLastedCallback, lcb FlushedLastedCallback) (ChunkStore, error) {
 
-	csp, err := NewChunkStorePersist(ctx, datasetId, cp)
+	csp, err := NewChunkStorePersist(ctx, datasetId, de)
 	if err != nil {
 		log.Error(ctx, "NewChunkStore call NewChunkStorePersist fail.", zap.Error(err))
 		return nil, err
@@ -77,7 +78,7 @@ func NewChunkStore(ctx context.Context, datasetId uint, cp *pb.ChunkProcess,
 
 	c := &chunkStore{
 		datasetId: datasetId,
-		cp:        cp,
+		de:        de,
 		fcb:       fcb,
 		lcb:       lcb,
 
@@ -112,6 +113,11 @@ func (c *chunkStore) FlushChunk(ctx context.Context, args *splitter.FlushChunkAr
 		EndValueSn:   args.EndValueSn + c.resumePoint.ValueFinishedCount,
 		ChunkData:    args.ChunkData,
 		ScanByteNum:  args.ScanByteNum + c.resumePoint.ResumePointOffset,
+	}
+
+	// 处理 Utf8Bom
+	if c.de.GetDataProcess().GetTrimUtf8Bom() && args.ChunkSn == 0 {
+		args.ChunkData = bytes.TrimPrefix(args.ChunkData, []byte{0xEF, 0xBB, 0xBF})
 	}
 
 	// 占用一个线程

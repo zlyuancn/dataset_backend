@@ -144,7 +144,7 @@ func newProcessorLauncher(datasetInfo *dataset_list.Model,
 	}
 
 	// chunk 储存
-	p.cs, err = chunk_store.NewChunkStore(p.ctx, datasetInfo.DatasetId, de.GetChunkProcess(), p.flushChunkHandler, p.flushLastedChunkHandler)
+	p.cs, err = chunk_store.NewChunkStore(p.ctx, datasetInfo.DatasetId, de, p.flushChunkHandler, p.flushLastedChunkHandler)
 	if err != nil {
 		log.Error(p.ctx, "newProcessorLauncher call NewChunkStore fail", zap.Any("dataset", datasetInfo), zap.Error(err))
 		return nil, err
@@ -426,6 +426,7 @@ func (p *processorLauncher) Run() {
 		},
 		ValueMaxScanSizeLimit: conf.Conf.ValueMaxScanSizeLimit,
 		ValueFilter:           p.vf.Handler,
+		RateLimit:             int(p.de.GetDataProcess().GetRateLimit()),
 	})
 
 	// 开始处理分隔

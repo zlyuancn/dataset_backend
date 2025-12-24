@@ -126,6 +126,8 @@ message KV{
 message DataProcess {
   DataSource dataSource = 1; // 数据源
   DataSourceUriFile uriFile = 2;
+  bool trimUtf8Bom = 3;
+  int64 rateLimit = 4; // 数据处理限速字节
 }
 
 enum DataSource {

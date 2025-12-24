@@ -404,6 +404,10 @@ func (m *DataProcess) validate(all bool) error {
 		}
 	}
 
+	// no validation rules for TrimUtf8Bom
+
+	// no validation rules for RateLimit
+
 	if len(errors) > 0 {
 		return DataProcessMultiError(errors)
 	}
