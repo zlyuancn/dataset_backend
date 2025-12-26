@@ -6,7 +6,7 @@ sequenceDiagram
     participant a as 工具
     participant b as Redis
     participant c as chunk分割模块
-    participant d as Chunk持久化模块
+    participant d as Chunk Store
     participant e as db
 
     a->>b: 获取数据ID锁,自动续期,流程结束后自动解锁
@@ -53,5 +53,49 @@ sequenceDiagram
 ```
 
 # 数据查询流程
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant APIServer as API Server
+    participant MetaCache as Metadata Cache (LRU)
+    participant ChunkCache as Chunk Value Cache (LRU)
+    participant Redis
+    participant Chunk Store
+
+    Client ->> APIServer: GetValue(datasetID, valueSn)
+    %% Step 1: 加载元数据 (with cache)
+    APIServer ->> MetaCache: 获取元数据
+    alt 命中缓存
+        MetaCache -->> APIServer: chunk元数据
+    else 未命中缓存
+        MetaCache -->> APIServer: miss
+        APIServer ->> Redis: 获取元数据
+        Redis -->> APIServer: raw metadata
+        APIServer ->> APIServer: 解析元数据
+        APIServer ->> MetaCache: 写入缓存
+    end
+
+    %% Step 2: 二分查找查找 chunk
+    APIServer ->> APIServer: BinarySearch(metas, valueSn) → chunkSn
+
+    %% Step 3: 加载chunk的value数据 (with cache)
+    APIServer ->> ChunkCache: 获取chunk的value数据
+    alt 命中缓存
+        ChunkCache -->> APIServer: []Value
+    else 未命中缓存
+        ChunkCache -->> APIServer: miss
+        APIServer ->> Chunk Store: 获取chunk数据
+        Chunk Store -->> APIServer: raw chunk bytes
+        APIServer ->> APIServer: 使用crc32校验码检查chunk数据完整性
+        APIServer ->> APIServer: 根据chunk数据解析出value数据
+        APIServer ->> ChunkCache: 写入缓存
+    end
+
+    %% Step 4: 找到目标value
+    APIServer ->> APIServer: 根据chunk元数据找到value索引对应的value
+
+    APIServer -->> Client: Return value
+```
 
 # 恢复器
