@@ -10,6 +10,7 @@ import (
 	"github.com/zly-app/zapp/log"
 	"github.com/zlyuancn/redis_tool"
 
+	"github.com/zlyuancn/dataset/module"
 	"github.com/zlyuancn/dataset/pb"
 
 	"github.com/zlyuancn/dataset/conf"
@@ -35,6 +36,8 @@ func main() {
 
 	redis_tool.RedisClientName = conf.Conf.RedisName
 	redis_tool.ManualInit()
+
+	module.InitQuery()
 
 	// rpc服务
 	pb.RegisterDatasetServiceServer(grpc.Server("dataset"), logic.NewServer())

@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/zlyuancn/dataset/conf"
+	"github.com/zlyuancn/dataset/model"
 	"github.com/zlyuancn/dataset/pb"
 )
 
@@ -31,7 +32,9 @@ type ChunkStore interface {
 	Wait(ctx context.Context, chunkSn int32) error
 	// 与 Wait 相同, 但是入参没有计算断点
 	WaitNoChunkSnOffset(ctx context.Context, chunkSn int32) error
-
+	// 加载chunk
+	LoadChunk(ctx context.Context, oneChunkMeta *model.OneChunkMeta) ([]byte, error)
+	// 关闭
 	Close()
 }
 
@@ -115,11 +118,6 @@ func (c *chunkStore) FlushChunk(ctx context.Context, args *splitter.FlushChunkAr
 		ScanByteNum:  args.ScanByteNum + c.resumePoint.ResumePointOffset,
 	}
 
-	// 处理 Utf8Bom
-	if c.de.GetDataProcess().GetTrimUtf8Bom() && args.ChunkSn == 0 {
-		args.ChunkData = bytes.TrimPrefix(args.ChunkData, []byte{0xEF, 0xBB, 0xBF})
-	}
-
 	// 占用一个线程
 	select {
 	case c.threadLock <- struct{}{}:
@@ -132,6 +130,13 @@ func (c *chunkStore) FlushChunk(ctx context.Context, args *splitter.FlushChunkAr
 		defer func() {
 			<-c.threadLock
 		}()
+
+		// 处理 Utf8Bom
+		if c.de.GetDataProcess().GetTrimUtf8Bom() && args.ChunkSn == 0 {
+			args.ChunkData = bytes.TrimPrefix(args.ChunkData, []byte{0xEF, 0xBB, 0xBF})
+		}
+
+		// todo 压缩
 
 		// 处理
 		fr := &flushResult{args: args}
@@ -186,6 +191,18 @@ func (c *chunkStore) Wait(ctx context.Context, chunkSn int32) error {
 // 与 Wait 相同, 但是入参没有计算断点
 func (c *chunkStore) WaitNoChunkSnOffset(ctx context.Context, chunkSn int32) error {
 	return c.Wait(ctx, chunkSn+c.resumePoint.ChunkFinishedCount)
+}
+
+func (c *chunkStore) LoadChunk(ctx context.Context, oneChunkMeta *model.OneChunkMeta) ([]byte, error) {
+	bs, err := c.csp.LoadChunk(ctx, oneChunkMeta)
+	if err != nil {
+		log.Error(ctx, "LoadChunk call csp.LoadChunk fail.", zap.Error(err))
+		return nil, err
+	}
+
+	// todo 解压缩
+
+	return bs, nil
 }
 
 func (c *chunkStore) Close() {

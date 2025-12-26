@@ -6,11 +6,13 @@ import (
 
 	"github.com/zlyuancn/splitter"
 
+	"github.com/zlyuancn/dataset/model"
 	"github.com/zlyuancn/dataset/pb"
 )
 
 type ChunkStorePersist interface {
 	FlushChunk(ctx context.Context, args *splitter.FlushChunkArgs) error
+	LoadChunk(ctx context.Context, oneChunkMeta *model.OneChunkMeta) ([]byte, error)
 }
 
 type cspCreatorFunc = func(ctx context.Context, datasetId uint, de *pb.DatasetExtend) (ChunkStorePersist, error)

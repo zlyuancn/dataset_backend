@@ -4,9 +4,10 @@ import (
 	"context"
 	"testing"
 
+	"github.com/zlyuancn/splitter"
+
 	"github.com/zlyuancn/dataset/conf"
 	"github.com/zlyuancn/dataset/pb"
-	"github.com/zlyuancn/splitter"
 )
 
 func TestChunkStore(t *testing.T) {
@@ -19,9 +20,10 @@ func TestChunkStore(t *testing.T) {
 
 	lastFinishedChunkSn := finishedChunkCount - 1
 
-	cp := &pb.ChunkProcess{
-		StoreType:    0,
-		CompressType: 0,
+	de := &pb.DatasetExtend{
+		DataProcess:  &pb.DataProcess{},
+		ChunkProcess: &pb.ChunkProcess{},
+		ValueProcess: &pb.ValueProcess{},
 	}
 	fcb := func(args *splitter.FlushChunkArgs) {
 		t.Logf("fcb args=%+v", args)
@@ -32,7 +34,7 @@ func TestChunkStore(t *testing.T) {
 		lastFinishedChunkSn = args.ChunkSn
 	}
 
-	cs, err := NewChunkStore(context.Background(), cp, fcb, lcb)
+	cs, err := NewChunkStore(context.Background(), 0, de, fcb, lcb)
 	if err != nil {
 		t.Fatalf("NewChunkStore fail. err=%s", err)
 		return

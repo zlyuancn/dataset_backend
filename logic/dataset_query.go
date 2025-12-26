@@ -290,5 +290,16 @@ func (*Dataset) batchRenderRunningProcess(ctx context.Context, ret []*pb.Dataset
 }
 
 func (d *Dataset) QueryDatasetData(ctx context.Context, req *pb.QueryDatasetDataReq) (*pb.QueryDatasetDataRsp, error) {
-	return &pb.QueryDatasetDataRsp{}, nil
+	chunkSn, value, err := module.Query.GetValue(ctx, req.GetDatasetId(), req.GetValueSn())
+	if err != nil {
+		log.Error(ctx, "QueryDatasetData call GetValue fail.", zap.Error(err))
+		return nil, err
+	}
+
+	return &pb.QueryDatasetDataRsp{
+		DatasetId: req.GetDatasetId(),
+		ChunkSn:   chunkSn,
+		ValueSn:   req.GetValueSn(),
+		Value:     value,
+	}, nil
 }
