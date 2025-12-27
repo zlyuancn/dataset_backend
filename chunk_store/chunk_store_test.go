@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/zlyuancn/dataset/conf"
-	"github.com/zlyuancn/dataset/model"
-	"github.com/zlyuancn/dataset/pb"
+	"github.com/zlyuancn/dataset_backend/conf"
+	"github.com/zlyuancn/dataset_backend/model"
+	"github.com/zlyuancn/dataset_backend/pb"
 )
 
 func TestChunkStore(t *testing.T) {

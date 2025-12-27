@@ -13,11 +13,11 @@ import (
 	"github.com/zly-app/zapp/pkg/utils"
 	"go.uber.org/zap"
 
-	"github.com/zlyuancn/dataset/client/db"
-	"github.com/zlyuancn/dataset/conf"
-	"github.com/zlyuancn/dataset/dao/dataset_list"
-	"github.com/zlyuancn/dataset/model"
-	"github.com/zlyuancn/dataset/pb"
+	"github.com/zlyuancn/dataset_backend/client/db"
+	"github.com/zlyuancn/dataset_backend/conf"
+	"github.com/zlyuancn/dataset_backend/dao/dataset_list"
+	"github.com/zlyuancn/dataset_backend/model"
+	"github.com/zlyuancn/dataset_backend/pb"
 )
 
 var Dataset = &datasetCli{}

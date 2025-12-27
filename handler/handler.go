@@ -7,7 +7,7 @@ import (
 	"github.com/zly-app/zapp/component/gpool"
 	"github.com/zly-app/zapp/pkg/utils"
 
-	"github.com/zlyuancn/dataset/dao/dataset_list"
+	"github.com/zlyuancn/dataset_backend/dao/dataset_list"
 )
 
 type Info struct {

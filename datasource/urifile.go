@@ -13,7 +13,7 @@ import (
 	"github.com/zly-app/zapp/log"
 	"go.uber.org/zap"
 
-	"github.com/zlyuancn/dataset/pb"
+	"github.com/zlyuancn/dataset_backend/pb"
 )
 
 type uriFileDataSource struct {

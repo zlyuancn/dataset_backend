@@ -10,11 +10,11 @@ import (
 	"github.com/zly-app/zapp/log"
 	"github.com/zlyuancn/redis_tool"
 
-	"github.com/zlyuancn/dataset/module"
-	"github.com/zlyuancn/dataset/pb"
+	"github.com/zlyuancn/dataset_backend/module"
+	"github.com/zlyuancn/dataset_backend/pb"
 
-	"github.com/zlyuancn/dataset/conf"
-	"github.com/zlyuancn/dataset/logic"
+	"github.com/zlyuancn/dataset_backend/conf"
+	"github.com/zlyuancn/dataset_backend/logic"
 )
 
 func main() {

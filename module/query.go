@@ -18,10 +18,10 @@ import (
 	"github.com/zlyuancn/zsingleflight"
 	"go.uber.org/zap"
 
-	"github.com/zlyuancn/dataset/chunk_store"
-	"github.com/zlyuancn/dataset/conf"
-	"github.com/zlyuancn/dataset/model"
-	"github.com/zlyuancn/dataset/pb"
+	"github.com/zlyuancn/dataset_backend/chunk_store"
+	"github.com/zlyuancn/dataset_backend/conf"
+	"github.com/zlyuancn/dataset_backend/model"
+	"github.com/zlyuancn/dataset_backend/pb"
 )
 
 type queryCli struct {

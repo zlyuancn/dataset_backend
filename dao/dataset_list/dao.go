@@ -10,7 +10,7 @@ import (
 	"github.com/zly-app/zapp/log"
 	"go.uber.org/zap"
 
-	"github.com/zlyuancn/dataset/client/db"
+	"github.com/zlyuancn/dataset_backend/client/db"
 )
 
 var (

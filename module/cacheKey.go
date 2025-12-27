@@ -3,7 +3,7 @@ package module
 import (
 	"strconv"
 
-	"github.com/zlyuancn/dataset/conf"
+	"github.com/zlyuancn/dataset_backend/conf"
 )
 
 var CacheKey = cacheKeyCli{}

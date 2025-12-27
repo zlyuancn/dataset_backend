@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/zlyuancn/dataset/pb"
+	"github.com/zlyuancn/dataset_backend/pb"
 )
 
 func TestCompress_UnCompress(t *testing.T) {

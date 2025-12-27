@@ -1,7 +1,7 @@
 package logic
 
 import (
-	"github.com/zlyuancn/dataset/pb"
+	"github.com/zlyuancn/dataset_backend/pb"
 )
 
 type Dataset struct {

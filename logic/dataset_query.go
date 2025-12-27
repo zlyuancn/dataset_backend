@@ -11,11 +11,11 @@ import (
 	"github.com/zly-app/zapp/log"
 	"go.uber.org/zap"
 
-	"github.com/zlyuancn/dataset/client/db"
-	"github.com/zlyuancn/dataset/dao/dataset_list"
-	"github.com/zlyuancn/dataset/model"
-	"github.com/zlyuancn/dataset/module"
-	"github.com/zlyuancn/dataset/pb"
+	"github.com/zlyuancn/dataset_backend/client/db"
+	"github.com/zlyuancn/dataset_backend/dao/dataset_list"
+	"github.com/zlyuancn/dataset_backend/model"
+	"github.com/zlyuancn/dataset_backend/module"
+	"github.com/zlyuancn/dataset_backend/pb"
 )
 
 func (*Dataset) SearchDatasetName(ctx context.Context, req *pb.SearchDatasetNameReq) (*pb.SearchDatasetNameRsp, error) {

@@ -499,7 +499,8 @@
           "$ref": "#/definitions/datasetDataSourceUriFile"
         },
         "trimUtf8Bom": {
-          "type": "boolean"
+          "type": "boolean",
+          "title": "去掉utf8bom文件头"
         },
         "rateLimit": {
           "type": "string",

@@ -6,10 +6,10 @@ import (
 
 	"github.com/zly-app/cache/v2"
 	"github.com/zly-app/zapp/log"
-	"github.com/zlyuancn/dataset/conf"
-	"github.com/zlyuancn/dataset/dao/dataset_list"
-	"github.com/zlyuancn/dataset/handler"
-	"github.com/zlyuancn/dataset/pb"
+	"github.com/zlyuancn/dataset_backend/conf"
+	"github.com/zlyuancn/dataset_backend/dao/dataset_list"
+	"github.com/zlyuancn/dataset_backend/handler"
+	"github.com/zlyuancn/dataset_backend/pb"
 	"github.com/zlyuancn/redis_tool"
 	"go.uber.org/zap"
 )

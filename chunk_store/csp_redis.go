@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/zlyuancn/dataset/client/db"
-	"github.com/zlyuancn/dataset/conf"
-	"github.com/zlyuancn/dataset/pb"
+	"github.com/zlyuancn/dataset_backend/client/db"
+	"github.com/zlyuancn/dataset_backend/conf"
+	"github.com/zlyuancn/dataset_backend/pb"
 )
 
 type redisCsp struct {

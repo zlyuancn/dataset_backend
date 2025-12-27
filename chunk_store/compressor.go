@@ -6,8 +6,8 @@ import (
 
 	"github.com/pierrec/lz4"
 
-	"github.com/zlyuancn/dataset/conf"
-	"github.com/zlyuancn/dataset/pb"
+	"github.com/zlyuancn/dataset_backend/conf"
+	"github.com/zlyuancn/dataset_backend/pb"
 )
 
 type Compressor interface {

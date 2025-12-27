@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/zlyuancn/dataset/pb"
+	"github.com/zlyuancn/dataset_backend/pb"
 )
 
 type DataSource interface {
@@ -14,7 +14,7 @@ type DataSource interface {
 	// 尝试获取数据流长度
 	GetDataStreamLen(ctx context.Context) int64
 	// 获取读取器
-	GetReader(ctx context.Context, ) (io.Reader, error)
+	GetReader(ctx context.Context) (io.Reader, error)
 	// 关闭
 	Close()
 }

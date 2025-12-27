@@ -1,6 +1,6 @@
 syntax = 'proto3';
 package dataset; // 决定proto引用路径和rpc路由
-option go_package = "github.com/zlyuancn/dataset/pb"; // 用于对golang包管理的定位
+option go_package = "github.com/zlyuancn/dataset_backend/pb"; // 用于对golang包管理的定位
 
 import "google/api/annotations.proto";  // 添加导入
 import "validate/validate.proto";

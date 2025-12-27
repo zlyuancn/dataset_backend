@@ -4,7 +4,7 @@ import (
 	"github.com/zly-app/component/redis"
 	"github.com/zly-app/component/sqlx"
 
-	"github.com/zlyuancn/dataset/conf"
+	"github.com/zlyuancn/dataset_backend/conf"
 )
 
 func GetSqlx() sqlx.Client {
