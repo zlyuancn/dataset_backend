@@ -2,8 +2,10 @@ package logic
 
 import (
 	"context"
+	"errors"
 
 	"github.com/bytedance/sonic"
+	"github.com/spf13/cast"
 	"github.com/zly-app/cache/v2"
 	"github.com/zly-app/component/redis"
 	"github.com/zly-app/zapp/log"
@@ -254,33 +256,36 @@ func (d *Dataset) QueryDatasetStatusInfo(ctx context.Context, req *pb.QueryDatas
 // 批量渲染运行中任务进度
 func (*Dataset) batchRenderRunningProcess(ctx context.Context, ret []*pb.DatasetStateInfo) error {
 	lines := make([]*pb.DatasetStateInfo, 0, len(ret))
-	status := make([]*redis.StringCmd, 0, len(ret)) // 数据集状态
+	keys := make([]string, 0, len(lines))
+	for _, l := range ret {
+		lines = append(lines, l)
+		keys = append(keys, module.CacheKey.GetCacheDatasetProcessStatus(int(l.DatasetId)))
+	}
+	if len(keys) == 0 {
+		return nil
+	}
 
 	rdb, err := db.GetRedis()
 	if err != nil {
 		return err
 	}
-	pipe := rdb.Pipeline()
-	for _, l := range ret {
-		switch l.Status {
-		case pb.Status_Status_Running, pb.Status_Status_Stopping, pb.Status_Status_Deleting:
-		default:
-			continue
-		}
 
-		lines = append(lines, l)
-		status = append(status, pipe.Get(ctx, module.CacheKey.GetCacheDatasetProcessStatus(int(l.DatasetId))))
-	}
-	_, err = pipe.Exec(ctx)
+	// 查询
+	values, err := rdb.MGet(ctx, keys...).Result()
 	if err != nil && err != redis.Nil {
-		log.Error(ctx, "batchRenderRunningProcess call pipe.Exec", zap.Error(err))
+		log.Error(ctx, "batchRenderRunningProcess call mget fail.", zap.Error(err))
+		return err
+	}
+	if len(values) != len(keys) {
+		err = errors.New("reply nums not match keys")
+		log.Error(ctx, "batchRenderRunningProcess call mget fail.", zap.Error(err))
 		return err
 	}
 
 	for i, line := range lines {
-		if status[i].Err() == nil {
+		if values[i] != nil {
 			s := &model.CacheDatasetProcessStatus{}
-			_ = sonic.UnmarshalString(status[i].Val(), s)
+			_ = sonic.UnmarshalString(cast.ToString(values[i]), s)
 			line.ChunkTotal = s.ChunkTotal
 			line.ChunkProcessedCount = s.ChunkFinishedCount
 			line.ValueTotal = s.ValueFinishedCount

@@ -33,7 +33,7 @@ const (
 	defChunkStoreThreadCount                 = 5
 	defChunkMetaLruCacheCount                = 100
 	defChunkDataLruCacheCount                = 100
-	defChunkCompressedRatioLimit             = 80
+	defChunkCompressedRatioLimit             = 85
 	defChunkPreloadByValueExpendRatio        = 90
 	defChunkPreloadProbabilityWithValueCount = 100
 )

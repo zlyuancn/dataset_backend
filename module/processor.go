@@ -91,15 +91,7 @@ type processorLauncher struct {
 func newProcessorLauncher(datasetInfo *dataset_list.Model,
 	unlock redis_tool.KeyUnlock, renew redis_tool.KeyTtlRenew) (*processorLauncher, error) {
 
-	de := &pb.DatasetExtend{}
-	err := sonic.UnmarshalString(datasetInfo.DatasetExtend, de)
-	if err != nil {
-		log.Error("newProcessorLauncher UnmarshalString DatasetExtend fail.", zap.Error(err))
-		return nil, err
-	}
-
 	p := &processorLauncher{
-		de:          de,
 		datasetInfo: datasetInfo,
 
 		lockKeyUnlock: unlock,
@@ -111,6 +103,14 @@ func newProcessorLauncher(datasetInfo *dataset_list.Model,
 	p.ctx, p.cancel = context.WithCancel(context.Background())
 	p.ctx = utils.Trace.CtxStart(p.ctx, "newProcessorLauncher")
 	defer utils.Trace.CtxEnd(p.ctx)
+
+	de := &pb.DatasetExtend{}
+	err := sonic.UnmarshalString(datasetInfo.DatasetExtend, de)
+	if err != nil {
+		log.Error("newProcessorLauncher UnmarshalString DatasetExtend fail.", zap.Error(err))
+		return nil, err
+	}
+	p.de = de
 
 	log.Info(p.ctx, "newProcessorLauncher", zap.Any("datasetInfo", datasetInfo))
 
@@ -160,6 +160,8 @@ func (p *processorLauncher) loadCacheStatus() error {
 	}
 	if ok {
 		p.pStatus = status
+	} else {
+		p.pStatus = &model.CacheDatasetProcessStatus{}
 	}
 	return nil
 }
@@ -288,7 +290,7 @@ func (p *processorLauncher) loopCheckStopFlag() {
 // 尝试恢复断点
 func (p *processorLauncher) tryResumePointOffset() {
 	// 尝试断点续传
-	if p.pStatus != nil && p.pStatus.ResumePointOffset > 0 {
+	if p.pStatus.ResumePointOffset > 0 {
 		resume, err := p.ds.SetBreakpoint(p.ctx, p.pStatus.ResumePointOffset)
 		if err != nil {
 			log.Error(p.ctx, "try ResumePointOffset fail.", zap.Error(err))
@@ -316,15 +318,9 @@ func (p *processorLauncher) tryResumePointOffset() {
 
 // 处理完成的每个 chunk 回调
 func (p *processorLauncher) flushChunkHandler(meta *model.OneChunkMeta) {
-	oneChunk := &model.OneChunkMeta{
-		ChunkSn:      meta.ChunkSn,
-		StartValueSn: meta.StartValueSn,
-		EndValueSn:   meta.EndValueSn,
-		Checksum:     meta.Checksum,
-	}
-	p.chunkMeta = append(p.chunkMeta, oneChunk)
+	p.chunkMeta = append(p.chunkMeta, meta)
 
-	v, err := sonic.MarshalString(oneChunk)
+	v, err := sonic.MarshalString(meta)
 	if err != nil {
 		log.Error(p.ctx, "flushChunkHandler call MarshalString fail", zap.Error(err))
 		p.submitStopFlag("flushChunkHandler call MarshalString fail. err=%s" + err.Error())
@@ -333,7 +329,7 @@ func (p *processorLauncher) flushChunkHandler(meta *model.OneChunkMeta) {
 
 	// 保存 ChunkMeta
 	key := CacheKey.GetChunkMeta(int(p.datasetInfo.DatasetId))
-	field := strconv.Itoa(int(oneChunk.ChunkSn))
+	field := strconv.Itoa(int(meta.ChunkSn))
 	rdb, err := db.GetRedis()
 	if err == nil {
 		err = rdb.HSet(p.ctx, key, field, v).Err()
@@ -347,7 +343,7 @@ func (p *processorLauncher) flushChunkHandler(meta *model.OneChunkMeta) {
 
 // 处理完成的最后已完成 chunk 回调
 func (p *processorLauncher) flushLastedChunkHandler(meta *model.OneChunkMeta) {
-	p.pStatus.ChunkFinishedCount = int32(meta.ChunkSn + 1)
+	p.pStatus.ChunkFinishedCount = meta.ChunkSn + 1
 	p.pStatus.ValueFinishedCount = meta.EndValueSn + 1
 	p.pStatus.ResumePointOffset = meta.ScanByteNum
 
@@ -387,8 +383,7 @@ func (p *processorLauncher) runSplitter(sp splitter.Splitter, rd io.Reader) (boo
 func (p *processorLauncher) Run() {
 	log.Warn(p.ctx, "dataset run process", zap.Any("datasetInfo", p.datasetInfo))
 
-	go p.loopLockKeyRenew() // 循环续期
-	// go p.loopWriteProgressStatus() // 循环写入处理状态
+	go p.loopLockKeyRenew()  // 循环续期
 	go p.loopCheckStopFlag() // 循环检查停止flag
 
 	defer func() {
@@ -549,11 +544,10 @@ func (p *processorLauncher) stopSideEffect() {
 		CacheKey.GetDatasetInfo(int(p.datasetInfo.DatasetId)), // 删除数据集缓存
 		CacheKey.GetStopFlag(int(p.datasetInfo.DatasetId)),    // 停止 flag
 	}
-	if isStopped || p.isFinished { // 如果是最后阶段则删除状态
-		keys = append(keys, CacheKey.GetCacheDatasetProcessStatus(int(p.datasetInfo.DatasetId)))
-	}
-	if p.isFinished { // 如果是已完成则删除 ChunkMeta
-		keys = append(keys, CacheKey.GetChunkMeta(int(p.datasetInfo.DatasetId)))
+	// 如果是最后阶段则删除状态
+	if p.isFinished {
+		keys = append(keys, CacheKey.GetCacheDatasetProcessStatus(int(p.datasetInfo.DatasetId))) // 删除状态
+		keys = append(keys, CacheKey.GetChunkMeta(int(p.datasetInfo.DatasetId)))                 // 删除meta
 	}
 	rdb, err := db.GetRedis()
 	if err == nil {
