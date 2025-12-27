@@ -1,11 +1,22 @@
 package model
 
+// chunk 数据
+type ChunkData struct {
+	ChunkSn      int32  // chunk sn
+	StartValueSn int64  // 第一个 value 的 sn
+	EndValueSn   int64  // 最后一个 value 的 sn
+	ChunkData    []byte // chunk数据
+	ScanByteNum  int64  // 已扫描rd的字节数
+}
+
 // 一个chunk元数据
 type OneChunkMeta struct {
 	ChunkSn      int32  // chunk sn
 	StartValueSn int64  // 第一个 value 的 sn
 	EndValueSn   int64  // 最后一个 value 的 sn
-	Checksum     uint32 // 数据校验和(实际持久化数据)
+	Checksum     uint32 // 数据校验和(原始数据, 不是压缩后的数据)
+	IsCompressed bool   // 这个 chunk 是否使用了压缩
+	ScanByteNum  int64  // 已扫描rd的字节数
 }
 
 type ChunkMeta []*OneChunkMeta

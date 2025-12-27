@@ -4,9 +4,8 @@ import (
 	"context"
 	"testing"
 
-	"github.com/zlyuancn/splitter"
-
 	"github.com/zlyuancn/dataset/conf"
+	"github.com/zlyuancn/dataset/model"
 	"github.com/zlyuancn/dataset/pb"
 )
 
@@ -25,13 +24,13 @@ func TestChunkStore(t *testing.T) {
 		ChunkProcess: &pb.ChunkProcess{},
 		ValueProcess: &pb.ValueProcess{},
 	}
-	fcb := func(args *splitter.FlushChunkArgs) {
-		t.Logf("fcb args=%+v", args)
-		lastFinishedChunkSn = args.ChunkSn
+	fcb := func(meta *model.OneChunkMeta) {
+		t.Logf("fcb chunkData=%+v", meta)
+		lastFinishedChunkSn = int(meta.ChunkSn)
 	}
-	lcb := func(args *splitter.FlushChunkArgs) {
-		t.Logf("lcb!!!! args=%+v", args)
-		lastFinishedChunkSn = args.ChunkSn
+	lcb := func(meta *model.OneChunkMeta) {
+		t.Logf("lcb!!!! chunkData=%+v", meta)
+		lastFinishedChunkSn = int(meta.ChunkSn)
 	}
 
 	cs, err := NewChunkStore(context.Background(), 0, de, fcb, lcb)
@@ -50,8 +49,8 @@ func TestChunkStore(t *testing.T) {
 	lastChunkSn := -1
 	for i := 0; i < chunkTotal-finishedChunkCount; i++ {
 		lastChunkSn = i
-		cs.FlushChunk(context.Background(), &splitter.FlushChunkArgs{
-			ChunkSn:      i,
+		cs.FlushChunk(context.Background(), &model.ChunkData{
+			ChunkSn:      int32(i),
 			StartValueSn: int64(i * oneChunkValueCount),
 			EndValueSn:   int64((i+1)*oneChunkValueCount - 1),
 			ChunkData:    nil,

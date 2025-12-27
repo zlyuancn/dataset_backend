@@ -4,11 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/zlyuancn/splitter"
-
 	"github.com/zlyuancn/dataset/client/db"
 	"github.com/zlyuancn/dataset/conf"
-	"github.com/zlyuancn/dataset/model"
 	"github.com/zlyuancn/dataset/pb"
 )
 
@@ -25,23 +22,23 @@ func newRedisCsp(ctx context.Context, datasetId uint, de *pb.DatasetExtend) (Chu
 	return r, nil
 }
 
-func (r *redisCsp) FlushChunk(ctx context.Context, args *splitter.FlushChunkArgs) error {
+func (r *redisCsp) FlushChunk(ctx context.Context, chunkSn int32, chunkData []byte) error {
 	rdb, err := db.GetChunkStoreRedis()
 	if err != nil {
 		return err
 	}
 
-	key := fmt.Sprintf(conf.Conf.ChunkStoreRedisKeyFormat, r.datasetId, args.ChunkSn)
-	err = rdb.Set(ctx, key, args.ChunkData, 0).Err()
+	key := fmt.Sprintf(conf.Conf.ChunkStoreRedisKeyFormat, r.datasetId, chunkSn)
+	err = rdb.Set(ctx, key, chunkData, 0).Err()
 	return err
 }
 
-func (r *redisCsp) LoadChunk(ctx context.Context, oneChunkMeta *model.OneChunkMeta) ([]byte, error) {
+func (r *redisCsp) LoadChunk(ctx context.Context, chunkSn int32) ([]byte, error) {
 	rdb, err := db.GetChunkStoreRedis()
 	if err != nil {
 		return nil, err
 	}
 
-	key := fmt.Sprintf(conf.Conf.ChunkStoreRedisKeyFormat, r.datasetId, oneChunkMeta.ChunkSn)
+	key := fmt.Sprintf(conf.Conf.ChunkStoreRedisKeyFormat, r.datasetId, chunkSn)
 	return rdb.Get(ctx, key).Bytes()
 }

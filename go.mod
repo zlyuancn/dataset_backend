@@ -8,6 +8,7 @@ require (
 	github.com/envoyproxy/protoc-gen-validate v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.3
 	github.com/hashicorp/golang-lru/v2 v2.0.7
+	github.com/pierrec/lz4 v2.0.5+incompatible
 	github.com/spf13/cast v1.10.0
 	github.com/zly-app/cache/v2 v2.0.11
 	github.com/zly-app/component/http v0.0.0-20251201104934-96e59c17144e

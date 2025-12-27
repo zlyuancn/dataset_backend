@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"hash/crc32"
 	"sync/atomic"
 
 	"github.com/zly-app/zapp/log"
-	"github.com/zlyuancn/splitter"
 	"go.uber.org/zap"
 
 	"github.com/zlyuancn/dataset/conf"
@@ -18,16 +18,16 @@ import (
 var ErrStop = errors.New("stop")
 
 // 持久化进度回调, 不会每次完成 chunkSn 都回调
-type FlushedLastedCallback func(args *splitter.FlushChunkArgs)
+type FlushedLastedCallback func(meta *model.OneChunkMeta)
 
 // 持久化回调, 每次完成 chunkSn 都会回调, 无序
-type FlushedCallback func(args *splitter.FlushChunkArgs)
+type FlushedCallback func(meta *model.OneChunkMeta)
 
 type ChunkStore interface {
 	// 初始化
 	Init(resumePoint *ResumePoint)
 	// 持久化某个chunk
-	FlushChunk(ctx context.Context, args *splitter.FlushChunkArgs)
+	FlushChunk(ctx context.Context, chunkData *model.ChunkData)
 	// 等待flushChunk完成或者停止
 	Wait(ctx context.Context, chunkSn int32) error
 	// 与 Wait 相同, 但是入参没有计算断点
@@ -46,7 +46,7 @@ type ResumePoint struct {
 }
 
 type flushResult struct {
-	args *splitter.FlushChunkArgs
+	meta *model.OneChunkMeta
 	err  error // 如果需要错误处理可扩展
 }
 
@@ -104,18 +104,18 @@ func (c *chunkStore) Init(resumePoint *ResumePoint) {
 	go c.callbackDispatcher()
 }
 
-func (c *chunkStore) FlushChunk(ctx context.Context, args *splitter.FlushChunkArgs) {
+func (c *chunkStore) FlushChunk(ctx context.Context, chunkData *model.ChunkData) {
 	// 已停止则拒绝处理
 	if atomic.LoadInt32(&c.onceStop) != 0 {
 		return
 	}
 
-	args = &splitter.FlushChunkArgs{
-		ChunkSn:      args.ChunkSn + int(c.resumePoint.ChunkFinishedCount),
-		StartValueSn: args.StartValueSn + c.resumePoint.ValueFinishedCount,
-		EndValueSn:   args.EndValueSn + c.resumePoint.ValueFinishedCount,
-		ChunkData:    args.ChunkData,
-		ScanByteNum:  args.ScanByteNum + c.resumePoint.ResumePointOffset,
+	chunkData = &model.ChunkData{
+		ChunkSn:      chunkData.ChunkSn + c.resumePoint.ChunkFinishedCount,
+		StartValueSn: chunkData.StartValueSn + c.resumePoint.ValueFinishedCount,
+		EndValueSn:   chunkData.EndValueSn + c.resumePoint.ValueFinishedCount,
+		ChunkData:    chunkData.ChunkData,
+		ScanByteNum:  chunkData.ScanByteNum + c.resumePoint.ResumePointOffset,
 	}
 
 	// 占用一个线程
@@ -125,24 +125,41 @@ func (c *chunkStore) FlushChunk(ctx context.Context, args *splitter.FlushChunkAr
 		return
 	}
 
-	go func(args *splitter.FlushChunkArgs) {
+	go func(chunkData *model.ChunkData) {
 		// 退出前释放线程
 		defer func() {
 			<-c.threadLock
 		}()
 
 		// 处理 Utf8Bom
-		if c.de.GetDataProcess().GetTrimUtf8Bom() && args.ChunkSn == 0 {
-			args.ChunkData = bytes.TrimPrefix(args.ChunkData, []byte{0xEF, 0xBB, 0xBF})
+		if c.de.GetDataProcess().GetTrimUtf8Bom() && chunkData.ChunkSn == 0 {
+			chunkData.ChunkData = bytes.TrimPrefix(chunkData.ChunkData, []byte{0xEF, 0xBB, 0xBF})
 		}
 
-		// todo 压缩
+		// 获取校验和. 数据校验和是原始数据, 不是压缩后的数据
+		checkSum := crc32.ChecksumIEEE(chunkData.ChunkData)
+
+		// 压缩
+		compressed, isCompressed, err := Compress(c.de.GetChunkProcess().GetCompressType(), chunkData.ChunkData)
+		if err != nil {
+			log.Error(ctx, "Compress fail.", zap.Error(err))
+		}
+		if isCompressed {
+			chunkData.ChunkData = compressed
+		}
 
 		// 处理
-		fr := &flushResult{args: args}
-		fr.err = c.csp.FlushChunk(ctx, args)
+		fr := &flushResult{meta: &model.OneChunkMeta{
+			ChunkSn:      chunkData.ChunkSn,
+			StartValueSn: chunkData.StartValueSn,
+			EndValueSn:   chunkData.EndValueSn,
+			Checksum:     checkSum,
+			IsCompressed: isCompressed,
+			ScanByteNum:  chunkData.ScanByteNum,
+		}}
+		fr.err = c.csp.FlushChunk(ctx, chunkData.ChunkSn, chunkData.ChunkData)
 		if fr.err != nil {
-			log.Error(ctx, "FlushChunk call csp.FlushChunk fail.", zap.Any("args", args), zap.Error(fr.err))
+			log.Error(ctx, "FlushChunk call csp.FlushChunk fail.", zap.Any("chunkData", chunkData), zap.Error(fr.err))
 		}
 
 		// 处理完成后将结果输出
@@ -151,7 +168,7 @@ func (c *chunkStore) FlushChunk(ctx context.Context, args *splitter.FlushChunkAr
 		case <-c.stopChan:
 			return
 		}
-	}(args)
+	}(chunkData)
 }
 
 // 等待至少 ChunkSn 处理完成
@@ -194,13 +211,28 @@ func (c *chunkStore) WaitNoChunkSnOffset(ctx context.Context, chunkSn int32) err
 }
 
 func (c *chunkStore) LoadChunk(ctx context.Context, oneChunkMeta *model.OneChunkMeta) ([]byte, error) {
-	bs, err := c.csp.LoadChunk(ctx, oneChunkMeta)
+	bs, err := c.csp.LoadChunk(ctx, oneChunkMeta.ChunkSn)
 	if err != nil {
 		log.Error(ctx, "LoadChunk call csp.LoadChunk fail.", zap.Error(err))
 		return nil, err
 	}
 
-	// todo 解压缩
+	// 解压缩
+	if oneChunkMeta.IsCompressed {
+		bs, err = UnCompress(c.de.GetChunkProcess().GetCompressType(), bs)
+		if err != nil {
+			log.Error(ctx, "LoadChunk call UnCompress fail.", zap.Error(err))
+			return nil, err
+		}
+	}
+
+	// 检查校验和
+	checkSum := crc32.ChecksumIEEE(bs)
+	if checkSum != oneChunkMeta.Checksum {
+		err = errors.New("check checksum fail.")
+		log.Error(ctx, "LoadChunk fail.", zap.Error(err))
+		return nil, err
+	}
 
 	return bs, nil
 }
@@ -231,9 +263,9 @@ func (c *chunkStore) callbackDispatcher() {
 			return
 		}
 
-		pending[int32(fr.args.ChunkSn)] = fr
+		pending[fr.meta.ChunkSn] = fr
 		// 处理回调
-		c.fcb(fr.args)
+		c.fcb(fr.meta)
 
 		// 尝试按序处理
 		var lastedFinishedFr *flushResult // 用于回调的 fr
@@ -251,7 +283,7 @@ func (c *chunkStore) callbackDispatcher() {
 		// 检查是否有新的已完成的sn
 		if lastedFinishedFr != nil {
 			// 处理回调
-			c.lcb(lastedFinishedFr.args)
+			c.lcb(lastedFinishedFr.meta)
 
 			// 更新已完成的
 			atomic.StoreInt32(&c.flushedChunkSn, expectedSn-1)

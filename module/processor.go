@@ -2,7 +2,6 @@ package module
 
 import (
 	"context"
-	"hash/crc32"
 	"io"
 	"sort"
 	"strconv"
@@ -316,12 +315,12 @@ func (p *processorLauncher) tryResumePointOffset() {
 }
 
 // 处理完成的每个 chunk 回调
-func (p *processorLauncher) flushChunkHandler(args *splitter.FlushChunkArgs) {
+func (p *processorLauncher) flushChunkHandler(meta *model.OneChunkMeta) {
 	oneChunk := &model.OneChunkMeta{
-		ChunkSn:      int32(args.ChunkSn),
-		StartValueSn: args.StartValueSn,
-		EndValueSn:   args.EndValueSn,
-		Checksum:     crc32.ChecksumIEEE(args.ChunkData),
+		ChunkSn:      meta.ChunkSn,
+		StartValueSn: meta.StartValueSn,
+		EndValueSn:   meta.EndValueSn,
+		Checksum:     meta.Checksum,
 	}
 	p.chunkMeta = append(p.chunkMeta, oneChunk)
 
@@ -347,10 +346,10 @@ func (p *processorLauncher) flushChunkHandler(args *splitter.FlushChunkArgs) {
 }
 
 // 处理完成的最后已完成 chunk 回调
-func (p *processorLauncher) flushLastedChunkHandler(args *splitter.FlushChunkArgs) {
-	p.pStatus.ChunkFinishedCount = int32(args.ChunkSn + 1)
-	p.pStatus.ValueFinishedCount = args.EndValueSn + 1
-	p.pStatus.ResumePointOffset = args.ScanByteNum
+func (p *processorLauncher) flushLastedChunkHandler(meta *model.OneChunkMeta) {
+	p.pStatus.ChunkFinishedCount = int32(meta.ChunkSn + 1)
+	p.pStatus.ValueFinishedCount = meta.EndValueSn + 1
+	p.pStatus.ResumePointOffset = meta.ScanByteNum
 
 	// 持久化状态
 	err := p.writeCacheStatus()
@@ -422,7 +421,13 @@ func (p *processorLauncher) Run() {
 		ChunkSizeLimit: int(p.pStatus.ChunkSizeLimit),
 		FlushChunkHandler: func(args *splitter.FlushChunkArgs) {
 			lastChunkSn = int32(args.ChunkSn)
-			p.cs.FlushChunk(p.ctx, args)
+			p.cs.FlushChunk(p.ctx, &model.ChunkData{
+				ChunkSn:      int32(args.ChunkSn),
+				StartValueSn: args.StartValueSn,
+				EndValueSn:   args.EndValueSn,
+				ChunkData:    args.ChunkData,
+				ScanByteNum:  args.ScanByteNum,
+			})
 		},
 		ValueMaxScanSizeLimit: conf.Conf.ValueMaxScanSizeLimit,
 		ValueFilter:           p.vf.Handler,

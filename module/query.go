@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"errors"
-	"hash/crc32"
 	"io"
 	"sort"
 	"strconv"
@@ -180,13 +179,6 @@ func (q *queryCli) getChunkValues(ctx context.Context, datasetId int64, meta *mo
 	bs, err := cs.LoadChunk(ctx, meta)
 	if err != nil {
 		log.Error(ctx, "getChunkValues call LoadChunk fail.", zap.Error(err))
-		return nil, err
-	}
-	// 检查校验和
-	checkSum := crc32.ChecksumIEEE(bs)
-	if checkSum != meta.Checksum {
-		err = errors.New("check checksum fail.")
-		log.Error(ctx, "getChunkValues fail.", zap.Error(err))
 		return nil, err
 	}
 
