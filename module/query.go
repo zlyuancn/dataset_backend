@@ -213,7 +213,7 @@ func (q *queryCli) findChunkByValueSn(metas model.ChunkMeta, valueSn int64) (*mo
 
 	// 找到最小符合要求的 one chunk meta
 	i := sort.Search(len(metas), func(i int) bool {
-		return metas[i].StartValueSn >= valueSn
+		return metas[i].EndValueSn >= valueSn
 	})
 	if i >= len(metas) {
 		return nil, errors.New("find chunk by sn fail. not in range")
