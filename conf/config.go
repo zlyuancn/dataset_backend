@@ -22,8 +22,9 @@ const (
 	defDatasetProcessStatusPrefix        = "dataset:status:"
 	defChunkMetaKeyPrefix                = "dataset:chunk_meta:"
 
-	defDatasetInfoKeyPrefix = "dataset:info:"
-	defDatasetInfoCacheTtl  = 3600
+	defDatasetInfoKeyPrefix           = "dataset:info:"
+	defDatasetInfoCacheTtl            = 3600
+	defDatasetNotFinishedInfoCacheTtl = 300
 
 	defChunkStoreRedisName                   = "dataset"
 	defChunkStoreRedisKeyFormat              = "dataset:chunk_store:%d_%d"
@@ -56,8 +57,9 @@ var Conf = Config{
 
 	// cache Key
 
-	DatasetInfoKeyPrefix: defDatasetInfoKeyPrefix,
-	DatasetInfoCacheTtl:  defDatasetInfoCacheTtl,
+	DatasetInfoKeyPrefix:           defDatasetInfoKeyPrefix,
+	DatasetInfoCacheTtl:            defDatasetInfoCacheTtl,
+	DatasetNotFinishedInfoCacheTtl: defDatasetNotFinishedInfoCacheTtl,
 
 	// chunk
 
@@ -94,8 +96,9 @@ type Config struct {
 
 	// cache Key
 
-	DatasetInfoKeyPrefix string // 数据集信息缓存前缀
-	DatasetInfoCacheTtl  int    // 数据集信息缓存ttl秒数
+	DatasetInfoKeyPrefix           string // 数据集信息缓存前缀
+	DatasetInfoCacheTtl            int    // 数据集信息缓存ttl秒数
+	DatasetNotFinishedInfoCacheTtl int    // 数据集未处理完成的数据缓存ttl
 
 	// chunk
 
@@ -155,6 +158,9 @@ func (conf *Config) Check() {
 	}
 	if conf.DatasetInfoCacheTtl < 1 {
 		conf.DatasetInfoCacheTtl = defDatasetInfoCacheTtl
+	}
+	if conf.DatasetNotFinishedInfoCacheTtl < 1 {
+		conf.DatasetNotFinishedInfoCacheTtl = defDatasetNotFinishedInfoCacheTtl
 	}
 
 	if conf.ChunkStoreRedisName == "" {

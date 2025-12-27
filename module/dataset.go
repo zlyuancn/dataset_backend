@@ -11,11 +11,13 @@ import (
 	"github.com/zly-app/component/sqlx"
 	"github.com/zly-app/zapp/log"
 	"github.com/zly-app/zapp/pkg/utils"
+	"go.uber.org/zap"
+
 	"github.com/zlyuancn/dataset/client/db"
 	"github.com/zlyuancn/dataset/conf"
 	"github.com/zlyuancn/dataset/dao/dataset_list"
 	"github.com/zlyuancn/dataset/model"
-	"go.uber.org/zap"
+	"github.com/zlyuancn/dataset/pb"
 )
 
 var Dataset = &datasetCli{}
@@ -60,13 +62,43 @@ func (*datasetCli) GetStopFlag(ctx context.Context, datasetId int) (model.StopFl
 func (*datasetCli) GetDatasetInfoByCache(ctx context.Context, datasetId uint) (*dataset_list.Model, error) {
 	key := CacheKey.GetDatasetInfo(int(datasetId))
 	ret := &dataset_list.Model{}
-	err := cache.GetDefCache().Get(ctx, key, ret, cache.WithLoadFn(func(ctx context.Context, key string) (interface{}, error) {
+
+	// 单纯的从cache获取数据
+	err := cache.GetDefCache().Get(ctx, key, ret)
+	if err != nil && err != cache.ErrCacheMiss {
+		log.Error(ctx, "GetDatasetInfoByCache fail.", zap.Error(err))
+		return nil, err
+	}
+
+	// 从db加载数据
+	err = cache.GetDefCache().SingleFlightDo(ctx, key, ret, cache.WithLoadFn(func(ctx context.Context, key string) (interface{}, error) {
 		v, err := dataset_list.GetOneByDatasetId(ctx, int(datasetId))
 		if err == sqlx.ErrNoRows {
 			return nil, nil
 		}
 		return v, err
-	}), cache.WithExpire(conf.Conf.DatasetInfoCacheTtl))
+	}))
+	if err == cache.ErrDataIsNil {
+		er := cache.GetDefCache().Set(ctx, key, nil, cache.WithExpire(conf.Conf.DatasetNotFinishedInfoCacheTtl))
+		if er != nil {
+			log.Error(ctx, "GetDatasetInfoByCache call Set fail.", zap.Error(err))
+		}
+		return nil, err
+	}
+	if err != nil {
+		log.Error(ctx, "GetDatasetInfoByCache call SingleFlightDo fail.", zap.Error(err))
+		return nil, err
+	}
+
+	// 写入缓存
+	expire := conf.Conf.DatasetInfoCacheTtl
+	if ret.Status != byte(pb.Status_Status_Finished) {
+		expire = conf.Conf.DatasetNotFinishedInfoCacheTtl
+	}
+	err = cache.GetDefCache().Set(ctx, key, ret, cache.WithExpire(expire))
+	if err != nil {
+		log.Error(ctx, "GetDatasetInfoByCache call Set fail.", zap.Error(err))
+	}
 	return ret, err
 }
 
