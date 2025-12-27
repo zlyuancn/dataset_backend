@@ -10,6 +10,9 @@ import (
 func GetSqlx() sqlx.Client {
 	return sqlx.GetClient(conf.Conf.SqlxName)
 }
+func GetLogSqlx() sqlx.Client {
+	return sqlx.GetClient(conf.Conf.LogSqlxName)
+}
 func GetRedis() (redis.UniversalClient, error) {
 	return redis.GetClient(conf.Conf.RedisName)
 }

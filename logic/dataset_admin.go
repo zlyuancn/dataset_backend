@@ -54,6 +54,7 @@ func (*Dataset) AdminAddDataset(ctx context.Context, req *pb.AdminAddDatasetReq)
 		log.Error(ctx, "AdminAddDataset call CreateOneModel fail.", zap.Error(err))
 		return nil, err
 	}
+	v.DatasetId = uint(datasetId)
 
 	handler.Trigger(ctx, handler.AfterCreateDataset, &handler.Info{
 		Dataset: v,

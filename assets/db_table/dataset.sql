@@ -48,3 +48,17 @@ CREATE TABLE `dataset_history`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_general_ci COMMENT ='数据集操作历史';
+
+CREATE TABLE `dataset_log`
+(
+    `id`          bigint unsigned  NOT NULL AUTO_INCREMENT,
+    `dataset_id`  bigint unsigned  NOT NULL COMMENT '数据集id',
+    `remark`      varchar(4096)    NOT NULL DEFAULT '' COMMENT '备注',
+    `extend`      Text             NOT NULL COMMENT '扩展数据',
+    `log_type`    tinyint unsigned NOT NULL DEFAULT 0 COMMENT '日志类型 枚举类型参考 pb.DataLogType',
+    `create_time` bigint unsigned  NOT NULL DEFAULT 0 COMMENT '创建时间, 微秒',
+    PRIMARY KEY (`id`),
+    KEY `idx_job_id` (`dataset_id`, `create_time` DESC)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci COMMENT ='数据集日志';

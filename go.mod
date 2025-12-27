@@ -1,4 +1,4 @@
-module github.com/zlyuancn/dataset_bakcend
+module github.com/zlyuancn/dataset_backend
 
 go 1.25.0
 
@@ -19,7 +19,9 @@ require (
 	github.com/zly-app/uapp v0.0.0-20251201110646-673ce4a3e75f
 	github.com/zly-app/zapp v1.4.2
 	github.com/zlyuancn/redis_tool v0.0.0-20251216042311-cf7350789353
+	github.com/zlyuancn/rotate v0.0.0-20251105133058-d2b2a91da640
 	github.com/zlyuancn/splitter v0.0.0-20251227074928-7ef5d318387c
+	github.com/zlyuancn/zretry v0.0.0-20220514032503-d78bfd22a441
 	github.com/zlyuancn/zsingleflight v0.0.0-20251227041538-317cd25cdd71
 	go.uber.org/zap v1.27.1
 	google.golang.org/genproto/googleapis/api v0.0.0-20251213004720-97cd9d5aeac2

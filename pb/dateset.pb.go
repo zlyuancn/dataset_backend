@@ -22,6 +22,56 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 数据的日志类型
+type DataLogType int32
+
+const (
+	DataLogType_DataLogType_Info DataLogType = 0 // 信息
+	DataLogType_DataLogType_Warn DataLogType = 1 // 警告
+	DataLogType_DataLogType_Err  DataLogType = 2 // 错误
+)
+
+// Enum value maps for DataLogType.
+var (
+	DataLogType_name = map[int32]string{
+		0: "DataLogType_Info",
+		1: "DataLogType_Warn",
+		2: "DataLogType_Err",
+	}
+	DataLogType_value = map[string]int32{
+		"DataLogType_Info": 0,
+		"DataLogType_Warn": 1,
+		"DataLogType_Err":  2,
+	}
+)
+
+func (x DataLogType) Enum() *DataLogType {
+	p := new(DataLogType)
+	*p = x
+	return p
+}
+
+func (x DataLogType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (DataLogType) Descriptor() protoreflect.EnumDescriptor {
+	return file_dateset_proto_enumTypes[0].Descriptor()
+}
+
+func (DataLogType) Type() protoreflect.EnumType {
+	return &file_dateset_proto_enumTypes[0]
+}
+
+func (x DataLogType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use DataLogType.Descriptor instead.
+func (DataLogType) EnumDescriptor() ([]byte, []int) {
+	return file_dateset_proto_rawDescGZIP(), []int{0}
+}
+
 type OpCmd int32
 
 const (
@@ -64,11 +114,11 @@ func (x OpCmd) String() string {
 }
 
 func (OpCmd) Descriptor() protoreflect.EnumDescriptor {
-	return file_dateset_proto_enumTypes[0].Descriptor()
+	return file_dateset_proto_enumTypes[1].Descriptor()
 }
 
 func (OpCmd) Type() protoreflect.EnumType {
-	return &file_dateset_proto_enumTypes[0]
+	return &file_dateset_proto_enumTypes[1]
 }
 
 func (x OpCmd) Number() protoreflect.EnumNumber {
@@ -77,7 +127,7 @@ func (x OpCmd) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use OpCmd.Descriptor instead.
 func (OpCmd) EnumDescriptor() ([]byte, []int) {
-	return file_dateset_proto_rawDescGZIP(), []int{0}
+	return file_dateset_proto_rawDescGZIP(), []int{1}
 }
 
 // 状态
@@ -126,11 +176,11 @@ func (x Status) String() string {
 }
 
 func (Status) Descriptor() protoreflect.EnumDescriptor {
-	return file_dateset_proto_enumTypes[1].Descriptor()
+	return file_dateset_proto_enumTypes[2].Descriptor()
 }
 
 func (Status) Type() protoreflect.EnumType {
-	return &file_dateset_proto_enumTypes[1]
+	return &file_dateset_proto_enumTypes[2]
 }
 
 func (x Status) Number() protoreflect.EnumNumber {
@@ -139,7 +189,7 @@ func (x Status) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use Status.Descriptor instead.
 func (Status) EnumDescriptor() ([]byte, []int) {
-	return file_dateset_proto_rawDescGZIP(), []int{1}
+	return file_dateset_proto_rawDescGZIP(), []int{2}
 }
 
 type DataSource int32
@@ -172,11 +222,11 @@ func (x DataSource) String() string {
 }
 
 func (DataSource) Descriptor() protoreflect.EnumDescriptor {
-	return file_dateset_proto_enumTypes[2].Descriptor()
+	return file_dateset_proto_enumTypes[3].Descriptor()
 }
 
 func (DataSource) Type() protoreflect.EnumType {
-	return &file_dateset_proto_enumTypes[2]
+	return &file_dateset_proto_enumTypes[3]
 }
 
 func (x DataSource) Number() protoreflect.EnumNumber {
@@ -185,7 +235,7 @@ func (x DataSource) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use DataSource.Descriptor instead.
 func (DataSource) EnumDescriptor() ([]byte, []int) {
-	return file_dateset_proto_rawDescGZIP(), []int{2}
+	return file_dateset_proto_rawDescGZIP(), []int{3}
 }
 
 type CompressType int32
@@ -218,11 +268,11 @@ func (x CompressType) String() string {
 }
 
 func (CompressType) Descriptor() protoreflect.EnumDescriptor {
-	return file_dateset_proto_enumTypes[3].Descriptor()
+	return file_dateset_proto_enumTypes[4].Descriptor()
 }
 
 func (CompressType) Type() protoreflect.EnumType {
-	return &file_dateset_proto_enumTypes[3]
+	return &file_dateset_proto_enumTypes[4]
 }
 
 func (x CompressType) Number() protoreflect.EnumNumber {
@@ -231,7 +281,7 @@ func (x CompressType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use CompressType.Descriptor instead.
 func (CompressType) EnumDescriptor() ([]byte, []int) {
-	return file_dateset_proto_rawDescGZIP(), []int{3}
+	return file_dateset_proto_rawDescGZIP(), []int{4}
 }
 
 // 操作信息-请求
@@ -2591,6 +2641,11 @@ var file_dateset_proto_rawDesc = []byte{
 	0x18, 0x0a, 0x07, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x53, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03,
 	0x52, 0x07, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x53, 0x6e, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c,
 	0x75, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x2a,
+	0x4e, 0x0a, 0x0b, 0x44, 0x61, 0x74, 0x61, 0x4c, 0x6f, 0x67, 0x54, 0x79, 0x70, 0x65, 0x12, 0x14,
+	0x0a, 0x10, 0x44, 0x61, 0x74, 0x61, 0x4c, 0x6f, 0x67, 0x54, 0x79, 0x70, 0x65, 0x5f, 0x49, 0x6e,
+	0x66, 0x6f, 0x10, 0x00, 0x12, 0x14, 0x0a, 0x10, 0x44, 0x61, 0x74, 0x61, 0x4c, 0x6f, 0x67, 0x54,
+	0x79, 0x70, 0x65, 0x5f, 0x57, 0x61, 0x72, 0x6e, 0x10, 0x01, 0x12, 0x13, 0x0a, 0x0f, 0x44, 0x61,
+	0x74, 0x61, 0x4c, 0x6f, 0x67, 0x54, 0x79, 0x70, 0x65, 0x5f, 0x45, 0x72, 0x72, 0x10, 0x02, 0x2a,
 	0x74, 0x0a, 0x05, 0x4f, 0x70, 0x43, 0x6d, 0x64, 0x12, 0x10, 0x0a, 0x0c, 0x4f, 0x70, 0x43, 0x6d,
 	0x64, 0x5f, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x10, 0x00, 0x12, 0x10, 0x0a, 0x0c, 0x4f, 0x70,
 	0x43, 0x6d, 0x64, 0x5f, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x10, 0x01, 0x12, 0x16, 0x0a, 0x12,
@@ -2714,93 +2769,94 @@ func file_dateset_proto_rawDescGZIP() []byte {
 	return file_dateset_proto_rawDescData
 }
 
-var file_dateset_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
+var file_dateset_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
 var file_dateset_proto_msgTypes = make([]protoimpl.MessageInfo, 32)
 var file_dateset_proto_goTypes = []interface{}{
-	(OpCmd)(0),                         // 0: dataset.OpCmd
-	(Status)(0),                        // 1: dataset.Status
-	(DataSource)(0),                    // 2: dataset.DataSource
-	(CompressType)(0),                  // 3: dataset.CompressType
-	(*OpInfoQ)(nil),                    // 4: dataset.OpInfoQ
-	(*OpInfoA)(nil),                    // 5: dataset.OpInfoA
-	(*KV)(nil),                         // 6: dataset.KV
-	(*DataProcess)(nil),                // 7: dataset.DataProcess
-	(*DataSourceUriFile)(nil),          // 8: dataset.DataSourceUriFile
-	(*ChunkProcess)(nil),               // 9: dataset.ChunkProcess
-	(*ValueProcess)(nil),               // 10: dataset.ValueProcess
-	(*DatasetExtend)(nil),              // 11: dataset.DatasetExtend
-	(*AdminAddDatasetReq)(nil),         // 12: dataset.AdminAddDatasetReq
-	(*AdminAddDatasetRsp)(nil),         // 13: dataset.AdminAddDatasetRsp
-	(*AdminUpdateDatasetReq)(nil),      // 14: dataset.AdminUpdateDatasetReq
-	(*AdminUpdateDatasetRsp)(nil),      // 15: dataset.AdminUpdateDatasetRsp
-	(*AdminDelDatasetReq)(nil),         // 16: dataset.AdminDelDatasetReq
-	(*AdminDelDatasetRsp)(nil),         // 17: dataset.AdminDelDatasetRsp
-	(*AdminRunProcessDatasetReq)(nil),  // 18: dataset.AdminRunProcessDatasetReq
-	(*AdminRunProcessDatasetRsp)(nil),  // 19: dataset.AdminRunProcessDatasetRsp
-	(*AdminStopProcessDatasetReq)(nil), // 20: dataset.AdminStopProcessDatasetReq
-	(*AdminStopProcessDatasetRsp)(nil), // 21: dataset.AdminStopProcessDatasetRsp
-	(*SearchDatasetNameLine)(nil),      // 22: dataset.SearchDatasetNameLine
-	(*SearchDatasetNameReq)(nil),       // 23: dataset.SearchDatasetNameReq
-	(*SearchDatasetNameRsp)(nil),       // 24: dataset.SearchDatasetNameRsp
-	(*DatasetInfoByListA)(nil),         // 25: dataset.DatasetInfoByListA
-	(*QueryDatasetListReq)(nil),        // 26: dataset.QueryDatasetListReq
-	(*QueryDatasetListRsp)(nil),        // 27: dataset.QueryDatasetListRsp
-	(*DatasetInfoA)(nil),               // 28: dataset.DatasetInfoA
-	(*QueryDatasetInfoReq)(nil),        // 29: dataset.QueryDatasetInfoReq
-	(*QueryDatasetInfoRsp)(nil),        // 30: dataset.QueryDatasetInfoRsp
-	(*QueryDatasetStatusInfoReq)(nil),  // 31: dataset.QueryDatasetStatusInfoReq
-	(*DatasetStateInfo)(nil),           // 32: dataset.DatasetStateInfo
-	(*QueryDatasetStatusInfoRsp)(nil),  // 33: dataset.QueryDatasetStatusInfoRsp
-	(*QueryDatasetDataReq)(nil),        // 34: dataset.QueryDatasetDataReq
-	(*QueryDatasetDataRsp)(nil),        // 35: dataset.QueryDatasetDataRsp
+	(DataLogType)(0),                   // 0: dataset.DataLogType
+	(OpCmd)(0),                         // 1: dataset.OpCmd
+	(Status)(0),                        // 2: dataset.Status
+	(DataSource)(0),                    // 3: dataset.DataSource
+	(CompressType)(0),                  // 4: dataset.CompressType
+	(*OpInfoQ)(nil),                    // 5: dataset.OpInfoQ
+	(*OpInfoA)(nil),                    // 6: dataset.OpInfoA
+	(*KV)(nil),                         // 7: dataset.KV
+	(*DataProcess)(nil),                // 8: dataset.DataProcess
+	(*DataSourceUriFile)(nil),          // 9: dataset.DataSourceUriFile
+	(*ChunkProcess)(nil),               // 10: dataset.ChunkProcess
+	(*ValueProcess)(nil),               // 11: dataset.ValueProcess
+	(*DatasetExtend)(nil),              // 12: dataset.DatasetExtend
+	(*AdminAddDatasetReq)(nil),         // 13: dataset.AdminAddDatasetReq
+	(*AdminAddDatasetRsp)(nil),         // 14: dataset.AdminAddDatasetRsp
+	(*AdminUpdateDatasetReq)(nil),      // 15: dataset.AdminUpdateDatasetReq
+	(*AdminUpdateDatasetRsp)(nil),      // 16: dataset.AdminUpdateDatasetRsp
+	(*AdminDelDatasetReq)(nil),         // 17: dataset.AdminDelDatasetReq
+	(*AdminDelDatasetRsp)(nil),         // 18: dataset.AdminDelDatasetRsp
+	(*AdminRunProcessDatasetReq)(nil),  // 19: dataset.AdminRunProcessDatasetReq
+	(*AdminRunProcessDatasetRsp)(nil),  // 20: dataset.AdminRunProcessDatasetRsp
+	(*AdminStopProcessDatasetReq)(nil), // 21: dataset.AdminStopProcessDatasetReq
+	(*AdminStopProcessDatasetRsp)(nil), // 22: dataset.AdminStopProcessDatasetRsp
+	(*SearchDatasetNameLine)(nil),      // 23: dataset.SearchDatasetNameLine
+	(*SearchDatasetNameReq)(nil),       // 24: dataset.SearchDatasetNameReq
+	(*SearchDatasetNameRsp)(nil),       // 25: dataset.SearchDatasetNameRsp
+	(*DatasetInfoByListA)(nil),         // 26: dataset.DatasetInfoByListA
+	(*QueryDatasetListReq)(nil),        // 27: dataset.QueryDatasetListReq
+	(*QueryDatasetListRsp)(nil),        // 28: dataset.QueryDatasetListRsp
+	(*DatasetInfoA)(nil),               // 29: dataset.DatasetInfoA
+	(*QueryDatasetInfoReq)(nil),        // 30: dataset.QueryDatasetInfoReq
+	(*QueryDatasetInfoRsp)(nil),        // 31: dataset.QueryDatasetInfoRsp
+	(*QueryDatasetStatusInfoReq)(nil),  // 32: dataset.QueryDatasetStatusInfoReq
+	(*DatasetStateInfo)(nil),           // 33: dataset.DatasetStateInfo
+	(*QueryDatasetStatusInfoRsp)(nil),  // 34: dataset.QueryDatasetStatusInfoRsp
+	(*QueryDatasetDataReq)(nil),        // 35: dataset.QueryDatasetDataReq
+	(*QueryDatasetDataRsp)(nil),        // 36: dataset.QueryDatasetDataRsp
 }
 var file_dateset_proto_depIdxs = []int32{
-	2,  // 0: dataset.DataProcess.dataSource:type_name -> dataset.DataSource
-	8,  // 1: dataset.DataProcess.uriFile:type_name -> dataset.DataSourceUriFile
-	6,  // 2: dataset.DataSourceUriFile.headers:type_name -> dataset.KV
-	3,  // 3: dataset.ChunkProcess.compressType:type_name -> dataset.CompressType
-	7,  // 4: dataset.DatasetExtend.dataProcess:type_name -> dataset.DataProcess
-	9,  // 5: dataset.DatasetExtend.chunkProcess:type_name -> dataset.ChunkProcess
-	10, // 6: dataset.DatasetExtend.valueProcess:type_name -> dataset.ValueProcess
-	11, // 7: dataset.AdminAddDatasetReq.datasetExtend:type_name -> dataset.DatasetExtend
-	4,  // 8: dataset.AdminAddDatasetReq.op:type_name -> dataset.OpInfoQ
-	11, // 9: dataset.AdminUpdateDatasetReq.datasetExtend:type_name -> dataset.DatasetExtend
-	4,  // 10: dataset.AdminUpdateDatasetReq.op:type_name -> dataset.OpInfoQ
-	4,  // 11: dataset.AdminDelDatasetReq.op:type_name -> dataset.OpInfoQ
-	4,  // 12: dataset.AdminRunProcessDatasetReq.op:type_name -> dataset.OpInfoQ
-	4,  // 13: dataset.AdminStopProcessDatasetReq.op:type_name -> dataset.OpInfoQ
-	22, // 14: dataset.SearchDatasetNameRsp.lines:type_name -> dataset.SearchDatasetNameLine
-	5,  // 15: dataset.DatasetInfoByListA.op:type_name -> dataset.OpInfoA
-	1,  // 16: dataset.DatasetInfoByListA.status:type_name -> dataset.Status
-	1,  // 17: dataset.QueryDatasetListReq.status:type_name -> dataset.Status
-	25, // 18: dataset.QueryDatasetListRsp.lines:type_name -> dataset.DatasetInfoByListA
-	11, // 19: dataset.DatasetInfoA.datasetExtend:type_name -> dataset.DatasetExtend
-	5,  // 20: dataset.DatasetInfoA.op:type_name -> dataset.OpInfoA
-	1,  // 21: dataset.DatasetInfoA.status:type_name -> dataset.Status
-	28, // 22: dataset.QueryDatasetInfoRsp.line:type_name -> dataset.DatasetInfoA
-	1,  // 23: dataset.DatasetStateInfo.status:type_name -> dataset.Status
-	5,  // 24: dataset.DatasetStateInfo.op:type_name -> dataset.OpInfoA
-	32, // 25: dataset.QueryDatasetStatusInfoRsp.datasetStateInfos:type_name -> dataset.DatasetStateInfo
-	12, // 26: dataset.DatasetService.AdminAddDataset:input_type -> dataset.AdminAddDatasetReq
-	14, // 27: dataset.DatasetService.AdminUpdateDataset:input_type -> dataset.AdminUpdateDatasetReq
-	16, // 28: dataset.DatasetService.AdminDelDataset:input_type -> dataset.AdminDelDatasetReq
-	18, // 29: dataset.DatasetService.AdminRunProcessDataset:input_type -> dataset.AdminRunProcessDatasetReq
-	20, // 30: dataset.DatasetService.AdminStopProcessDataset:input_type -> dataset.AdminStopProcessDatasetReq
-	23, // 31: dataset.DatasetService.SearchDatasetName:input_type -> dataset.SearchDatasetNameReq
-	26, // 32: dataset.DatasetService.QueryDatasetList:input_type -> dataset.QueryDatasetListReq
-	29, // 33: dataset.DatasetService.QueryDatasetInfo:input_type -> dataset.QueryDatasetInfoReq
-	31, // 34: dataset.DatasetService.QueryDatasetStatusInfo:input_type -> dataset.QueryDatasetStatusInfoReq
-	34, // 35: dataset.DatasetService.QueryDatasetData:input_type -> dataset.QueryDatasetDataReq
-	13, // 36: dataset.DatasetService.AdminAddDataset:output_type -> dataset.AdminAddDatasetRsp
-	15, // 37: dataset.DatasetService.AdminUpdateDataset:output_type -> dataset.AdminUpdateDatasetRsp
-	17, // 38: dataset.DatasetService.AdminDelDataset:output_type -> dataset.AdminDelDatasetRsp
-	19, // 39: dataset.DatasetService.AdminRunProcessDataset:output_type -> dataset.AdminRunProcessDatasetRsp
-	21, // 40: dataset.DatasetService.AdminStopProcessDataset:output_type -> dataset.AdminStopProcessDatasetRsp
-	24, // 41: dataset.DatasetService.SearchDatasetName:output_type -> dataset.SearchDatasetNameRsp
-	27, // 42: dataset.DatasetService.QueryDatasetList:output_type -> dataset.QueryDatasetListRsp
-	30, // 43: dataset.DatasetService.QueryDatasetInfo:output_type -> dataset.QueryDatasetInfoRsp
-	33, // 44: dataset.DatasetService.QueryDatasetStatusInfo:output_type -> dataset.QueryDatasetStatusInfoRsp
-	35, // 45: dataset.DatasetService.QueryDatasetData:output_type -> dataset.QueryDatasetDataRsp
+	3,  // 0: dataset.DataProcess.dataSource:type_name -> dataset.DataSource
+	9,  // 1: dataset.DataProcess.uriFile:type_name -> dataset.DataSourceUriFile
+	7,  // 2: dataset.DataSourceUriFile.headers:type_name -> dataset.KV
+	4,  // 3: dataset.ChunkProcess.compressType:type_name -> dataset.CompressType
+	8,  // 4: dataset.DatasetExtend.dataProcess:type_name -> dataset.DataProcess
+	10, // 5: dataset.DatasetExtend.chunkProcess:type_name -> dataset.ChunkProcess
+	11, // 6: dataset.DatasetExtend.valueProcess:type_name -> dataset.ValueProcess
+	12, // 7: dataset.AdminAddDatasetReq.datasetExtend:type_name -> dataset.DatasetExtend
+	5,  // 8: dataset.AdminAddDatasetReq.op:type_name -> dataset.OpInfoQ
+	12, // 9: dataset.AdminUpdateDatasetReq.datasetExtend:type_name -> dataset.DatasetExtend
+	5,  // 10: dataset.AdminUpdateDatasetReq.op:type_name -> dataset.OpInfoQ
+	5,  // 11: dataset.AdminDelDatasetReq.op:type_name -> dataset.OpInfoQ
+	5,  // 12: dataset.AdminRunProcessDatasetReq.op:type_name -> dataset.OpInfoQ
+	5,  // 13: dataset.AdminStopProcessDatasetReq.op:type_name -> dataset.OpInfoQ
+	23, // 14: dataset.SearchDatasetNameRsp.lines:type_name -> dataset.SearchDatasetNameLine
+	6,  // 15: dataset.DatasetInfoByListA.op:type_name -> dataset.OpInfoA
+	2,  // 16: dataset.DatasetInfoByListA.status:type_name -> dataset.Status
+	2,  // 17: dataset.QueryDatasetListReq.status:type_name -> dataset.Status
+	26, // 18: dataset.QueryDatasetListRsp.lines:type_name -> dataset.DatasetInfoByListA
+	12, // 19: dataset.DatasetInfoA.datasetExtend:type_name -> dataset.DatasetExtend
+	6,  // 20: dataset.DatasetInfoA.op:type_name -> dataset.OpInfoA
+	2,  // 21: dataset.DatasetInfoA.status:type_name -> dataset.Status
+	29, // 22: dataset.QueryDatasetInfoRsp.line:type_name -> dataset.DatasetInfoA
+	2,  // 23: dataset.DatasetStateInfo.status:type_name -> dataset.Status
+	6,  // 24: dataset.DatasetStateInfo.op:type_name -> dataset.OpInfoA
+	33, // 25: dataset.QueryDatasetStatusInfoRsp.datasetStateInfos:type_name -> dataset.DatasetStateInfo
+	13, // 26: dataset.DatasetService.AdminAddDataset:input_type -> dataset.AdminAddDatasetReq
+	15, // 27: dataset.DatasetService.AdminUpdateDataset:input_type -> dataset.AdminUpdateDatasetReq
+	17, // 28: dataset.DatasetService.AdminDelDataset:input_type -> dataset.AdminDelDatasetReq
+	19, // 29: dataset.DatasetService.AdminRunProcessDataset:input_type -> dataset.AdminRunProcessDatasetReq
+	21, // 30: dataset.DatasetService.AdminStopProcessDataset:input_type -> dataset.AdminStopProcessDatasetReq
+	24, // 31: dataset.DatasetService.SearchDatasetName:input_type -> dataset.SearchDatasetNameReq
+	27, // 32: dataset.DatasetService.QueryDatasetList:input_type -> dataset.QueryDatasetListReq
+	30, // 33: dataset.DatasetService.QueryDatasetInfo:input_type -> dataset.QueryDatasetInfoReq
+	32, // 34: dataset.DatasetService.QueryDatasetStatusInfo:input_type -> dataset.QueryDatasetStatusInfoReq
+	35, // 35: dataset.DatasetService.QueryDatasetData:input_type -> dataset.QueryDatasetDataReq
+	14, // 36: dataset.DatasetService.AdminAddDataset:output_type -> dataset.AdminAddDatasetRsp
+	16, // 37: dataset.DatasetService.AdminUpdateDataset:output_type -> dataset.AdminUpdateDatasetRsp
+	18, // 38: dataset.DatasetService.AdminDelDataset:output_type -> dataset.AdminDelDatasetRsp
+	20, // 39: dataset.DatasetService.AdminRunProcessDataset:output_type -> dataset.AdminRunProcessDatasetRsp
+	22, // 40: dataset.DatasetService.AdminStopProcessDataset:output_type -> dataset.AdminStopProcessDatasetRsp
+	25, // 41: dataset.DatasetService.SearchDatasetName:output_type -> dataset.SearchDatasetNameRsp
+	28, // 42: dataset.DatasetService.QueryDatasetList:output_type -> dataset.QueryDatasetListRsp
+	31, // 43: dataset.DatasetService.QueryDatasetInfo:output_type -> dataset.QueryDatasetInfoRsp
+	34, // 44: dataset.DatasetService.QueryDatasetStatusInfo:output_type -> dataset.QueryDatasetStatusInfoRsp
+	36, // 45: dataset.DatasetService.QueryDatasetData:output_type -> dataset.QueryDatasetDataRsp
 	36, // [36:46] is the sub-list for method output_type
 	26, // [26:36] is the sub-list for method input_type
 	26, // [26:26] is the sub-list for extension type_name
@@ -3204,7 +3260,7 @@ func file_dateset_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_dateset_proto_rawDesc,
-			NumEnums:      4,
+			NumEnums:      5,
 			NumMessages:   32,
 			NumExtensions: 0,
 			NumServices:   1,

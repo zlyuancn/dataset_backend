@@ -8,8 +8,9 @@ import (
 const ConfigKey = "dataset"
 
 const (
-	defSqlxName  = "dataset"
-	defRedisName = "dataset"
+	defSqlxName    = "dataset"
+	defLogSqlxName = "dataset"
+	defRedisName   = "dataset"
 
 	defDatasetOpLockKeyPrefix            = "dataset:op_lock:"
 	defAdminOpLockTtl                    = 10
@@ -37,11 +38,20 @@ const (
 	defChunkCompressedRatioLimit             = 85
 	defChunkPreloadByValueExpendRatio        = 90
 	defChunkPreloadProbabilityWithValueCount = 100
+
+	defSysLogWriteDatabase       = true
+	defSysLogWriteLevel          = "info"
+	defSysLogBatchSize           = 100
+	defSysLogAutoRotateTimeSec   = 3
+	defSysLogCloseAutoRotate     = false
+	defSysLogFlushAttemptCount   = 3
+	defSysLogFlushErrIntervalSec = 2
 )
 
 var Conf = Config{
-	SqlxName:  defSqlxName,
-	RedisName: defRedisName,
+	SqlxName:    defSqlxName,
+	LogSqlxName: defLogSqlxName,
+	RedisName:   defRedisName,
 
 	// redis Key
 	DatasetOpLockKeyPrefix:            defDatasetOpLockKeyPrefix,
@@ -73,13 +83,22 @@ var Conf = Config{
 	ChunkCompressedRatioLimit:             defChunkCompressedRatioLimit,
 	ChunkPreloadByValueExpendRatio:        defChunkPreloadByValueExpendRatio,
 	ChunkPreloadProbabilityWithValueCount: defChunkPreloadProbabilityWithValueCount,
+
+	SysLogWriteDatabase:       defSysLogWriteDatabase,
+	SysLogWriteLevel:          defSysLogWriteLevel,
+	SysLogBatchSize:           defSysLogBatchSize,
+	SysLogAutoRotateTimeSec:   defSysLogAutoRotateTimeSec,
+	SysLogCloseAutoRotate:     defSysLogCloseAutoRotate,
+	SysLogFlushAttemptCount:   defSysLogFlushAttemptCount,
+	SysLogFlushErrIntervalSec: defSysLogFlushErrIntervalSec,
 }
 
 type Config struct {
 	// 组件名
 
-	SqlxName  string // sqlx组件名
-	RedisName string // redis组件名
+	SqlxName    string // sqlx组件名
+	LogSqlxName string // 日志的sqlx组件名
+	RedisName   string // redis组件名
 
 	// redis
 
@@ -112,11 +131,23 @@ type Config struct {
 	ChunkCompressedRatioLimit             int    // 压缩后的数据为原始数据的多少百分比才会视为有意义的压缩. 0表示不检查
 	ChunkPreloadByValueExpendRatio        int    // 当 valueSn 在当前 chunk 的百分比位置之后触发预加载下一个 chunk. 0表示不预加载
 	ChunkPreloadProbabilityWithValueCount int    // 当 valueSn 在预加载阈值时并不是直接进行预加载, 而是有概率的, 这个值表示会有多少个 value 会命中该概率阈值, 0 表示不计算概率直接进行预加载(有性能损耗)
+
+	// 系统日志
+	SysLogWriteDatabase       bool   // 系统日志是否写入到db中
+	SysLogWriteLevel          string // 系统日志写入到db的最小level. 可选 info, warn, err
+	SysLogBatchSize           int    // 系统日志批次大小, 达到批次自动旋转
+	SysLogAutoRotateTimeSec   int    // 系统日志自动旋转时间, 单位秒
+	SysLogCloseAutoRotate     bool   // 系统日志是否关闭自动旋转
+	SysLogFlushAttemptCount   int    // 系统日志写入db尝试次数
+	SysLogFlushErrIntervalSec int    // 系统日志写入db错误时重试间隔时间, 单位秒
 }
 
 func (conf *Config) Check() {
 	if conf.SqlxName == "" {
 		conf.SqlxName = defSqlxName
+	}
+	if conf.LogSqlxName == "" {
+		conf.LogSqlxName = defLogSqlxName
 	}
 	if conf.RedisName == "" {
 		conf.RedisName = defRedisName
@@ -178,6 +209,22 @@ func (conf *Config) Check() {
 	}
 	if conf.ChunkDataLruCacheCount < 1 {
 		conf.ChunkDataLruCacheCount = defChunkDataLruCacheCount
+	}
+
+	if conf.SysLogWriteLevel == "" {
+		conf.SysLogWriteLevel = defSysLogWriteLevel
+	}
+	if conf.SysLogBatchSize < 1 {
+		conf.SysLogBatchSize = defSysLogBatchSize
+	}
+	if conf.SysLogAutoRotateTimeSec < 1 {
+		conf.SysLogAutoRotateTimeSec = defSysLogAutoRotateTimeSec
+	}
+	if conf.SysLogFlushAttemptCount < 1 {
+		conf.SysLogFlushAttemptCount = defSysLogFlushAttemptCount
+	}
+	if conf.SysLogFlushErrIntervalSec < 1 {
+		conf.SysLogFlushErrIntervalSec = defSysLogFlushErrIntervalSec
 	}
 }
 

@@ -12,6 +12,7 @@ import (
 
 	"github.com/zlyuancn/dataset_backend/module"
 	"github.com/zlyuancn/dataset_backend/pb"
+	"github.com/zlyuancn/dataset_backend/syslog"
 
 	"github.com/zlyuancn/dataset_backend/conf"
 	"github.com/zlyuancn/dataset_backend/logic"
@@ -50,6 +51,9 @@ func main() {
 	cron.RegistryHandler("recover", "@every 10m", true, func(ctx cron.IContext) error {
 		return nil
 	})
+
+	// syslog
+	syslog.Init()
 
 	app.Run()
 }
