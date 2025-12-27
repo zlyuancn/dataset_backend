@@ -41,14 +41,19 @@ func (processorCli) CreateProcessor(ctx context.Context, datasetInfo *dataset_li
 		return
 	}
 	if err != nil { // 加锁异常
-		log.Error("CreateProcessor call AutoLock fail.", zap.Error(err))
+		log.Error(ctx, "CreateProcessor call AutoLock fail.", zap.Error(err))
 		return
 	}
 
 	// 创建启动器
 	p, err := newProcessorLauncher(datasetInfo, unlock, renew)
 	if err != nil {
-		log.Error("CreateProcessor call newProcessorLauncher fail.", zap.Error(err))
+		datasetInfo.StatusInfo = err.Error()
+		handler.Trigger(ctx, handler.DatasetProcessRunFailureExit, &handler.Info{
+			Dataset: datasetInfo,
+		})
+
+		log.Error(ctx, "CreateProcessor call newProcessorLauncher fail.", zap.Error(err))
 		return
 	}
 
@@ -107,7 +112,7 @@ func newProcessorLauncher(datasetInfo *dataset_list.Model,
 	de := &pb.DatasetExtend{}
 	err := sonic.UnmarshalString(datasetInfo.DatasetExtend, de)
 	if err != nil {
-		log.Error("newProcessorLauncher UnmarshalString DatasetExtend fail.", zap.Error(err))
+		log.Error(p.ctx, "newProcessorLauncher UnmarshalString DatasetExtend fail.", zap.Error(err))
 		return nil, err
 	}
 	p.de = de
