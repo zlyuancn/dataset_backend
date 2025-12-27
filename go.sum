@@ -454,6 +454,8 @@ github.com/zlyuancn/splitter v0.0.0-20251224094610-7c1796632d69 h1:24G7wVXUEX8O/
 github.com/zlyuancn/splitter v0.0.0-20251224094610-7c1796632d69/go.mod h1:/S0NErHduGayVCUd/ltsR8NfslOMxa+s1GyWu0+EGm0=
 github.com/zlyuancn/zbalancer v1.1.0 h1:bDs59eIkEXUVTdwMKd6pko2PBAEgAw7TgIQwzzYZKjk=
 github.com/zlyuancn/zbalancer v1.1.0/go.mod h1:c8hq0Lig8lOqqXD7YLqPJOFsNROGG5I6N+6AbuutBYI=
+github.com/zlyuancn/zsingleflight v0.0.0-20251227041538-317cd25cdd71 h1:SC+GQyXPX4k1WUIIGm1WF3inaPBtFM2mhDIKL0fNm/Q=
+github.com/zlyuancn/zsingleflight v0.0.0-20251227041538-317cd25cdd71/go.mod h1:LSDt34nEl4laJn2bNVW40zXSMEM4vL68i3LrQv+/ARA=
 github.com/zlyuancn/zstr v0.0.0-20230412074414-14d6b645962f h1:s4xoe70+PMGec95geCKaIk/nSUo5Gu2QGqDjZOKeMXY=
 github.com/zlyuancn/zstr v0.0.0-20230412074414-14d6b645962f/go.mod h1:gcWCwemINH4jJeg+sXWMf45IAWc/fSn4rZ38eW2zqI8=
 github.com/zlyuancn/zutils v0.0.0-20240710092024-0b40857d46af h1:DTneHe5Eu45FyEXhvWxbu8zquPU0M/0TDSTwgoq01us=

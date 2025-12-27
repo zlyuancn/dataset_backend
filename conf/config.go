@@ -25,15 +25,17 @@ const (
 	defDatasetInfoKeyPrefix = "dataset:info:"
 	defDatasetInfoCacheTtl  = 3600
 
-	defChunkStoreRedisName       = "dataset"
-	defChunkStoreRedisKeyFormat  = "dataset:chunk_store:%d_%d"
-	defChunkSizeLimit            = 8 * 1024 * 1024
-	defMinChunkSizeLimit         = 1 * 1024
-	defValueMaxScanSizeLimit     = 1 * 1024 * 1024
-	defChunkStoreThreadCount     = 5
-	defChunkMetaLruCacheCount    = 100
-	defChunkDataLruCacheCount    = 100
-	defChunkCompressedRatioLimit = 80
+	defChunkStoreRedisName                   = "dataset"
+	defChunkStoreRedisKeyFormat              = "dataset:chunk_store:%d_%d"
+	defChunkSizeLimit                        = 8 * 1024 * 1024
+	defMinChunkSizeLimit                     = 1 * 1024
+	defValueMaxScanSizeLimit                 = 1 * 1024 * 1024
+	defChunkStoreThreadCount                 = 5
+	defChunkMetaLruCacheCount                = 100
+	defChunkDataLruCacheCount                = 100
+	defChunkCompressedRatioLimit             = 80
+	defChunkPreloadByValueExpendRatio        = 90
+	defChunkPreloadProbabilityWithValueCount = 100
 )
 
 var Conf = Config{
@@ -59,14 +61,16 @@ var Conf = Config{
 
 	// chunk
 
-	ChunkStoreRedisName:       defChunkStoreRedisName,
-	ChunkStoreRedisKeyFormat:  defChunkStoreRedisKeyFormat,
-	ChunkSizeLimit:            defChunkSizeLimit,
-	ValueMaxScanSizeLimit:     defValueMaxScanSizeLimit,
-	ChunkStoreThreadCount:     defChunkStoreThreadCount,
-	ChunkMetaLruCacheCount:    defChunkMetaLruCacheCount,
-	ChunkDataLruCacheCount:    defChunkDataLruCacheCount,
-	ChunkCompressedRatioLimit: defChunkCompressedRatioLimit,
+	ChunkStoreRedisName:                   defChunkStoreRedisName,
+	ChunkStoreRedisKeyFormat:              defChunkStoreRedisKeyFormat,
+	ChunkSizeLimit:                        defChunkSizeLimit,
+	ValueMaxScanSizeLimit:                 defValueMaxScanSizeLimit,
+	ChunkStoreThreadCount:                 defChunkStoreThreadCount,
+	ChunkMetaLruCacheCount:                defChunkMetaLruCacheCount,
+	ChunkDataLruCacheCount:                defChunkDataLruCacheCount,
+	ChunkCompressedRatioLimit:             defChunkCompressedRatioLimit,
+	ChunkPreloadByValueExpendRatio:        defChunkPreloadByValueExpendRatio,
+	ChunkPreloadProbabilityWithValueCount: defChunkPreloadProbabilityWithValueCount,
 }
 
 type Config struct {
@@ -95,14 +99,16 @@ type Config struct {
 
 	// chunk
 
-	ChunkStoreRedisName       string // chunk store redis 组件名
-	ChunkStoreRedisKeyFormat  string // chunk store redis key格式
-	ChunkSizeLimit            int32  // chunk 大小限制
-	ValueMaxScanSizeLimit     int    // value 扫描最大长度限制
-	ChunkStoreThreadCount     int    // chunk 持久化线程数
-	ChunkMetaLruCacheCount    int    // chunk meta 的 lru 缓存最大条数
-	ChunkDataLruCacheCount    int    // chunk 数据的 lru 缓存最大条数
-	ChunkCompressedRatioLimit int    // 压缩后的数据为原始数据的多少百分比才会视为有意义的压缩. 0表示不检查
+	ChunkStoreRedisName                   string // chunk store redis 组件名
+	ChunkStoreRedisKeyFormat              string // chunk store redis key格式
+	ChunkSizeLimit                        int32  // chunk 大小限制
+	ValueMaxScanSizeLimit                 int    // value 扫描最大长度限制
+	ChunkStoreThreadCount                 int    // chunk 持久化线程数
+	ChunkMetaLruCacheCount                int    // chunk meta 的 lru 缓存最大条数
+	ChunkDataLruCacheCount                int    // chunk 数据的 lru 缓存最大条数
+	ChunkCompressedRatioLimit             int    // 压缩后的数据为原始数据的多少百分比才会视为有意义的压缩. 0表示不检查
+	ChunkPreloadByValueExpendRatio        int    // 当 valueSn 在当前 chunk 的百分比位置之后触发预加载下一个 chunk. 0表示不预加载
+	ChunkPreloadProbabilityWithValueCount int    // 当 valueSn 在预加载阈值时并不是直接进行预加载, 而是有概率的, 这个值表示会有多少个 value 会命中该概率阈值, 0 表示不计算概率直接进行预加载(有性能损耗)
 }
 
 func (conf *Config) Check() {

@@ -20,6 +20,7 @@ require (
 	github.com/zly-app/zapp v1.4.2
 	github.com/zlyuancn/redis_tool v0.0.0-20251216042311-cf7350789353
 	github.com/zlyuancn/splitter v0.0.0-20251224094610-7c1796632d69
+	github.com/zlyuancn/zsingleflight v0.0.0-20251227041538-317cd25cdd71
 	go.uber.org/zap v1.27.1
 	google.golang.org/genproto/googleapis/api v0.0.0-20251213004720-97cd9d5aeac2
 	google.golang.org/grpc v1.77.0
