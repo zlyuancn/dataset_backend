@@ -450,8 +450,8 @@ github.com/zlyuancn/connpool v0.0.0-20240529080113-fdbaa79cba97 h1:IxkdvMgQgvkWj
 github.com/zlyuancn/connpool v0.0.0-20240529080113-fdbaa79cba97/go.mod h1:8LD1Yt5uc6SNBYANF0IpVEx7NM+/d/9+ku5WZ9x/4W8=
 github.com/zlyuancn/redis_tool v0.0.0-20251216042311-cf7350789353 h1:9Jyjw8NdYAgOc13ens0J3bQlL0rcxUjGXG5PTHUvRa0=
 github.com/zlyuancn/redis_tool v0.0.0-20251216042311-cf7350789353/go.mod h1:6jM+/xg7lky6Ppv9VIPGCkXjfN6RhOl/hpn+9O+JgaM=
-github.com/zlyuancn/splitter v0.0.0-20251224094610-7c1796632d69 h1:24G7wVXUEX8O/K6DUaorpQftK2/AI7z+dfWgt6a5EBU=
-github.com/zlyuancn/splitter v0.0.0-20251224094610-7c1796632d69/go.mod h1:/S0NErHduGayVCUd/ltsR8NfslOMxa+s1GyWu0+EGm0=
+github.com/zlyuancn/splitter v0.0.0-20251227074928-7ef5d318387c h1:4ik71P31tIORC6YRzlMuUzRxAR3wBHW7gPnP9iMLpLo=
+github.com/zlyuancn/splitter v0.0.0-20251227074928-7ef5d318387c/go.mod h1:/S0NErHduGayVCUd/ltsR8NfslOMxa+s1GyWu0+EGm0=
 github.com/zlyuancn/zbalancer v1.1.0 h1:bDs59eIkEXUVTdwMKd6pko2PBAEgAw7TgIQwzzYZKjk=
 github.com/zlyuancn/zbalancer v1.1.0/go.mod h1:c8hq0Lig8lOqqXD7YLqPJOFsNROGG5I6N+6AbuutBYI=
 github.com/zlyuancn/zsingleflight v0.0.0-20251227041538-317cd25cdd71 h1:SC+GQyXPX4k1WUIIGm1WF3inaPBtFM2mhDIKL0fNm/Q=

@@ -2,7 +2,9 @@ package datasource
 
 import (
 	"context"
+	"fmt"
 	"io"
+	rawHttp "net/http"
 	"strings"
 
 	"github.com/spf13/cast"
@@ -17,12 +19,44 @@ import (
 type uriFileDataSource struct {
 	ctx    context.Context
 	uf     *pb.DataSourceUriFile
-	closer io.Closer
+	reader io.ReadCloser
 }
 
+// 尝试断点续传
 func (u *uriFileDataSource) SetBreakpoint(ctx context.Context, offset int64) (bool, error) {
-	// 暂不支持断点续传
-	return false, nil
+	header := make(http.Header, len(u.uf.GetHeaders())+1)
+	for _, kv := range u.uf.GetHeaders() {
+		header.Set(kv.GetK(), kv.GetV())
+	}
+	header.Set("Range", fmt.Sprintf("bytes=%d-", offset))
+
+	method := strings.ToUpper(u.uf.GetMethod())
+	if method == "" {
+		method = rawHttp.MethodGet
+	}
+	r := &http.Request{
+		Method:             method,
+		Path:               u.uf.GetUri(),
+		InsecureSkipVerify: u.uf.GetInsecureSkipVerify(),
+		Header:             header,
+		OutIsStream:        true, // 响应是一个流
+		Proxy:              u.uf.GetProxy(),
+	}
+
+	ctx = filter.WithoutFilterName(ctx, "base.timeout", "base.gpool")
+	sp, err := http.NewClient("uriFileDataSource").Do(ctx, r)
+	if err != nil {
+		log.Error(ctx, "SetBreakpoint fail.", zap.Error(err))
+		return false, err
+	}
+	u.reader = sp.BodyStream
+
+	// 检查是否支持断点
+	if sp.StatusCode != rawHttp.StatusPartialContent {
+		log.Warn(ctx, "SetBreakpoint fail. StatusCode is %d", sp.StatusCode)
+		return false, nil
+	}
+	return true, nil
 }
 
 // 尝试数据长度
@@ -51,9 +85,13 @@ func (u *uriFileDataSource) GetDataStreamLen(ctx context.Context) int64 {
 }
 
 func (u *uriFileDataSource) GetReader(ctx context.Context) (io.Reader, error) {
+	if u.reader != nil {
+		return u.reader, nil
+	}
+
 	method := strings.ToUpper(u.uf.GetMethod())
 	if method == "" {
-		method = "GET"
+		method = rawHttp.MethodGet
 	}
 	header := make(http.Header, len(u.uf.GetHeaders()))
 	for _, kv := range u.uf.GetHeaders() {
@@ -73,12 +111,19 @@ func (u *uriFileDataSource) GetReader(ctx context.Context) (io.Reader, error) {
 	if err != nil {
 		return nil, err
 	}
-	u.closer = sp.BodyStream
+	if sp.StatusCode != rawHttp.StatusOK {
+		err = fmt.Errorf("StatusCode not %d is %d", rawHttp.StatusOK, sp.StatusCode)
+		return nil, err
+	}
+
+	u.reader = sp.BodyStream
 	return sp.BodyStream, nil
 }
 
 func (u *uriFileDataSource) Close() {
-	_ = u.closer.Close()
+	if u.reader != nil {
+		_ = u.reader.Close()
+	}
 	return
 }
 

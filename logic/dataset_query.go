@@ -154,9 +154,7 @@ func (d *Dataset) QueryDatasetInfo(ctx context.Context, req *pb.QueryDatasetInfo
 
 func (d *Dataset) datasetDbModel2Pb(line *dataset_list.Model) *pb.DatasetInfoA {
 	de := &pb.DatasetExtend{}
-	if line.DatasetExtend != "" {
-		_ = sonic.UnmarshalString(line.DatasetExtend, de)
-	}
+	_ = sonic.UnmarshalString(line.DatasetExtend, de)
 	ret := &pb.DatasetInfoA{
 		DatasetId:     int64(line.DatasetId),
 		DatasetName:   line.DatasetName,
@@ -181,9 +179,7 @@ func (d *Dataset) datasetDbModel2Pb(line *dataset_list.Model) *pb.DatasetInfoA {
 
 func (d *Dataset) datasetDBModel2ListPb(line *dataset_list.Model) *pb.DatasetInfoByListA {
 	de := &pb.DatasetExtend{}
-	if line.DatasetExtend != "" {
-		_ = sonic.UnmarshalString(line.DatasetExtend, de)
-	}
+	_ = sonic.UnmarshalString(line.DatasetExtend, de)
 	ret := &pb.DatasetInfoByListA{
 		DatasetId:     int64(line.DatasetId),
 		DatasetName:   line.DatasetName,
@@ -207,13 +203,13 @@ func (d *Dataset) datasetDBModel2ListPb(line *dataset_list.Model) *pb.DatasetInf
 
 func (d *Dataset) datasetDBModel2StatusPb(line *dataset_list.Model) *pb.DatasetStateInfo {
 	de := &pb.DatasetExtend{}
-	if line.DatasetExtend != "" {
-		_ = sonic.UnmarshalString(line.DatasetExtend, de)
-	}
+	_ = sonic.UnmarshalString(line.DatasetExtend, de)
+	meta := model.ChunkMeta{}
+	_ = sonic.UnmarshalString(line.ChunkMeta, &meta)
 	ret := &pb.DatasetStateInfo{
 		DatasetId:           int64(line.DatasetId),
 		ChunkTotal:          0,
-		ChunkProcessedCount: 0,
+		ChunkProcessedCount: int32(len(meta)),
 		ValueTotal:          line.ValueTotal,
 		Status:              pb.Status(line.Status),
 		StatusInfo:          line.StatusInfo,
