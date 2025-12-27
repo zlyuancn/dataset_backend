@@ -159,7 +159,7 @@ func (c *chunkStore) FlushChunk(ctx context.Context, chunkData *model.ChunkData)
 		}}
 		fr.err = c.csp.FlushChunk(ctx, chunkData.ChunkSn, chunkData.ChunkData)
 		if fr.err != nil {
-			log.Error(ctx, "FlushChunk call csp.FlushChunk fail.", zap.Any("chunkData", chunkData), zap.Error(fr.err))
+			log.Error(ctx, "FlushChunk call csp.FlushChunk fail.", zap.Error(fr.err))
 		}
 
 		// 处理完成后将结果输出

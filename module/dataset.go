@@ -69,6 +69,9 @@ func (*datasetCli) GetDatasetInfoByCache(ctx context.Context, datasetId uint) (*
 		log.Error(ctx, "GetDatasetInfoByCache fail.", zap.Error(err))
 		return nil, err
 	}
+	if err == nil {
+		return ret, nil
+	}
 
 	// 从db加载数据
 	err = cache.GetDefCache().SingleFlightDo(ctx, key, ret, cache.WithLoadFn(func(ctx context.Context, key string) (interface{}, error) {
