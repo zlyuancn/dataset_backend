@@ -10,6 +10,8 @@ import (
 	"github.com/zly-app/zapp/log"
 	"go.uber.org/zap"
 
+	"github.com/zlyuancn/dataset_backend/pb"
+
 	"github.com/zlyuancn/dataset_backend/client/db"
 )
 
@@ -282,4 +284,34 @@ func UpdateOne(ctx context.Context, datasetId int, updateData map[string]interfa
 		return err
 	}
 	return nil
+}
+
+// 查询最近活跃的数据集
+func QueryActivateList(ctx context.Context, activateTime time.Time, limit uint) ([]*Model, error) {
+	where := map[string]interface{}{
+		"activate_time >": activateTime,
+		"status in": []byte{
+			byte(pb.Status_Status_Running),
+			byte(pb.Status_Status_Stopping),
+			byte(pb.Status_Status_Deleting),
+		},
+		"_orderby": "activate_time asc",
+		"_limit":   []uint{0, limit},
+	}
+	cond, vals, err := builder.BuildSelect(tableName, where, []string{"dataset_id", "activate_time", "status"})
+	if err != nil {
+		log.Error(ctx, "QueryActivateList BuildSelect err",
+			zap.Any("where", where),
+			zap.Error(err),
+		)
+		return nil, err
+	}
+
+	ret := []*Model{}
+	err = db.GetSqlx().Find(ctx, &ret, cond, vals...)
+	if err != nil {
+		log.Error(ctx, "QueryActivateList Find fail.", zap.String("cond", cond), zap.Any("vals", vals), zap.Error(err))
+		return nil, err
+	}
+	return ret, nil
 }

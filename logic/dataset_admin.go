@@ -90,14 +90,7 @@ func (*Dataset) AdminAddDataset(ctx context.Context, req *pb.AdminAddDatasetReq)
 	// 立即启动处理
 	if req.GetStartProcessNow() {
 		gpool.GetDefGPool().Go(func() error {
-			// 获取数据集
-			d, err := dataset_list.GetOneByDatasetId(cloneCtx, int(datasetId))
-			if err != nil {
-				log.Error(ctx, "AdminAddDataset call dataset.GetOneByDatasetId fail.", zap.Error(err))
-				return err
-			}
-
-			module.Processor.CreateProcessor(cloneCtx, d)
+			module.Processor.CreateProcessor(cloneCtx, int(datasetId), false)
 			return nil
 		}, nil)
 	}
@@ -124,7 +117,7 @@ func (*Dataset) AdminUpdateDataset(ctx context.Context, req *pb.AdminUpdateDatas
 	// 获取数据集
 	d, err := dataset_list.GetOneByDatasetId(ctx, int(req.GetDatasetId()))
 	if err != nil {
-		log.Error(ctx, "AdminUpdateDataset call dataset.GetOneByDatasetId fail.", zap.Error(err))
+		log.Error(ctx, "AdminUpdateDataset call dataset_list.GetOneByDatasetId fail.", zap.Error(err))
 		return nil, err
 	}
 	oldStatus := d.Status
@@ -148,7 +141,7 @@ func (*Dataset) AdminUpdateDataset(ctx context.Context, req *pb.AdminUpdateDatas
 	// 写入数据库
 	_, err = dataset_list.AdminUpdateDataset(ctx, v, oldStatus)
 	if err != nil {
-		log.Error(ctx, "AdminUpdateDataset call dataset.AdminUpdateDataset fail.", zap.Error(err))
+		log.Error(ctx, "AdminUpdateDataset call dataset_list.AdminUpdateDataset fail.", zap.Error(err))
 		return nil, err
 	}
 
@@ -217,7 +210,7 @@ func (*Dataset) AdminDelDataset(ctx context.Context, req *pb.AdminDelDatasetReq)
 	// 获取数据集
 	d, err := dataset_list.GetOneByDatasetId(ctx, int(req.GetDatasetId()))
 	if err != nil {
-		log.Error(ctx, "AdminDelDataset call dataset.GetOneByDatasetId fail.", zap.Error(err))
+		log.Error(ctx, "AdminDelDataset call dataset_list.GetOneByDatasetId fail.", zap.Error(err))
 		return nil, err
 	}
 	oldStatus := d.Status
@@ -247,12 +240,12 @@ func (*Dataset) AdminDelDataset(ctx context.Context, req *pb.AdminDelDatasetReq)
 	// 更新数据为删除中
 	count, err := dataset_list.AdminUpdateStatus(ctx, v, oldStatus)
 	if err != nil {
-		log.Error(ctx, "AdminDelDataset call dataset.AdminUpdateStatus fail.", zap.Error(err))
+		log.Error(ctx, "AdminDelDataset call dataset_list.AdminUpdateStatus fail.", zap.Error(err))
 		return nil, err
 	}
 	if count != 1 {
 		err = fmt.Errorf("update dataset status fail. update count != 1. is %d", count)
-		log.Error(ctx, "AdminDelDataset call dataset.AdminUpdateStatus fail.", zap.Error(err))
+		log.Error(ctx, "AdminDelDataset call dataset_list.AdminUpdateStatus fail.", zap.Error(err))
 		return nil, err
 	}
 
@@ -305,7 +298,7 @@ func (*Dataset) AdminRunProcessDataset(ctx context.Context, req *pb.AdminRunProc
 	// 获取数据集
 	d, err := dataset_list.GetOneByDatasetId(ctx, int(req.GetDatasetId()))
 	if err != nil {
-		log.Error(ctx, "AdminRunProcessDataset call dataset.GetOneByDatasetId fail.", zap.Error(err))
+		log.Error(ctx, "AdminRunProcessDataset call dataset_list.GetOneByDatasetId fail.", zap.Error(err))
 		return nil, err
 	}
 	oldStatus := d.Status
@@ -347,12 +340,12 @@ func (*Dataset) AdminRunProcessDataset(ctx context.Context, req *pb.AdminRunProc
 	// 更新数据为处理中
 	count, err := dataset_list.AdminUpdateStatus(ctx, v, oldStatus)
 	if err != nil {
-		log.Error(ctx, "AdminRunProcessDataset call dataset.AdminUpdateStatus fail.", zap.Error(err))
+		log.Error(ctx, "AdminRunProcessDataset call dataset_list.AdminUpdateStatus fail.", zap.Error(err))
 		return nil, err
 	}
 	if count != 1 {
 		err = fmt.Errorf("update dataset status fail. update count != 1. is %d", count)
-		log.Error(ctx, "AdminRunProcessDataset call dataset.AdminUpdateStatus fail.", zap.Error(err))
+		log.Error(ctx, "AdminRunProcessDataset call dataset_listAdminUpdateStatus fail.", zap.Error(err))
 		return nil, err
 	}
 
@@ -397,7 +390,7 @@ func (*Dataset) AdminRunProcessDataset(ctx context.Context, req *pb.AdminRunProc
 		}
 
 		// 开始处理
-		module.Processor.CreateProcessor(cloneCtx, d)
+		module.Processor.CreateProcessor(cloneCtx, int(d.DatasetId), false)
 		return nil
 	}, nil)
 
@@ -417,7 +410,7 @@ func (*Dataset) AdminStopProcessDataset(ctx context.Context, req *pb.AdminStopPr
 	// 获取数据集
 	d, err := dataset_list.GetOneByDatasetId(ctx, int(req.GetDatasetId()))
 	if err != nil {
-		log.Error(ctx, "AdminStopProcessDataset call dataset.GetOneByDatasetId fail.", zap.Error(err))
+		log.Error(ctx, "AdminStopProcessDataset call dataset_listGetOneByDatasetId fail.", zap.Error(err))
 		return nil, err
 	}
 	oldStatus := d.Status
@@ -457,12 +450,12 @@ func (*Dataset) AdminStopProcessDataset(ctx context.Context, req *pb.AdminStopPr
 	// 更新数据为停止中
 	count, err := dataset_list.AdminUpdateStatus(ctx, v, oldStatus)
 	if err != nil {
-		log.Error(ctx, "AdminStopProcessDataset call dataset.AdminUpdateStatus fail.", zap.Error(err))
+		log.Error(ctx, "AdminStopProcessDataset call dataset_listAdminUpdateStatus fail.", zap.Error(err))
 		return nil, err
 	}
 	if count != 1 {
 		err = fmt.Errorf("update dataset status fail. update count != 1. is %d", count)
-		log.Error(ctx, "AdminStopProcessDataset call dataset.AdminUpdateStatus fail.", zap.Error(err))
+		log.Error(ctx, "AdminStopProcessDataset call dataset_listAdminUpdateStatus fail.", zap.Error(err))
 		return nil, err
 	}
 
@@ -507,7 +500,7 @@ func (*Dataset) AdminStopProcessDataset(ctx context.Context, req *pb.AdminStopPr
 
 	// 尝试立即更新为停止状态
 	gpool.GetDefGPool().Go(func() error {
-		module.Processor.RestorerStop(cloneCtx, d)
+		module.Processor.RestorerStop(cloneCtx, int(d.DatasetId))
 		return nil
 	}, nil)
 

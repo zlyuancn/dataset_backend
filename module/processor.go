@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/bytedance/sonic"
+	"github.com/zly-app/cache/v2"
 	"github.com/zly-app/component/redis"
 	"github.com/zly-app/zapp/component/gpool"
 	"github.com/zly-app/zapp/log"
@@ -33,9 +34,9 @@ var Processor = processorCli{}
 type processorCli struct{}
 
 // 创建处理器
-func (processorCli) CreateProcessor(ctx context.Context, datasetInfo *dataset_list.Model) {
+func (processorCli) CreateProcessor(ctx context.Context, datasetId int, isRestorer bool) {
 	// 加运行处理锁
-	lockKey := CacheKey.GetRunProcessLock(int(datasetInfo.DatasetId))
+	lockKey := CacheKey.GetRunProcessLock(datasetId)
 	unlock, renew, err := redis_tool.AutoLock(ctx, lockKey, time.Duration(conf.Conf.RunLockExtraTtl)*time.Second)
 	if err == redis_tool.LockIsUsedByAnother { // 加锁失败
 		return
@@ -43,6 +44,19 @@ func (processorCli) CreateProcessor(ctx context.Context, datasetInfo *dataset_li
 	if err != nil { // 加锁异常
 		log.Error(ctx, "CreateProcessor call AutoLock fail.", zap.Error(err))
 		return
+	}
+
+	// 获取数据集
+	datasetInfo, err := dataset_list.GetOneByDatasetId(ctx, datasetId)
+	if err != nil {
+		log.Error(ctx, "CreateProcessor call dataset_list.GetOneByDatasetId fail.", zap.Error(err))
+		return
+	}
+
+	if isRestorer {
+		handler.Trigger(ctx, handler.DatasetProcessRestorer, &handler.Info{
+			Dataset: datasetInfo,
+		})
 	}
 
 	// 创建启动器
@@ -544,10 +558,16 @@ func (p *processorLauncher) stopSideEffect() {
 	p.datasetInfo.Status = status
 	p.datasetInfo.StatusInfo = statusInfo
 
+	// 删除数据集缓存
+	err = cache.GetDefCache().Del(p.ctx, CacheKey.GetDatasetInfo(int(p.datasetInfo.DatasetId)))
+	if err != nil {
+		log.Error(p.ctx, "stopSideEffect call clear Cache fail.", zap.Error(err))
+		// return err
+	}
+
 	// 删除缓存
 	keys := []string{
-		CacheKey.GetDatasetInfo(int(p.datasetInfo.DatasetId)), // 删除数据集缓存
-		CacheKey.GetStopFlag(int(p.datasetInfo.DatasetId)),    // 停止 flag
+		CacheKey.GetStopFlag(int(p.datasetInfo.DatasetId)), // 停止 flag
 	}
 	// 如果是最后阶段则删除状态
 	if p.isFinished {

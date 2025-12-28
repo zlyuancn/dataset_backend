@@ -15,7 +15,6 @@ require (
 	github.com/zly-app/component/redis v0.0.0-20251205041122-9e84deef01af
 	github.com/zly-app/component/sqlx v0.0.0-20251205041122-9e84deef01af
 	github.com/zly-app/grpc v0.5.4
-	github.com/zly-app/service/cron v0.0.0-20251201123525-ab839839c4b2
 	github.com/zly-app/uapp v0.0.0-20251201110646-673ce4a3e75f
 	github.com/zly-app/zapp v1.4.2
 	github.com/zlyuancn/redis_tool v0.0.0-20251216042311-cf7350789353
@@ -46,10 +45,6 @@ require (
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
-	github.com/go-playground/locales v0.13.0 // indirect
-	github.com/go-playground/universal-translator v0.17.0 // indirect
-	github.com/go-playground/validator/v10 v10.4.1 // indirect
-	github.com/go-redis/redis/v8 v8.11.3 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe // indirect
 	github.com/google/uuid v1.6.0 // indirect
@@ -60,7 +55,6 @@ require (
 	github.com/kardianos/service v1.2.2 // indirect
 	github.com/klauspost/compress v1.15.9 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.9 // indirect
-	github.com/leodido/go-urn v1.2.0 // indirect
 	github.com/lib/pq v1.10.3 // indirect
 	github.com/lufia/plan9stats v0.0.0-20250827001030-24949be3fa54 // indirect
 	github.com/magiconair/properties v1.8.5 // indirect
@@ -74,7 +68,6 @@ require (
 	github.com/redis/go-redis/extra/rediscmd/v9 v9.17.1 // indirect
 	github.com/redis/go-redis/extra/redisotel/v9 v9.17.1 // indirect
 	github.com/redis/go-redis/v9 v9.17.1 // indirect
-	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/shirou/gopsutil/v3 v3.23.10 // indirect
 	github.com/shirou/gopsutil/v4 v4.25.7 // indirect
 	github.com/spf13/afero v1.10.0 // indirect
@@ -93,7 +86,6 @@ require (
 	github.com/zlyuancn/connpool v0.0.0-20240529080113-fdbaa79cba97 // indirect
 	github.com/zlyuancn/zbalancer v1.1.0 // indirect
 	github.com/zlyuancn/zstr v0.0.0-20230412074414-14d6b645962f // indirect
-	github.com/zlyuancn/zutils v0.0.0-20240710092024-0b40857d46af // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/contrib/bridges/otelzap v0.13.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/host v0.63.0 // indirect
@@ -122,7 +114,6 @@ require (
 	golang.org/x/time v0.14.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20251124214823-79d6a2a48846 // indirect
 	gopkg.in/ini.v1 v1.62.0 // indirect
-	gopkg.in/ugjka/go-tz.v2 v2.0.12 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

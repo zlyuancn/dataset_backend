@@ -39,6 +39,9 @@ const (
 	defChunkPreloadByValueExpendRatio        = 90
 	defChunkPreloadProbabilityWithValueCount = 100
 
+	defRecoverProcessLastActivateDay = 7
+	defRecoverIntervalTimeSec        = 60
+
 	defSysLogWriteDatabase       = true
 	defSysLogWriteLevel          = "info"
 	defSysLogBatchSize           = 100
@@ -85,6 +88,10 @@ var Conf = Config{
 	ChunkCompressedRatioLimit:             defChunkCompressedRatioLimit,
 	ChunkPreloadByValueExpendRatio:        defChunkPreloadByValueExpendRatio,
 	ChunkPreloadProbabilityWithValueCount: defChunkPreloadProbabilityWithValueCount,
+
+	// 恢复器
+	RecoverProcessLastActivateDay: defRecoverProcessLastActivateDay,
+	RecoverIntervalTimeSec:        defRecoverIntervalTimeSec,
 
 	// syslog
 
@@ -138,6 +145,10 @@ type Config struct {
 	ChunkCompressedRatioLimit             int    // 压缩后的数据为原始数据的多少百分比才会视为有意义的压缩. 0表示不检查
 	ChunkPreloadByValueExpendRatio        int    // 当 valueSn 在当前 chunk 的百分比位置之后触发预加载下一个 chunk. 0表示不预加载
 	ChunkPreloadProbabilityWithValueCount int    // 当 valueSn 在预加载阈值时并不是直接进行预加载, 而是有概率的, 这个值表示会有多少个 value 会命中该概率阈值, 0 表示不计算概率直接进行预加载(有性能损耗)
+
+	// 恢复器
+	RecoverProcessLastActivateDay int // 恢复处理最后多少天内活跃的数据集
+	RecoverIntervalTimeSec        int // 恢复器每隔多少时间扫描一次, 单位秒
 
 	// 系统日志
 	SysLogWriteDatabase       bool   // 系统日志是否写入到db中
@@ -219,6 +230,13 @@ func (conf *Config) Check() {
 	}
 	if conf.ChunkDataLruCacheCount < 1 {
 		conf.ChunkDataLruCacheCount = defChunkDataLruCacheCount
+	}
+
+	if conf.RecoverProcessLastActivateDay < 1 {
+		conf.RecoverProcessLastActivateDay = defRecoverProcessLastActivateDay
+	}
+	if conf.RecoverIntervalTimeSec < 1 {
+		conf.RecoverIntervalTimeSec = defRecoverIntervalTimeSec
 	}
 
 	if conf.SysLogWriteLevel == "" {

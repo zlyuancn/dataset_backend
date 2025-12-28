@@ -47,7 +47,7 @@ func (*Dataset) SearchDatasetName(ctx context.Context, req *pb.SearchDatasetName
 
 	lines, err := dataset_list.MultiGetBySelect(ctx, where, []string{"dataset_id", "dataset_name"})
 	if err != nil {
-		log.Error(ctx, "SearchDatasetName call dataset.MultiGetBySelect", zap.Error(err))
+		log.Error(ctx, "SearchDatasetName call dataset_listMultiGetBySelect", zap.Error(err))
 		return nil, err
 	}
 
@@ -123,7 +123,7 @@ func (d *Dataset) QueryDatasetList(ctx context.Context, req *pb.QueryDatasetList
 	// 获取id列表
 	ids, err := dataset_list.MultiGetId(ctx, where)
 	if err != nil {
-		log.Error(ctx, "QueryDatasetList call dataset.MultiGetId", zap.Error(err))
+		log.Error(ctx, "QueryDatasetList call dataset_listMultiGetId", zap.Error(err))
 		return nil, err
 	}
 

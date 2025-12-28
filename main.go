@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/zly-app/grpc"
-	"github.com/zly-app/service/cron"
 	"github.com/zly-app/uapp"
 	"github.com/zly-app/zapp/config"
 	"github.com/zly-app/zapp/log"
@@ -25,7 +24,6 @@ func main() {
 	app := uapp.NewApp("dataset",
 		grpc.WithService(),        // 启用 grpc 服务
 		grpc.WithGatewayService(), // 启用网关服务
-		cron.WithService(),        // 启用定时服务
 	)
 	defer app.Exit()
 
@@ -47,10 +45,8 @@ func main() {
 	client := pb.NewDatasetServiceClient(grpc.GetGatewayClientConn("dataset"))
 	_ = pb.RegisterDatasetServiceHandlerClient(context.Background(), grpc.GetGatewayMux(), client)
 
-	// 定时器
-	cron.RegistryHandler("recover", "@every 10m", true, func(ctx cron.IContext) error {
-		return nil
-	})
+	// 恢复器
+	module.Restorer.Start()
 
 	// syslog
 	syslog.Init()
