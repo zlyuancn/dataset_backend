@@ -29,7 +29,7 @@ const (
 
 	defChunkStoreRedisName                   = "dataset"
 	defChunkStoreRedisKeyFormat              = "dataset:chunk_store:%d_%d"
-	defChunkSizeLimit                        = 8 * 1024 * 1024
+	defChunkSizeLimit                        = 4 * 1024 * 1024
 	defMinChunkSizeLimit                     = 1 * 1024
 	defValueMaxScanSizeLimit                 = 1 * 1024 * 1024
 	defChunkStoreThreadCount                 = 5
