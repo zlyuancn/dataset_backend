@@ -46,6 +46,8 @@ const (
 	defSysLogCloseAutoRotate     = false
 	defSysLogFlushAttemptCount   = 3
 	defSysLogFlushErrIntervalSec = 2
+
+	defQueryListMaxReturnNums = 1000
 )
 
 var Conf = Config{
@@ -84,6 +86,8 @@ var Conf = Config{
 	ChunkPreloadByValueExpendRatio:        defChunkPreloadByValueExpendRatio,
 	ChunkPreloadProbabilityWithValueCount: defChunkPreloadProbabilityWithValueCount,
 
+	// syslog
+
 	SysLogWriteDatabase:       defSysLogWriteDatabase,
 	SysLogWriteLevel:          defSysLogWriteLevel,
 	SysLogBatchSize:           defSysLogBatchSize,
@@ -91,6 +95,9 @@ var Conf = Config{
 	SysLogCloseAutoRotate:     defSysLogCloseAutoRotate,
 	SysLogFlushAttemptCount:   defSysLogFlushAttemptCount,
 	SysLogFlushErrIntervalSec: defSysLogFlushErrIntervalSec,
+
+	// other
+	QueryListMaxReturnNums: defQueryListMaxReturnNums,
 }
 
 type Config struct {
@@ -140,6 +147,9 @@ type Config struct {
 	SysLogCloseAutoRotate     bool   // 系统日志是否关闭自动旋转
 	SysLogFlushAttemptCount   int    // 系统日志写入db尝试次数
 	SysLogFlushErrIntervalSec int    // 系统日志写入db错误时重试间隔时间, 单位秒
+
+	// 其它
+	QueryListMaxReturnNums int // 查询列表最大返回数量. 0表示不限制
 }
 
 func (conf *Config) Check() {

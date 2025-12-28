@@ -12,6 +12,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/zlyuancn/dataset_backend/client/db"
+	"github.com/zlyuancn/dataset_backend/conf"
 	"github.com/zlyuancn/dataset_backend/dao/dataset_list"
 	"github.com/zlyuancn/dataset_backend/model"
 	"github.com/zlyuancn/dataset_backend/module"
@@ -111,6 +112,9 @@ func (d *Dataset) QueryDatasetList(ctx context.Context, req *pb.QueryDatasetList
 			return nil, err
 		}
 		total = t
+		if conf.Conf.QueryListMaxReturnNums > 0 {
+			total = min(total, 1000)
+		}
 	}
 
 	where["_orderby"] = "dataset_id desc"
