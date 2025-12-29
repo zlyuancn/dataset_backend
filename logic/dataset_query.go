@@ -3,12 +3,14 @@ package logic
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/bytedance/sonic"
 	"github.com/spf13/cast"
 	"github.com/zly-app/cache/v2"
 	"github.com/zly-app/component/redis"
 	"github.com/zly-app/zapp/log"
+	"github.com/zlyuancn/dataset_backend/dao/dataset_log"
 	"go.uber.org/zap"
 
 	"github.com/zlyuancn/dataset_backend/client/db"
@@ -307,4 +309,65 @@ func (d *Dataset) QueryDatasetData(ctx context.Context, req *pb.QueryDatasetData
 		ValueSn:   req.GetValueSn(),
 		Value:     value,
 	}, nil
+}
+
+func (d *Dataset) QuerySyslog(ctx context.Context, req *pb.QuerySyslogReq) (*pb.QuerySyslogRsp, error) {
+	where := map[string]interface{}{
+		"dataset_id": req.GetDatasetId(),
+	}
+
+	// 分页游标优先；第一页使用 EndTime
+	if req.GetNextCursor() > 0 { // 如果 NextCursor 有值, 说明用户已经翻页了. 而第一页用户传的游标为0且传了EndTime在第一页返回的游标就已经小于EndTime了
+		where["create_time <"] = req.GetNextCursor()
+	} else if req.GetEndTime() > 0 {
+		where["create_time <="] = req.GetEndTime()
+	}
+	if req.GetStartTime() > 0 {
+		where["create_time >="] = req.GetStartTime()
+	}
+
+	if len(req.GetLogType()) == 1 {
+		where["log_type"] = int(req.GetLogType()[0])
+	}
+	if len(req.GetLogType()) > 1 {
+		types := make([]int32, len(req.GetLogType()))
+		for i := range req.GetLogType() {
+			types[i] = int32(req.GetLogType()[i])
+		}
+		where["log_type in"] = types
+	}
+
+	pageSize := max(req.GetPageSize(), 5)
+	where["_orderby"] = "create_time desc"
+	where["_limit"] = []uint{0, uint(pageSize)}
+
+	lines, err := dataset_log.MultiGet(ctx, where)
+	if err != nil {
+		log.Error(ctx, "QuerySyslog call dataset_log.MultiGet", zap.Error(err))
+		return nil, err
+	}
+
+	ret := make([]*pb.SysLogInfo, 0, len(lines))
+	for _, line := range lines {
+		ret = append(ret, d.logDbModel2ListPb(line))
+	}
+	nextCursor := int64(0)
+	if len(lines) > 0 {
+		nextCursor = int64(lines[len(lines)-1].ID)
+	}
+	return &pb.QuerySyslogRsp{
+		NextCursor: nextCursor,
+		PageSize:   pageSize,
+		Lines:      ret,
+	}, nil
+}
+
+func (*Dataset) logDbModel2ListPb(line *dataset_log.Model) *pb.SysLogInfo {
+	ret := &pb.SysLogInfo{
+		Remark:     line.Remark,
+		Extend:     line.Extend,
+		LogType:    pb.DataLogType(line.LogType),
+		CreateTime: line.CreateTime / int64(time.Microsecond),
+	}
+	return ret
 }

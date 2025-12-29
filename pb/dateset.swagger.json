@@ -313,6 +313,39 @@
         ]
       }
     },
+    "/Dataset/QuerySyslog": {
+      "post": {
+        "summary": "查询sys日志",
+        "operationId": "DatasetService_QuerySyslog",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/datasetQuerySyslogRsp"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/googlerpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/datasetQuerySyslogReq"
+            }
+          }
+        ],
+        "tags": [
+          "DatasetService"
+        ]
+      }
+    },
     "/Dataset/SearchDatasetName": {
       "post": {
         "summary": "搜索数据集名",
@@ -487,6 +520,18 @@
       ],
       "default": 0,
       "title": "- 0: 不压缩"
+    },
+    "datasetDataLogType": {
+      "type": "integer",
+      "format": "int32",
+      "enum": [
+        0,
+        1,
+        2
+      ],
+      "default": 0,
+      "description": "- 0: 信息\n - 1: 警告\n - 2: 错误",
+      "title": "数据的日志类型"
     },
     "datasetDataProcess": {
       "type": "object",
@@ -917,6 +962,66 @@
         }
       }
     },
+    "datasetQuerySyslogReq": {
+      "type": "object",
+      "properties": {
+        "datasetId": {
+          "type": "string",
+          "format": "int64",
+          "title": "数据集id"
+        },
+        "nextCursor": {
+          "type": "string",
+          "format": "int64",
+          "title": "下一页数据游标"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32",
+          "title": "每页返回数量, 最少返回5条"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "int64",
+          "title": "开始时间, 秒级时间戳. 0表示不限制"
+        },
+        "endTime": {
+          "type": "string",
+          "format": "int64",
+          "title": "结束时间, 秒级时间戳. 0表示不限制"
+        },
+        "logType": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/datasetDataLogType"
+          },
+          "title": "日志类型"
+        }
+      }
+    },
+    "datasetQuerySyslogRsp": {
+      "type": "object",
+      "properties": {
+        "nextCursor": {
+          "type": "string",
+          "format": "int64",
+          "title": "下一页数据游标"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32",
+          "title": "当前分一页预期返回条数"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/datasetSysLogInfo"
+          },
+          "title": "日志"
+        }
+      }
+    },
     "datasetSearchDatasetNameLine": {
       "type": "object",
       "properties": {
@@ -978,6 +1083,28 @@
       "default": 0,
       "description": "- 0: 已创建\n - 2: 运行中\n - 3: 已完成\n - 4: 正在停止\n - 5: 已停止\n - 7: 正在删除\n - 8: 元数据已删除",
       "title": "状态"
+    },
+    "datasetSysLogInfo": {
+      "type": "object",
+      "properties": {
+        "remark": {
+          "type": "string",
+          "title": "备注"
+        },
+        "extend": {
+          "type": "string",
+          "title": "扩展数据"
+        },
+        "logType": {
+          "$ref": "#/definitions/datasetDataLogType",
+          "title": "日志类型"
+        },
+        "createTime": {
+          "type": "string",
+          "format": "int64",
+          "title": "创建时间秒级时间戳"
+        }
+      }
     },
     "datasetValueProcess": {
       "type": "object",

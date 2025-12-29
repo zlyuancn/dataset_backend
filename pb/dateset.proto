@@ -78,6 +78,13 @@ service DatasetService {
       body: "*",
     };
   }
+  // 查询sys日志
+  rpc QuerySyslog(QuerySyslogReq) returns (QuerySyslogRsp) {
+    option (google.api.http) = {
+      post: "/Dataset/QuerySyslog",
+      body: "*",
+    };
+  }
 }
 
 // 数据的日志类型
@@ -311,4 +318,24 @@ message QueryDatasetDataRsp {
   int32 chunkSn = 2; // chunk sn
   int64 valueSn = 3; // 数据sn
   string value = 4; // 值
+}
+
+message SysLogInfo {
+  string remark = 2; // 备注
+  string extend = 3; // 扩展数据
+  DataLogType logType = 4; // 日志类型
+  int64 createTime = 5; // 创建时间秒级时间戳
+}
+message QuerySyslogReq {
+  int64 datasetId = 1 [(validate.rules).int64.gt = 0]; // 数据集id
+  int64 nextCursor = 2 [(validate.rules).int64.gte = 0]; // 下一页数据游标
+  int32 pageSize = 3 [(validate.rules).int32.gte = 5]; // 每页返回数量, 最少返回5条
+  int64 startTime = 4; // 开始时间, 秒级时间戳. 0表示不限制
+  int64 endTime = 5; // 结束时间, 秒级时间戳. 0表示不限制
+  repeated DataLogType logType = 6; // 日志类型
+}
+message QuerySyslogRsp {
+  int64 nextCursor = 1; // 下一页数据游标
+  int32 pageSize = 2; // 当前分一页预期返回条数
+  repeated SysLogInfo lines = 3; // 日志
 }

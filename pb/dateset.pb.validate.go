@@ -4139,3 +4139,385 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = QueryDatasetDataRspValidationError{}
+
+// Validate checks the field values on SysLogInfo with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *SysLogInfo) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SysLogInfo with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in SysLogInfoMultiError, or
+// nil if none found.
+func (m *SysLogInfo) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SysLogInfo) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Remark
+
+	// no validation rules for Extend
+
+	// no validation rules for LogType
+
+	// no validation rules for CreateTime
+
+	if len(errors) > 0 {
+		return SysLogInfoMultiError(errors)
+	}
+
+	return nil
+}
+
+// SysLogInfoMultiError is an error wrapping multiple validation errors
+// returned by SysLogInfo.ValidateAll() if the designated constraints aren't met.
+type SysLogInfoMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SysLogInfoMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SysLogInfoMultiError) AllErrors() []error { return m }
+
+// SysLogInfoValidationError is the validation error returned by
+// SysLogInfo.Validate if the designated constraints aren't met.
+type SysLogInfoValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SysLogInfoValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SysLogInfoValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SysLogInfoValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SysLogInfoValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SysLogInfoValidationError) ErrorName() string { return "SysLogInfoValidationError" }
+
+// Error satisfies the builtin error interface
+func (e SysLogInfoValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSysLogInfo.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SysLogInfoValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SysLogInfoValidationError{}
+
+// Validate checks the field values on QuerySyslogReq with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *QuerySyslogReq) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on QuerySyslogReq with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in QuerySyslogReqMultiError,
+// or nil if none found.
+func (m *QuerySyslogReq) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *QuerySyslogReq) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetDatasetId() <= 0 {
+		err := QuerySyslogReqValidationError{
+			field:  "DatasetId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetNextCursor() < 0 {
+		err := QuerySyslogReqValidationError{
+			field:  "NextCursor",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetPageSize() < 5 {
+		err := QuerySyslogReqValidationError{
+			field:  "PageSize",
+			reason: "value must be greater than or equal to 5",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for StartTime
+
+	// no validation rules for EndTime
+
+	if len(errors) > 0 {
+		return QuerySyslogReqMultiError(errors)
+	}
+
+	return nil
+}
+
+// QuerySyslogReqMultiError is an error wrapping multiple validation errors
+// returned by QuerySyslogReq.ValidateAll() if the designated constraints
+// aren't met.
+type QuerySyslogReqMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m QuerySyslogReqMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m QuerySyslogReqMultiError) AllErrors() []error { return m }
+
+// QuerySyslogReqValidationError is the validation error returned by
+// QuerySyslogReq.Validate if the designated constraints aren't met.
+type QuerySyslogReqValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e QuerySyslogReqValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e QuerySyslogReqValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e QuerySyslogReqValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e QuerySyslogReqValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e QuerySyslogReqValidationError) ErrorName() string { return "QuerySyslogReqValidationError" }
+
+// Error satisfies the builtin error interface
+func (e QuerySyslogReqValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sQuerySyslogReq.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = QuerySyslogReqValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = QuerySyslogReqValidationError{}
+
+// Validate checks the field values on QuerySyslogRsp with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *QuerySyslogRsp) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on QuerySyslogRsp with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in QuerySyslogRspMultiError,
+// or nil if none found.
+func (m *QuerySyslogRsp) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *QuerySyslogRsp) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for NextCursor
+
+	// no validation rules for PageSize
+
+	for idx, item := range m.GetLines() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, QuerySyslogRspValidationError{
+						field:  fmt.Sprintf("Lines[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, QuerySyslogRspValidationError{
+						field:  fmt.Sprintf("Lines[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return QuerySyslogRspValidationError{
+					field:  fmt.Sprintf("Lines[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return QuerySyslogRspMultiError(errors)
+	}
+
+	return nil
+}
+
+// QuerySyslogRspMultiError is an error wrapping multiple validation errors
+// returned by QuerySyslogRsp.ValidateAll() if the designated constraints
+// aren't met.
+type QuerySyslogRspMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m QuerySyslogRspMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m QuerySyslogRspMultiError) AllErrors() []error { return m }
+
+// QuerySyslogRspValidationError is the validation error returned by
+// QuerySyslogRsp.Validate if the designated constraints aren't met.
+type QuerySyslogRspValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e QuerySyslogRspValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e QuerySyslogRspValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e QuerySyslogRspValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e QuerySyslogRspValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e QuerySyslogRspValidationError) ErrorName() string { return "QuerySyslogRspValidationError" }
+
+// Error satisfies the builtin error interface
+func (e QuerySyslogRspValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sQuerySyslogRsp.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = QuerySyslogRspValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = QuerySyslogRspValidationError{}
