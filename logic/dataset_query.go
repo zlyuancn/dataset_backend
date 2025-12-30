@@ -24,8 +24,6 @@ import (
 func (*Dataset) SearchDatasetName(ctx context.Context, req *pb.SearchDatasetNameReq) (*pb.SearchDatasetNameRsp, error) {
 	where := map[string]any{}
 	switch {
-	case req.GetDatasetName() != "": // 仅搜索数据集名
-		where["dataset_name"] = req.GetDatasetName()
 	case req.GetDatasetId() > 0: // 直接根据数据集id搜索
 		d, err := module.Dataset.GetDatasetInfoByCache(ctx, uint(req.GetDatasetId()))
 		if err != nil {
@@ -39,6 +37,8 @@ func (*Dataset) SearchDatasetName(ctx context.Context, req *pb.SearchDatasetName
 			},
 		}
 		return &pb.SearchDatasetNameRsp{Lines: data}, nil
+	case req.GetDatasetName() != "": // 仅搜索数据集名
+		where["dataset_name"] = req.GetDatasetName()
 	default:
 		return &pb.SearchDatasetNameRsp{}, nil
 	}
