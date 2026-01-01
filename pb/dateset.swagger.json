@@ -983,12 +983,12 @@
         "startTime": {
           "type": "string",
           "format": "int64",
-          "title": "开始时间, 秒级时间戳. 0表示不限制"
+          "title": "开始时间, 毫秒级时间戳. 0表示不限制"
         },
         "endTime": {
           "type": "string",
           "format": "int64",
-          "title": "结束时间, 秒级时间戳. 0表示不限制"
+          "title": "结束时间, 毫秒级时间戳. 0表示不限制"
         },
         "logType": {
           "type": "array",
@@ -996,6 +996,10 @@
             "$ref": "#/definitions/datasetDataLogType"
           },
           "title": "日志类型"
+        },
+        "asc": {
+          "type": "boolean",
+          "title": "正序查询"
         }
       }
     },
@@ -1016,7 +1020,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/datasetSysLogInfo"
+            "$ref": "#/definitions/datasetSyslogInfo"
           },
           "title": "日志"
         }
@@ -1084,7 +1088,7 @@
       "description": "- 0: 已创建\n - 2: 运行中\n - 3: 已完成\n - 4: 正在停止\n - 5: 已停止\n - 7: 正在删除\n - 8: 元数据已删除",
       "title": "状态"
     },
-    "datasetSysLogInfo": {
+    "datasetSyslogInfo": {
       "type": "object",
       "properties": {
         "remark": {
@@ -1102,7 +1106,7 @@
         "createTime": {
           "type": "string",
           "format": "int64",
-          "title": "创建时间秒级时间戳"
+          "title": "创建时间毫秒级时间戳"
         }
       }
     },

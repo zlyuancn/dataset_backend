@@ -320,22 +320,23 @@ message QueryDatasetDataRsp {
   string value = 4; // 值
 }
 
-message SysLogInfo {
+message SyslogInfo {
   string remark = 2; // 备注
   string extend = 3; // 扩展数据
   DataLogType logType = 4; // 日志类型
-  int64 createTime = 5; // 创建时间秒级时间戳
+  int64 createTime = 5; // 创建时间毫秒级时间戳
 }
 message QuerySyslogReq {
   int64 datasetId = 1 [(validate.rules).int64.gt = 0]; // 数据集id
   int64 nextCursor = 2 [(validate.rules).int64.gte = 0]; // 下一页数据游标
   int32 pageSize = 3 [(validate.rules).int32.gte = 5]; // 每页返回数量, 最少返回5条
-  int64 startTime = 4; // 开始时间, 秒级时间戳. 0表示不限制
-  int64 endTime = 5; // 结束时间, 秒级时间戳. 0表示不限制
+  int64 startTime = 4; // 开始时间, 毫秒级时间戳. 0表示不限制
+  int64 endTime = 5; // 结束时间, 毫秒级时间戳. 0表示不限制
   repeated DataLogType logType = 6; // 日志类型
+  bool asc = 7; // 正序查询
 }
 message QuerySyslogRsp {
   int64 nextCursor = 1; // 下一页数据游标
   int32 pageSize = 2; // 当前分一页预期返回条数
-  repeated SysLogInfo lines = 3; // 日志
+  repeated SyslogInfo lines = 3; // 日志
 }

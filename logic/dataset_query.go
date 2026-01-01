@@ -10,8 +10,9 @@ import (
 	"github.com/zly-app/cache/v2"
 	"github.com/zly-app/component/redis"
 	"github.com/zly-app/zapp/log"
-	"github.com/zlyuancn/dataset_backend/dao/dataset_log"
 	"go.uber.org/zap"
+
+	"github.com/zlyuancn/dataset_backend/dao/dataset_log"
 
 	"github.com/zlyuancn/dataset_backend/client/db"
 	"github.com/zlyuancn/dataset_backend/conf"
@@ -88,10 +89,10 @@ func (d *Dataset) QueryDatasetList(ctx context.Context, req *pb.QueryDatasetList
 		where["status in"] = status
 	}
 	if req.GetStartTime() > 0 {
-		where["create_time >="] = req.GetStartTime()
+		where["create_time >="] = time.Unix(req.GetStartTime(), 0).Format(time.RFC3339)
 	}
 	if req.GetEndTime() > 0 {
-		where["create_time <="] = req.GetEndTime()
+		where["create_time <="] = time.Unix(req.GetEndTime(), 0).Format(time.RFC3339)
 	}
 	if req.GetOpUser() != "" {
 		where["_or"] = []map[string]interface{}{
@@ -316,14 +317,28 @@ func (d *Dataset) QuerySyslog(ctx context.Context, req *pb.QuerySyslogReq) (*pb.
 		"dataset_id": req.GetDatasetId(),
 	}
 
-	// 分页游标优先；第一页使用 EndTime
-	if req.GetNextCursor() > 0 { // 如果 NextCursor 有值, 说明用户已经翻页了. 而第一页用户传的游标为0且传了EndTime在第一页返回的游标就已经小于EndTime了
-		where["create_time <"] = req.GetNextCursor()
-	} else if req.GetEndTime() > 0 {
-		where["create_time <="] = req.GetEndTime()
-	}
-	if req.GetStartTime() > 0 {
-		where["create_time >="] = req.GetStartTime()
+	if req.GetAsc() { // 正序
+		// 分页游标与时间过滤的合并
+		if req.GetNextCursor() > 0 { // 这里表示非第一页, 由于在第一页查询已经使用了 StartTime 过滤, 此时用户传的游标必然大于 StartTime
+			where["create_time >"] = req.GetNextCursor()
+		} else if req.GetStartTime() > 0 { // 这里表示第一页, 使用 StartTime 作为过滤条件
+			where["create_time >="] = req.GetStartTime() * 1e3 // 将毫秒转为微秒
+		}
+		if req.GetEndTime() > 0 {
+			where["create_time <="] = req.GetEndTime() * 1e3 // 将毫秒转为微秒
+		}
+		where["_orderby"] = "create_time asc"
+	} else { // 倒序
+		// 分页游标与时间过滤的合并
+		if req.GetNextCursor() > 0 { // 这里表示非第一页, 由于在第一页查询已经使用了 EndTime 过滤, 此时用户传的游标必然小于EndTime
+			where["create_time <"] = req.GetNextCursor()
+		} else if req.GetEndTime() > 0 { // 这里表示第一页, 使用 EndTime 作为过滤条件
+			where["create_time <="] = req.GetEndTime() * 1e3 // 将毫秒转为微秒
+		}
+		if req.GetStartTime() > 0 {
+			where["create_time >="] = req.GetStartTime() * 1e3 // 将毫秒转为微秒
+		}
+		where["_orderby"] = "create_time desc"
 	}
 
 	if len(req.GetLogType()) == 1 {
@@ -338,7 +353,6 @@ func (d *Dataset) QuerySyslog(ctx context.Context, req *pb.QuerySyslogReq) (*pb.
 	}
 
 	pageSize := max(req.GetPageSize(), 5)
-	where["_orderby"] = "create_time desc"
 	where["_limit"] = []uint{0, uint(pageSize)}
 
 	lines, err := dataset_log.MultiGet(ctx, where)
@@ -347,13 +361,13 @@ func (d *Dataset) QuerySyslog(ctx context.Context, req *pb.QuerySyslogReq) (*pb.
 		return nil, err
 	}
 
-	ret := make([]*pb.SysLogInfo, 0, len(lines))
+	ret := make([]*pb.SyslogInfo, 0, len(lines))
 	for _, line := range lines {
 		ret = append(ret, d.logDbModel2ListPb(line))
 	}
 	nextCursor := int64(0)
 	if len(lines) > 0 {
-		nextCursor = int64(lines[len(lines)-1].ID)
+		nextCursor = lines[len(lines)-1].CreateTime
 	}
 	return &pb.QuerySyslogRsp{
 		NextCursor: nextCursor,
@@ -362,12 +376,12 @@ func (d *Dataset) QuerySyslog(ctx context.Context, req *pb.QuerySyslogReq) (*pb.
 	}, nil
 }
 
-func (*Dataset) logDbModel2ListPb(line *dataset_log.Model) *pb.SysLogInfo {
-	ret := &pb.SysLogInfo{
+func (*Dataset) logDbModel2ListPb(line *dataset_log.Model) *pb.SyslogInfo {
+	ret := &pb.SyslogInfo{
 		Remark:     line.Remark,
 		Extend:     line.Extend,
 		LogType:    pb.DataLogType(line.LogType),
-		CreateTime: line.CreateTime / int64(time.Microsecond),
+		CreateTime: line.CreateTime / 1e3, // 将微秒转为毫秒
 	}
 	return ret
 }
