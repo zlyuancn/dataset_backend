@@ -39,7 +39,7 @@ func (*Dataset) SearchDatasetName(ctx context.Context, req *pb.SearchDatasetName
 		}
 		return &pb.SearchDatasetNameRsp{Lines: data}, nil
 	case req.GetDatasetName() != "": // 仅搜索数据集名
-		where["dataset_name"] = req.GetDatasetName()
+		where["dataset_name like"] = req.GetDatasetName() + "%"
 	default:
 		return &pb.SearchDatasetNameRsp{}, nil
 	}
