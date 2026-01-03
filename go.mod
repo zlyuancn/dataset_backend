@@ -16,7 +16,7 @@ require (
 	github.com/zly-app/component/sqlx v0.0.0-20251205041122-9e84deef01af
 	github.com/zly-app/grpc v0.5.4
 	github.com/zly-app/uapp v0.0.0-20251201110646-673ce4a3e75f
-	github.com/zly-app/zapp v1.4.2
+	github.com/zly-app/zapp v1.4.3
 	github.com/zlyuancn/redis_tool v0.0.0-20251216042311-cf7350789353
 	github.com/zlyuancn/rotate v0.0.0-20251105133058-d2b2a91da640
 	github.com/zlyuancn/splitter v0.0.0-20251227074928-7ef5d318387c

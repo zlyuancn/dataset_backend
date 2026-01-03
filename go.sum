@@ -411,8 +411,8 @@ github.com/zly-app/plugin/pprof v0.0.0-20251201105815-b4c372b9135e h1:RB1VUYrKTa
 github.com/zly-app/plugin/pprof v0.0.0-20251201105815-b4c372b9135e/go.mod h1:VoGzG+6ivB+wSi1tK8Q3/+U9VPZeHv4NZj7QdBuyEVo=
 github.com/zly-app/uapp v0.0.0-20251201110646-673ce4a3e75f h1:Gv9HcntvVzrISmsGQq5gmkL1GzKHUsl7A0ns8b2gM98=
 github.com/zly-app/uapp v0.0.0-20251201110646-673ce4a3e75f/go.mod h1:NV4XI82+UWBo56BuWCXybgx9HmoTvVNmj67vy6RHTtI=
-github.com/zly-app/zapp v1.4.2 h1:wdhDz+s8VdkPfM4m+38whgpwKqgZRJ0D1NijUf1mL5I=
-github.com/zly-app/zapp v1.4.2/go.mod h1:VrAeA6NbJ6Dz7l1pWRb8EKEyVeek52XTc93Lt82wA+o=
+github.com/zly-app/zapp v1.4.3 h1:LkG2VKOPVK15b0igB5HOlIG3QpcgplEg7/O9J6+aAwY=
+github.com/zly-app/zapp v1.4.3/go.mod h1:VrAeA6NbJ6Dz7l1pWRb8EKEyVeek52XTc93Lt82wA+o=
 github.com/zlyuancn/connpool v0.0.0-20240529080113-fdbaa79cba97 h1:IxkdvMgQgvkWj3kFY9CR9W4XwtFkj0fOaWJvYuwn3yw=
 github.com/zlyuancn/connpool v0.0.0-20240529080113-fdbaa79cba97/go.mod h1:8LD1Yt5uc6SNBYANF0IpVEx7NM+/d/9+ku5WZ9x/4W8=
 github.com/zlyuancn/redis_tool v0.0.0-20251216042311-cf7350789353 h1:9Jyjw8NdYAgOc13ens0J3bQlL0rcxUjGXG5PTHUvRa0=
