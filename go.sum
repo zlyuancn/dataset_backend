@@ -399,8 +399,8 @@ github.com/zly-app/cache/v2 v2.0.11 h1:NFSrUJRvyqN+77dilM+WiSTDfnhKHk+Maw/53ewL5
 github.com/zly-app/cache/v2 v2.0.11/go.mod h1:/2L6wkGitM1jfWspLbsdFCEQ4UVMrkCrR3h6IvvkbRs=
 github.com/zly-app/component/http v0.0.0-20251201104934-96e59c17144e h1:PnkpzSB3rN4w7dMfsm1+C43ROaklG1Iaf48d2TpHNSg=
 github.com/zly-app/component/http v0.0.0-20251201104934-96e59c17144e/go.mod h1:A07lOW8A7+OfARw15GsJrKOm6uDm0BgUrJ3B5oPTMd4=
-github.com/zly-app/component/redis v0.0.0-20251205041122-9e84deef01af h1:3XUcIHYZuPSa+c1zxcoBbfYnTaROCiJCHBIIWgTROV0=
-github.com/zly-app/component/redis v0.0.0-20251205041122-9e84deef01af/go.mod h1:k6Yys89P+VgMrQ8Mf+CcU4AonYTzPTO97XoqW5GZs6g=
+github.com/zly-app/component/redis v0.0.0-20260124060631-28394c7194b1 h1:fa+c92Mn00ljaM8Q5T7QO1U7bIBaK9kcX/aDPwAalYU=
+github.com/zly-app/component/redis v0.0.0-20260124060631-28394c7194b1/go.mod h1:k6Yys89P+VgMrQ8Mf+CcU4AonYTzPTO97XoqW5GZs6g=
 github.com/zly-app/component/sqlx v0.0.0-20251205041122-9e84deef01af h1:8GjtXQvPyfqzVY/7h36eLwdWmRznXuEhlswIgyq1d98=
 github.com/zly-app/component/sqlx v0.0.0-20251205041122-9e84deef01af/go.mod h1:kL05YhtdvBL6y8p9BX94FJjq5WrZ/dUEKBrIdRfs/PU=
 github.com/zly-app/grpc v0.5.4 h1:Br25nLHaUZay3QRKXIwtwQtiVWaqlgfCFA/oADncDQg=

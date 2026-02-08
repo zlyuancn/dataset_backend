@@ -12,7 +12,7 @@ require (
 	github.com/spf13/cast v1.10.0
 	github.com/zly-app/cache/v2 v2.0.11
 	github.com/zly-app/component/http v0.0.0-20251201104934-96e59c17144e
-	github.com/zly-app/component/redis v0.0.0-20251205041122-9e84deef01af
+	github.com/zly-app/component/redis v0.0.0-20260124060631-28394c7194b1
 	github.com/zly-app/component/sqlx v0.0.0-20251205041122-9e84deef01af
 	github.com/zly-app/grpc v0.5.4
 	github.com/zly-app/uapp v0.0.0-20251201110646-673ce4a3e75f

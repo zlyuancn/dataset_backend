@@ -366,7 +366,7 @@ func (d *Dataset) QuerySyslog(ctx context.Context, req *pb.QuerySyslogReq) (*pb.
 		ret = append(ret, d.logDbModel2ListPb(line))
 	}
 	nextCursor := int64(0)
-	if len(lines) > 0 {
+	if len(lines) == int(pageSize) {
 		nextCursor = lines[len(lines)-1].CreateTime
 	}
 	return &pb.QuerySyslogRsp{
