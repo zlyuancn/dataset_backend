@@ -39,9 +39,20 @@ func (*Dataset) SearchDatasetName(ctx context.Context, req *pb.SearchDatasetName
 		}
 		return &pb.SearchDatasetNameRsp{Lines: data}, nil
 	case req.GetDatasetName() != "": // 仅搜索数据集名
-		where["dataset_name like"] = req.GetDatasetName() + "%"
+		if cast.ToInt64(req.GetDatasetName()) > 0 {
+			where["_or"] = []map[string]interface{}{
+				{
+					"dataset_id": cast.ToInt64(req.GetDatasetName()),
+				},
+				{
+					"dataset_name like": req.GetDatasetName() + "%",
+				},
+			}
+		} else {
+			where["dataset_name like"] = req.GetDatasetName() + "%"
+		}
 	default:
-		return &pb.SearchDatasetNameRsp{}, nil
+		// return &pb.SearchDatasetNameRsp{}, nil
 	}
 
 	pageSize := max(req.GetPageSize(), 5)
