@@ -1,0 +1,68 @@
+# Docker Compose 配置版本
+version: '3'
+
+# 定义的服务集合
+services:
+  # Dataset Backend 应用服务
+  dataset-backend:
+    # 使用当前目录的 Dockerfile 构建镜像
+    build: .
+    # 容器名称
+    container_name: dataset-backend
+    # 端口映射：主机端口：容器端口
+    ports:
+      - "3300:3300"  # gRPC 服务端口 (grpc.Bind)
+      - "8080:8080"  # gRPC-Gateway HTTP 网关端口
+    # 卷挂载：将本地 configs 目录挂载到容器的 /root/configs
+    volumes:
+      - ./configs:/root/configs
+    # 依赖服务：等待 mysql 和 redis 启动后才启动
+    depends_on:
+      - mysql
+      - redis
+    # 重启策略：除非手动停止，否则自动重启
+    restart: unless-stopped
+
+  # MySQL 数据库服务
+  mysql:
+    # 使用官方 MySQL 镜像
+    image: mysql
+    # 容器名称
+    container_name: dataset-mysql
+    # 环境变量配置
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword  # root 用户密码
+      MYSQL_DATABASE: dataset            # 初始化时创建的数据库名
+    # 端口映射
+    ports:
+      - "3306:3306"  # MySQL 默认端口
+    # 卷挂载
+    volumes:
+      # 初始化 SQL 脚本：容器首次启动时执行
+      - ./assets/db_table/dataset.sql:/docker-entrypoint-initdb.d/init.sql
+      # 数据持久化：使用命名卷存储 MySQL 数据
+      - mysql_data:/var/lib/mysql
+    # 重启策略
+    restart: unless-stopped
+
+  # Redis 缓存服务
+  redis:
+    # 使用官方 Redis 镜像
+    image: redis
+    # 容器名称
+    container_name: dataset-redis
+    # 端口映射
+    ports:
+      - "6379:6379"  # Redis 默认端口
+    # 卷挂载：使用命名卷持久化 Redis 数据
+    volumes:
+      - redis_data:/data
+    # 启动命令：启用 AOF 持久化
+    command: ["redis-server", "--appendonly", "yes"]
+    # 重启策略
+    restart: unless-stopped
+
+# 命名卷定义：用于数据持久化
+volumes:
+  mysql_data:   # MySQL 数据卷
+  redis_data:   # Redis 数据卷

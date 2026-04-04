@@ -1,0 +1,89 @@
+
+# 依赖组件
+components:
+  sqlx: # 参考 https://github.com/zly-app/component/tree/master/sqlx
+    dataset:
+      Driver: mysql # 驱动, 支持 mysql, postgres, sqlite3, mssql
+      Source: 'root:rootpassword@tcp(localhost:3306)/dataset?charset=utf8mb4&parseTime=True&loc=Local' # 连接源
+      # ...
+  redis: # 参考 https://github.com/zly-app/component/tree/master/redis
+    dataset:
+      Address: localhost-redis:6379
+      Password: "" # 密码
+      # ...
+  cache: # 参考 https://github.com/zly-app/cache
+    default:
+      Compactor: raw # 默认压缩器名, 可选 raw, zstd, gzip
+      Serializer: sonic_std # 默认序列化器名, 可选 sonic, sonic_std, msgpack, jsoniter, jsoniter_standard, json, yaml
+      SingleFlight: single # 默认单跑模块, 可选 no, single
+      ExpireSec: 300 # 默认过期时间, 秒, < 1 表示永久
+      IgnoreCacheFault: false # 是否忽略缓存数据库故障, 如果设为true, 在缓存数据库故障时从加载器获取数据, 这会导致缓存击穿. 如果设为false, 在缓存数据库故障时直接返回错误
+      CacheDB:
+        Type: redis # 缓存数据库类型, 支持 no, bigcache, freecache, redis
+        RedisName: "dataset" # redis组件名, 如果存在, 优先使用该redis组件
+        # ...
+  grpc: # 参考 https://github.com/zly-app/grpc/tree/master/client
+    dataset:
+      Address: localhost:3300
+      # ...
+
+services:
+  grpc: # 参考 https://github.com/zly-app/grpc
+    dataset:
+      Bind: :3300 # bind地址
+      # ...
+  grpc-gateway: # 网关配置 参考 https://github.com/zly-app/grpc?tab=readme-ov-file#http%E7%BD%91%E5%85%B3
+    Bind: :8080 # bind地址
+    # ...
+
+# 业务配置可选
+#dataset:
+  # 组件名
+  #SqlxName: "dataset"       # sqlx组件名
+  #LogSqlxName: "dataset"    # 日志的sqlx组件名
+  #RedisName: "dataset"      # redis组件名
+
+  # redis Key
+  #DatasetOpLockKeyPrefix: "dataset:op_lock:"            # 数据集操作锁前缀
+  #AdminOpLockTtl: 10                                    # admin 接口操作锁 ttl, 单位秒
+  #StopProcessFlagPrefix: "dataset:stop_flag:"           # 数据集停止处理flag
+  #CheckStopFlagInterval: 1                              # 检查停止标记间隔
+  #RunLockPrefix: "dataset:run_lock:"                    # 运行处理锁前缀
+  #RunLockExtraTtl: 600                                  # 任务处理运行锁的ttl, 单位秒, 用于防止重复启动
+  #RunLockRenewInterval: 120                             # 任务处理运行锁续期间隔秒数
+  #RunLockRenewMaxContinuousErrCount: 3                  # 续期最大连续错误次数
+  #DatasetProcessStatusPrefix: "dataset:status:"         # 数据集处理状态缓存前缀
+  #ChunkMetaKeyPrefix: "dataset:chunk_meta:"             # chunk meta key 前缀
+
+  # cache Key
+  #DatasetInfoKeyPrefix: "dataset:info:"                 # 数据集信息缓存前缀
+  #DatasetInfoCacheTtl: 3600                             # 数据集信息缓存ttl秒数
+  #DatasetNotFinishedInfoCacheTtl: 300                   # 数据集未处理完成的数据缓存ttl
+
+  # chunk
+  #ChunkStoreRedisName: "dataset"                        # chunk store redis 组件名
+  #ChunkStoreRedisKeyFormat: "dataset:chunk_store:%d_%d" # chunk store redis key格式
+  #ChunkSizeLimit: 4194304                               # chunk 大小限制 (4MB)
+  #ValueMaxScanSizeLimit: 1048576                        # value 扫描最大长度限制 (1MB)
+  #ChunkStoreThreadCount: 5                              # chunk 持久化线程数
+  #ChunkMetaLruCacheCount: 100                           # chunk meta 的 lru 缓存最大条数
+  #ChunkDataLruCacheCount: 100                           # chunk 数据的 lru 缓存最大条数
+  #ChunkCompressedRatioLimit: 85                         # 压缩后数据为原始数据的百分比才视为有效压缩, 0表示不检查
+  #ChunkPreloadByValueExpendRatio: 90                    # 当valueSn在当前chunk的百分比位置之后触发预加载下一个chunk, 0表示不预加载
+  #ChunkPreloadProbabilityWithValueCount: 100            # 预加载概率阈值命中的value数量, 0表示不计算概率直接预加载(有性能损耗)
+
+  # 恢复器
+  #RecoverProcessLastActivateDay: 7                      # 恢复处理最后多少天内活跃的数据集
+  #RecoverIntervalTimeSec: 60                            # 恢复器扫描间隔, 单位秒
+
+  # 系统日志
+  #SysLogWriteDatabase: true                             # 系统日志是否写入到db中
+  #SysLogWriteLevel: "info"                              # 系统日志写入到db的最小level, 可选 info, warn, err
+  #SysLogBatchSize: 100                                  # 系统日志批次大小, 达到批次自动旋转
+  #SysLogAutoRotateTimeSec: 3                            # 系统日志自动旋转时间, 单位秒
+  #SysLogCloseAutoRotate: false                          # 系统日志是否关闭自动旋转
+  #SysLogFlushAttemptCount: 3                            # 系统日志写入db尝试次数
+  #SysLogFlushErrIntervalSec: 2                          # 系统日志写入db错误时重试间隔, 单位秒
+
+  # 其它
+  #QueryListMaxReturnNums: 1000                          # 查询列表最大返回数量, 0表示不限制
