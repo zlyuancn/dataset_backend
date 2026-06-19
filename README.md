@@ -2,6 +2,10 @@
 
 数据集后端服务，提供 gRPC 和 HTTP Gateway 接口。
 
+## 文档
+
+- [AI 集成指南](doc/AI_GUIDE.md) - 面向 AI/外部系统的完整集成文档，包含 API 说明、接入流程和使用示例
+
 ## Docker Compose 部署
 
 ### 前置条件
