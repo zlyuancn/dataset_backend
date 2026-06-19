@@ -3,7 +3,7 @@ module github.com/zlyuancn/dataset_backend
 go 1.25.0
 
 require (
-	github.com/bytedance/sonic v1.14.2
+	github.com/bytedance/sonic v1.15.2
 	github.com/didi/gendry v1.8.2
 	github.com/envoyproxy/protoc-gen-validate v1.3.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.3
@@ -32,7 +32,7 @@ require (
 	github.com/ClickHouse/clickhouse-go v1.4.7 // indirect
 	github.com/allegro/bigcache/v3 v3.1.0 // indirect
 	github.com/bytedance/gopkg v0.1.3 // indirect
-	github.com/bytedance/sonic/loader v0.4.0 // indirect
+	github.com/bytedance/sonic/loader v0.5.1 // indirect
 	github.com/cenkalti/backoff/v5 v5.0.3 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/cloudflare/golz4 v0.0.0-20150217214814-ef862a3cdc58 // indirect
