@@ -127,7 +127,7 @@ func (d *Dataset) QueryDatasetList(ctx context.Context, req *pb.QueryDatasetList
 		}
 		total = t
 		if conf.Conf.QueryListMaxReturnNums > 0 {
-			total = min(total, 1000)
+			total = min(total, int64(conf.Conf.QueryListMaxReturnNums))
 		}
 	}
 
@@ -270,7 +270,7 @@ func (d *Dataset) QueryDatasetStatusInfo(ctx context.Context, req *pb.QueryDatas
 // 批量渲染运行中任务进度
 func (*Dataset) batchRenderRunningProcess(ctx context.Context, ret []*pb.DatasetStateInfo) error {
 	lines := make([]*pb.DatasetStateInfo, 0, len(ret))
-	keys := make([]string, 0, len(lines))
+	keys := make([]string, 0, len(ret))
 	for _, l := range ret {
 		lines = append(lines, l)
 		keys = append(keys, module.CacheKey.GetCacheDatasetProcessStatus(int(l.DatasetId)))

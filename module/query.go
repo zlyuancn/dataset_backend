@@ -131,17 +131,17 @@ func (q *queryCli) tryLoadNextChunk(ctx context.Context, datasetId int64, metas 
 	nextChunkSn := nowChunkMeta.ChunkSn + 1
 	// 尝试获取数据
 	cacheKey := strconv.FormatInt(datasetId, 32) + "_" + strconv.FormatInt(int64(nextChunkSn), 32)
-	_, ok := q.chunkValueCache.Peek(cacheKey) // 不会更新“最近使用”状态
+	_, ok := q.chunkValueCache.Peek(cacheKey) // 不会更新"最近使用"状态
 	if ok {
 		// 已经有数据了
 		return
 	}
 
-	// 获取下一个ChunkMeta
-	if int(nextChunkSn) >= len(metas) { // 超出索引
+	// 获取下一个ChunkMeta - 通过 ChunkSn 查找，不假设 ChunkSn 与 slice 索引对应
+	nextChunkMeta := q.findChunkByChunkSn(metas, nextChunkSn)
+	if nextChunkMeta == nil {
 		return
 	}
-	nextChunkMeta := metas[nextChunkSn] // 这里必然是有序的从 0 开始
 
 	// 通过查询来加载下一个数据
 	cloneCtx := utils.Ctx.CloneContext(ctx)
@@ -203,6 +203,17 @@ func (q *queryCli) getChunkMetasFromDb(ctx context.Context, datasetId int64) (mo
 		return chunkMeta[i].ChunkSn < chunkMeta[j].ChunkSn
 	})
 	return chunkMeta, nil
+}
+
+// 通过 ChunkSn 查找 chunk meta
+func (q *queryCli) findChunkByChunkSn(metas model.ChunkMeta, chunkSn int32) *model.OneChunkMeta {
+	i := sort.Search(len(metas), func(i int) bool {
+		return metas[i].ChunkSn >= chunkSn
+	})
+	if i < len(metas) && metas[i].ChunkSn == chunkSn {
+		return metas[i]
+	}
+	return nil
 }
 
 // 二分查找valueSn

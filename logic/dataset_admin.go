@@ -79,10 +79,10 @@ func (*Dataset) AdminAddDataset(ctx context.Context, req *pb.AdminAddDatasetReq)
 		h.OpCmd = byte(pb.OpCmd_OpCmd_CreateAndRun)
 	}
 	gpool.GetDefGPool().Go(func() error {
-		_, err := dataset_history.CreateOneModel(cloneCtx, h)
-		if err != nil {
-			log.Error(cloneCtx, "AdminAddDataset call dataset_history.CreateOneModel fail.", zap.Error(err))
-			// return err
+		_, gerr := dataset_history.CreateOneModel(cloneCtx, h)
+		if gerr != nil {
+			log.Error(cloneCtx, "AdminAddDataset call dataset_history.CreateOneModel fail.", zap.Error(gerr))
+			return gerr
 		}
 		return nil
 	}, nil)
@@ -176,20 +176,20 @@ func (*Dataset) AdminUpdateDataset(ctx context.Context, req *pb.AdminUpdateDatas
 		StatusInfo:    v.StatusInfo,
 	}
 	gpool.GetDefGPool().Go(func() error {
-		_, err = dataset_history.CreateOneModel(cloneCtx, h)
-		if err != nil {
-			log.Error(cloneCtx, "AdminUpdateDataset call dataset_history.CreateOneModel fail.", zap.Error(err))
-			// return nil, err
+		_, gerr := dataset_history.CreateOneModel(cloneCtx, h)
+		if gerr != nil {
+			log.Error(cloneCtx, "AdminUpdateDataset call dataset_history.CreateOneModel fail.", zap.Error(gerr))
+			return gerr
 		}
 		return nil
 	}, nil)
 
 	// 清除缓存
 	gpool.GetDefGPool().Go(func() error {
-		err := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetInfo(int(req.GetDatasetId())))
-		if err != nil {
-			log.Error(cloneCtx, "AdminUpdateDataset call clear Cache fail.", zap.Error(err))
-			// return err
+		gerr := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetInfo(int(req.GetDatasetId())))
+		if gerr != nil {
+			log.Error(cloneCtx, "AdminUpdateDataset call clear Cache fail.", zap.Error(gerr))
+			return gerr
 		}
 		return nil
 	}, nil)
@@ -262,20 +262,20 @@ func (*Dataset) AdminDelDataset(ctx context.Context, req *pb.AdminDelDatasetReq)
 		StatusInfo: model.StatusInfo_UserOp,
 	}
 	gpool.GetDefGPool().Go(func() error {
-		_, err = dataset_history.CreateOneModel(cloneCtx, h)
-		if err != nil {
-			log.Error(cloneCtx, "AdminDelDataset call dataset_history.CreateOneModel fail.", zap.Error(err))
-			// return nil, err
+		_, gerr := dataset_history.CreateOneModel(cloneCtx, h)
+		if gerr != nil {
+			log.Error(cloneCtx, "AdminDelDataset call dataset_history.CreateOneModel fail.", zap.Error(gerr))
+			return gerr
 		}
 		return nil
 	}, nil)
 
 	// 清除缓存
 	gpool.GetDefGPool().Go(func() error {
-		err := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetInfo(int(req.GetDatasetId())))
-		if err != nil {
-			log.Error(cloneCtx, "AdminDelDataset call clear Cache fail.", zap.Error(err))
-			// return err
+		gerr := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetInfo(int(req.GetDatasetId())))
+		if gerr != nil {
+			log.Error(cloneCtx, "AdminDelDataset call clear Cache fail.", zap.Error(gerr))
+			return gerr
 		}
 		return nil
 	}, nil)
@@ -362,20 +362,20 @@ func (*Dataset) AdminRunProcessDataset(ctx context.Context, req *pb.AdminRunProc
 		StatusInfo: model.StatusInfo_UserChangeStatus,
 	}
 	gpool.GetDefGPool().Go(func() error {
-		_, err = dataset_history.CreateOneModel(cloneCtx, h)
-		if err != nil {
-			log.Error(cloneCtx, "AdminRunProcessDataset call dataset_history.CreateOneModel fail.", zap.Error(err))
-			// return nil, err
+		_, gerr := dataset_history.CreateOneModel(cloneCtx, h)
+		if gerr != nil {
+			log.Error(cloneCtx, "AdminRunProcessDataset call dataset_history.CreateOneModel fail.", zap.Error(gerr))
+			return gerr
 		}
 		return nil
 	}, nil)
 
 	// 清除缓存
 	gpool.GetDefGPool().Go(func() error {
-		err := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetInfo(int(req.GetDatasetId())))
-		if err != nil {
-			log.Error(cloneCtx, "AdminRunProcessDataset call clear Cache fail.", zap.Error(err))
-			// return err
+		gerr := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetInfo(int(req.GetDatasetId())))
+		if gerr != nil {
+			log.Error(cloneCtx, "AdminRunProcessDataset call clear Cache fail.", zap.Error(gerr))
+			return gerr
 		}
 		return nil
 	}, nil)
@@ -383,10 +383,10 @@ func (*Dataset) AdminRunProcessDataset(ctx context.Context, req *pb.AdminRunProc
 	// 启动
 	gpool.GetDefGPool().Go(func() error {
 		// 删除停止标记
-		err = module.Dataset.SetStopFlag(cloneCtx, int(d.DatasetId), model.StopFlag_None)
-		if err != nil {
-			log.Error(cloneCtx, "AdminRunProcessDataset call DelStopFlag fail.", zap.Error(err))
-			return err
+		gerr := module.Dataset.SetStopFlag(cloneCtx, int(d.DatasetId), model.StopFlag_None)
+		if gerr != nil {
+			log.Error(cloneCtx, "AdminRunProcessDataset call DelStopFlag fail.", zap.Error(gerr))
+			return gerr
 		}
 
 		// 开始处理
@@ -480,20 +480,20 @@ func (*Dataset) AdminStopProcessDataset(ctx context.Context, req *pb.AdminStopPr
 		StatusInfo: model.StatusInfo_UserChangeStatus,
 	}
 	gpool.GetDefGPool().Go(func() error {
-		_, err = dataset_history.CreateOneModel(cloneCtx, h)
-		if err != nil {
-			log.Error(cloneCtx, "AdminStopProcessDataset call dataset_history.CreateOneModel fail.", zap.Error(err))
-			// return nil, err
+		_, gerr := dataset_history.CreateOneModel(cloneCtx, h)
+		if gerr != nil {
+			log.Error(cloneCtx, "AdminStopProcessDataset call dataset_history.CreateOneModel fail.", zap.Error(gerr))
+			return gerr
 		}
 		return nil
 	}, nil)
 
 	// 清除缓存
 	gpool.GetDefGPool().Go(func() error {
-		err := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetInfo(int(req.GetDatasetId())))
-		if err != nil {
-			log.Error(cloneCtx, "AdminStopProcessDataset call clear Cache fail.", zap.Error(err))
-			// return err
+		gerr := cache.GetDefCache().Del(cloneCtx, module.CacheKey.GetDatasetInfo(int(req.GetDatasetId())))
+		if gerr != nil {
+			log.Error(cloneCtx, "AdminStopProcessDataset call clear Cache fail.", zap.Error(gerr))
+			return gerr
 		}
 		return nil
 	}, nil)

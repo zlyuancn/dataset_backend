@@ -30,12 +30,23 @@ func (processorCli) RestorerStop(ctx context.Context, datasetId int) {
 	}
 	defer unlock()
 
+	// 拿到锁后再次检查状态，防止将已完成的任务错误更新为已停止
+	d, err := dataset_list.GetOneByDatasetId(ctx, datasetId)
+	if err != nil {
+		log.Error(ctx, "RestorerStop call GetOneByDatasetId fail.", zap.Error(err))
+		return
+	}
+	if pb.Status(d.Status) != pb.Status_Status_Stopping {
+		log.Warn(ctx, "RestorerStop status is not stopping, skip.", zap.Int("status", int(d.Status)))
+		return
+	}
+
 	// 更新为已停止
 	t := time.Now()
 	updateData := map[string]any{
 		"status": int(pb.Status_Status_Stopped),
 	}
-	err = dataset_list.UpdateOne(ctx, datasetId, updateData, 0)
+	err = dataset_list.UpdateOne(ctx, datasetId, updateData, byte(pb.Status_Status_Stopping))
 	if err != nil {
 		log.Error(ctx, "RestorerStop call UpdateOne fail.", zap.Error(err))
 		return

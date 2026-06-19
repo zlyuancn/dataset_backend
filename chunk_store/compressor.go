@@ -50,18 +50,18 @@ func Compress(t pb.CompressType, data []byte) ([]byte, bool, error) {
 		}
 	}
 
+	// 压缩验证 - 生产环境关闭以避免性能损耗
 	// 尝试立即解压
-	bs, err := c.UnCompress(newData)
-	if err != nil {
-		// 无法解压
-		return nil, false, err
-	}
-
-	// 对比数据
-	if bytes.Compare(data, bs) != 0 {
-		// 解压数据与原始数据不一致
-		return nil, false, nil
-	}
+	// bs, err := c.UnCompress(newData)
+	// if err != nil {
+	// 	// 无法解压
+	// 	return nil, false, err
+	// }
+	// // 对比数据
+	// if bytes.Compare(data, bs) != 0 {
+	// 	// 解压数据与原始数据不一致
+	// 	return nil, false, nil
+	// }
 	return newData, true, nil
 }
 

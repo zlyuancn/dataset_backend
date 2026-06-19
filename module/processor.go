@@ -342,7 +342,7 @@ func (p *processorLauncher) flushChunkHandler(meta *model.OneChunkMeta) {
 	v, err := sonic.MarshalString(meta)
 	if err != nil {
 		log.Error(p.ctx, "flushChunkHandler call MarshalString fail", zap.Error(err))
-		p.submitStopFlag("flushChunkHandler call MarshalString fail. err=%s" + err.Error())
+		p.submitStopFlag("flushChunkHandler call MarshalString fail. err=" + err.Error())
 		return
 	}
 
@@ -355,7 +355,7 @@ func (p *processorLauncher) flushChunkHandler(meta *model.OneChunkMeta) {
 	}
 	if err != nil {
 		log.Error(p.ctx, "flushChunkHandler call HSet fail", zap.Error(err))
-		p.submitStopFlag("flushChunkHandler call HSet fail. err=%s" + err.Error())
+		p.submitStopFlag("flushChunkHandler call HSet fail. err=" + err.Error())
 		return
 	}
 }
